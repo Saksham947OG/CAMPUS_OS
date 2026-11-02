@@ -62,7 +62,7 @@ export function CommunityHubPage() {
         {card(
           '/community/clubs',
           'Clubs & Committees',
-          'Browse fictional clubs and request a conversation.',
+          'Browse source-labelled clubs and request a conversation.',
         )}
         {card('/community/sports-events', 'Sports & Teams', 'Fixtures, teams and open places.')}
       </ul>

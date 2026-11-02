@@ -71,7 +71,11 @@ export function AcademicsHubPage() {
           `My courses (${courses.length})`,
           `${unread.length} unread sample notice${unread.length === 1 ? '' : 's'}.`,
         )}
-        {card('/academics/faculty', 'Faculty Connect', 'Published sample windows and requests.')}
+        {card(
+          '/academics/faculty',
+          'Faculty Connect',
+          'Faculty associations and meeting proposals.',
+        )}
         {card(
           '/academics/mentorship',
           `Mentorship (${groups.length})`,
