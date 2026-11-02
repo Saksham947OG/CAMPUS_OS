@@ -1,5 +1,14 @@
 import { Link } from 'react-router'
-import { ChevronLeft, ChevronRight, Filter, PanelRight, Search } from 'lucide-react'
+import {
+  Armchair,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  GraduationCap,
+  PanelRight,
+  Search,
+  Users,
+} from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { CALENDAR_VIEWS, type CalendarView } from '@/data/prefs/prefs'
@@ -118,17 +127,26 @@ export function CalendarToolbar({
           />
         </label>
 
-        <Button asChild variant="outline" className="min-h-11">
-          <Link to="/calendar/find-a-time">Find a time</Link>
-        </Button>
-        <Button asChild variant="outline" className="min-h-11">
-          <Link to="/academics/exams">Exam Schedule</Link>
-        </Button>
-        <Button asChild variant="outline" className="min-h-11">
-          <Link to="/academics/exams" aria-label="My Seating (opens the exam list with your seats)">
-            My Seating
-          </Link>
-        </Button>
+        <div className="flex flex-wrap items-center gap-1 md:ml-auto">
+          <Button asChild variant="outline" className="min-h-11 gap-1.5">
+            <Link to="/calendar/find-a-time">
+              <Users aria-hidden="true" /> Find a time
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="min-h-11 gap-1.5">
+            <Link to="/academics/exams">
+              <GraduationCap aria-hidden="true" /> Exam Schedule
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="min-h-11 gap-1.5">
+            <Link
+              to="/academics/exams"
+              aria-label="My Seating (opens the exam list with your seats)"
+            >
+              <Armchair aria-hidden="true" /> My Seating
+            </Link>
+          </Button>
+        </div>
         {showFiltersButton ? (
           <Button variant="outline" className="min-h-11 gap-2" onClick={onOpenFilters}>
             <Filter aria-hidden="true" />

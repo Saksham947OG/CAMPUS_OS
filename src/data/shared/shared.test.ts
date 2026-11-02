@@ -164,7 +164,7 @@ describe('exam seating', () => {
     const s = await env.repo.load()
     expect(s.exams.find((e) => e.id === 'exam-1')!.startTime).toBeUndefined()
     expect(examTimeText(s.exams.find((e) => e.id === 'exam-1')!)).toBe('start time not provided')
-    expect(examTimeText(s.exams.find((e) => e.id === 'exam-2')!)).toBe('starts 10:00')
+    expect(examTimeText(s.exams.find((e) => e.id === 'exam-2')!)).toBe('starts 10:00 am')
     expect(
       s.seats.every((x) => /Fictional demo seat \(not an official allotment\)/.test(x.sourceLabel)),
     ).toBe(true)

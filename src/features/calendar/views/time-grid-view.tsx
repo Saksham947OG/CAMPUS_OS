@@ -72,18 +72,15 @@ export function TimeGridView({
   const cols = `3.5rem repeat(${dates.length}, minmax(${dates.length > 1 ? '5rem' : '12rem'}, 1fr))`
   const topOf = (min: number) => ((min - hourStart * 60) / 60) * HOUR_PX
 
-  const outside = dates.reduce((n, d) => {
-    const { timed } = splitDay(itemsByDate.get(d) ?? [])
-    return (
-      n +
-      timed.filter((i) => {
-        if (i.time.kind !== 'timed') return false
-        return (
-          timeToMinutes(i.time.end) <= hourStart * 60 || timeToMinutes(i.time.start) >= hourEnd * 60
-        )
-      }).length
-    )
-  }, 0)
+  const outsideItems = dates.flatMap((d) =>
+    splitDay(itemsByDate.get(d) ?? []).timed.filter((i) => {
+      if (i.time.kind !== 'timed') return false
+      return (
+        timeToMinutes(i.time.end) <= hourStart * 60 || timeToMinutes(i.time.start) >= hourEnd * 60
+      )
+    }),
+  )
+  const outside = outsideItems.length
 
   return (
     <section className="rounded-lg border border-border bg-surface" aria-label={label}>
@@ -118,7 +115,11 @@ export function TimeGridView({
                 </span>
                 {d === today ? (
                   <span className="text-[10px] font-semibold text-teal-strong">Today</span>
-                ) : null}
+                ) : (
+                  <span className="text-[10px] text-ink-muted">
+                    {(itemsByDate.get(d) ?? []).length || 'No'} items
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -254,10 +255,17 @@ export function TimeGridView({
                             cancelled && 'bg-canvas text-ink-muted opacity-80',
                           )}
                         >
-                          <span className="flex items-center gap-1">
-                            <CategoryIcon category={item.category} className="size-3.5" />
+                          <span className="flex items-start gap-1">
+                            {dates.length === 1 ? (
+                              <CategoryIcon category={item.category} className="size-3.5" />
+                            ) : null}
                             <span
-                              className={cn('truncate font-medium', cancelled && 'line-through')}
+                              className={cn(
+                                'min-w-0 flex-1 font-medium leading-tight',
+                                h > 44 ? 'line-clamp-2' : 'truncate',
+                                cancelled && 'line-through',
+                              )}
+                              title={item.title}
                             >
                               {item.title}
                             </span>
@@ -297,12 +305,26 @@ export function TimeGridView({
         </div>
       </div>
       {outside > 0 ? (
-        <p className="border-t border-border px-3 py-2 text-xs text-ink-muted">
-          {outside} timed {outside === 1 ? 'item is' : 'items are'} outside the visible hours (
-          {formatTime(minutesToTime(hourStart * 60))}–
-          {formatTime(minutesToTime(Math.min(hourEnd, 24) * 60 - (hourEnd === 24 ? 1 : 0)))}).
-          Change the visible hours in Layers &amp; filters.
-        </p>
+        <div className="border-t border-border px-3 py-2">
+          <p className="text-xs text-ink-muted">
+            {outside} timed {outside === 1 ? 'item is' : 'items are'} outside the visible hours (
+            {formatTime(minutesToTime(hourStart * 60))}–
+            {formatTime(minutesToTime(Math.min(hourEnd, 24) * 60 - (hourEnd === 24 ? 1 : 0)))}).
+            They are listed here; change the visible hours in Layers &amp; filters.
+          </p>
+          <ul className="mt-1 grid gap-1 sm:grid-cols-2">
+            {outsideItems.map((item) => (
+              <li key={item.key}>
+                <ItemChip
+                  item={item}
+                  selected={item.key === selectedKey}
+                  conflict={conflictKeys.has(item.key)}
+                  onSelect={onSelectItem}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
     </section>
   )

@@ -55,6 +55,18 @@ describe('Campus AI', () => {
     expect(screen.getByRole('button', { name: 'Ask Campus AI' })).toHaveFocus()
   })
 
+  it('answers capacity questions from the owner-supplied table, and lists them all when no place is named', async () => {
+    const user = userEvent.setup()
+    renderApp('/')
+    const a = await openAssistant(user)
+    await ask(user, a, 'How many people fit in the gym?')
+    expect(await a.findByText(/Gym: about 20 people at a time/)).toBeInTheDocument()
+    await ask(user, a, 'what is the capacity of a badminton court')
+    expect(await a.findByText(/Badminton court: 4 people at a time/)).toBeInTheDocument()
+    await ask(user, a, 'capacity')
+    expect(await a.findByText(/Mess 100 people at a time; Library 130 people/)).toBeInTheDocument()
+  })
+
   it('CHAT-AT-03: schedule and task answers come from the active profile’s records and link to the Calendar', async () => {
     const user = userEvent.setup()
     renderApp('/')

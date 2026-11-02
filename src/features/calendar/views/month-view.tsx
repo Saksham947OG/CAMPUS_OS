@@ -12,6 +12,27 @@ import { cn } from '@/lib/utils'
 import type { CalendarItem } from '@/selectors/items'
 import { ItemChip } from '../item-chip'
 
+/** What a crowded month cell should show first: dates that matter, then the daily routine last. */
+const WEIGHT: Record<CalendarItem['category'], number> = {
+  holiday: 0,
+  exam: 0,
+  assignment: 1,
+  project: 1,
+  meeting: 2,
+  booking: 2,
+  administration: 2,
+  campusEvent: 2,
+  club: 2,
+  sports: 2,
+  birthday: 3,
+  task: 4,
+  class: 5,
+  focus: 6,
+  personal: 7,
+}
+const byImportance = (items: CalendarItem[]) =>
+  [...items].sort((a, b) => WEIGHT[a.category] - WEIGHT[b.category])
+
 interface Props {
   anchor: DateOnly
   today: DateOnly
@@ -42,6 +63,7 @@ export function MonthView({
   onShowDay,
 }: Props) {
   const wide = useMediaQuery('(min-width: 1024px)')
+  const isMd = useMediaQuery('(min-width: 768px)')
   const limit = wide ? 3 : 2
   const weeks = monthGrid(anchor)
   const header = weekDates(weeks[0]![0]!)
@@ -72,8 +94,7 @@ export function MonthView({
               const inMonth = isSameMonth(date, anchor)
               const isToday = date === today
               const isSelected = date === selectedDate
-              const shown =
-                wide || items.length <= limit ? items.slice(0, limit) : items.slice(0, limit)
+              const shown = byImportance(items).slice(0, limit)
               const extra = items.length - shown.length
               return (
                 <td
@@ -87,7 +108,7 @@ export function MonthView({
                   <div className="flex flex-col gap-1 p-1">
                     <button
                       type="button"
-                      onClick={() => onSelectDate(date)}
+                      onClick={() => (isMd ? onShowDay(date) : onSelectDate(date))}
                       aria-label={`${formatDateLong(date)}. ${items.length} ${items.length === 1 ? 'item' : 'items'}${isToday ? '. Today' : ''}`}
                       aria-pressed={isSelected}
                       className={cn(
@@ -116,7 +137,7 @@ export function MonthView({
                             selected={item.key === selectedKey}
                             conflict={conflictKeys.has(item.key)}
                             onSelect={onSelectItem}
-                            showTime={false}
+                            showTime={item.category !== 'holiday'}
                           />
                         </li>
                       ))}

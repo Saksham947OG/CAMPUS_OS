@@ -39,6 +39,14 @@ describe('hub and information (SP-T01 … SP-T04)', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('shows the owner-supplied capacity on the hub, the gym page and the Services table', async () => {
+    renderApp('/bookings')
+    await heading('Bookings')
+    expect(await screen.findAllByText(/Capacity · 4 people at a time/)).toHaveLength(1)
+    expect(screen.getByText(/Capacity · about 20 people at a time/)).toBeInTheDocument()
+    expect(screen.getByText(/Capacity · 70 people at a time/)).toBeInTheDocument()
+  })
+
   it('SP-T02 / SP-T04: unsupplied hours and limits say so, and every status carries its source and as-of time', async () => {
     renderApp('/bookings/resources/DEMO-POOL-1')
     await heading('Demo pool table')
@@ -231,6 +239,16 @@ describe('gym (SP-T21 … SP-T23, SP-T34)', () => {
     expect(body).toMatch(/not a live or verified headcount/)
     expect(body).not.toMatch(/\d\s*%|\bof \d+ (people|seats)/)
     expect(screen.getByText(/Published slots for/)).toBeInTheDocument()
+  })
+
+  it('says each gym slot holds up to 20 reservations', async () => {
+    renderApp('/bookings/gym')
+    await heading('Gym')
+    expect(
+      await screen.findByText(
+        /about 20 people at a time \(owner-supplied\); each 30-minute slot holds up\s+to 20 reservations/,
+      ),
+    ).toBeInTheDocument()
   })
 
   it('shows all 32 half-hour gym slots and saves the selected session', async () => {

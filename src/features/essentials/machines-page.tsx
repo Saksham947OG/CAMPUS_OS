@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useConfirm } from '@/components/confirm-context'
 import { Field, inputClass } from '@/components/form-kit'
 import { PageHeader } from '@/components/page-header'
+import { CapacityNote } from '@/components/capacity-note'
 import { Button } from '@/components/ui/button'
 import { reservationStateLabel, type Machine, type Reservation } from '@/domain/ess'
 import { addDays, formatDateShort, formatInstant, formatTime, type DateOnly } from '@/lib/time'
@@ -199,6 +200,7 @@ export function MachinesPage() {
         description="Reserve a slot. A reservation is only a booking on this device's local data: it does not show whether a machine is physically free."
         badge={<Pill tone="demo">Campus data</Pill>}
       />
+      <CapacityNote facility="laundry" />
       <SubNav label="Laundry sections" items={laundryTabs} current="machines" />
 
       <SectionCard id="rules-h" title="Planning rules (not campus policy)">

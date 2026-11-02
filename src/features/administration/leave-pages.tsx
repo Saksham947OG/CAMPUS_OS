@@ -74,7 +74,7 @@ export function LeavePage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Leave and out-time"
-        description="Ask for time away on this devicenstration and follow a simulated review. A request here is a record in this app only."
+        description="Ask for time away on this device and follow a simulated review. A request here is a record in this app only."
         badge={<Pill tone="demo">Local · not an official permission</Pill>}
       />
       <SubNav label="Administration sections" items={adminTabs} current="leave" />

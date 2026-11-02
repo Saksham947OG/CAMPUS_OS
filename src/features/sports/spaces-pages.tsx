@@ -29,7 +29,7 @@ import { useSports } from './sports-hooks'
 import { SportsOps } from './sports-ops'
 import { bookingTabs } from './sports-nav'
 
-const BADGE = <Pill tone="demo">Illustrative data spaces</Pill>
+const BADGE = <Pill tone="demo">Illustrative data</Pill>
 
 const libraryTabs = [
   { id: 'overview', label: 'Overview and study spaces', to: '/bookings/library' },
@@ -134,7 +134,10 @@ export function LibraryPage() {
             <li key={r.id} className="rounded-md border border-border p-3">
               <p className="font-semibold">{r.label}</p>
               <p className="text-sm text-ink-muted">
-                Capacity not supplied. Amenities not supplied.
+                {r.referenceCapacity
+                  ? `Study cabin: ${r.referenceCapacity} people at a time (owner-supplied).`
+                  : 'Capacity not provided.'}{' '}
+                Amenities not supplied.
               </p>
               <Link
                 to={`/bookings/library/spaces/${r.id}`}
@@ -150,8 +153,8 @@ export function LibraryPage() {
       <SlotBooker activity="library" />
       {sports.resources.find((r) => r.id === LIBRARY_ID)?.referenceCapacity ? (
         <p className="rounded-md bg-mist p-3 text-sm">
-          Library reference capacity: 140 people, updated by the owner (earlier chart: 130). Current
-          occupancy is not known.
+          Library capacity: {sports.resources.find((r) => r.id === LIBRARY_ID)?.referenceCapacity}{' '}
+          people at a time (owner-supplied). Current occupancy is not known.
         </p>
       ) : null}
       <PersonMinutesScenario id="lib-tt-h" noun="library trips to full or unavailable rooms" />
@@ -297,7 +300,7 @@ export function MusicRoomPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Music Room"
-        description="Reserve a jam session on this devicenstration. A reservation holds a time slot in this app’s data; it does not show who is in the room or what equipment works."
+        description="Reserve a jam session on this device. A reservation holds a time slot in this app’s data; it does not show who is in the room or what equipment works."
         badge={BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="music" />
@@ -350,7 +353,7 @@ export function ChillZonePage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Chill Zone"
-        description="Coordinate midnight celebration spots on this devicenstration. The three spots are illustrative placeholders, and a demo slot is not a campus allocation."
+        description="Coordinate midnight celebration spots on this device. The three spots are illustrative placeholders, and a demo slot is not a campus allocation."
         badge={BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="chill" />

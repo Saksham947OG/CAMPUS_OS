@@ -67,6 +67,9 @@ export interface SlotView {
   end: LocalTime
   state: 'free' | 'reserved' | 'past' | 'closed'
   mine: boolean
+  /** Reservations recorded for this interval, and how many one interval holds (1 unless the resource says more). */
+  taken: number
+  places: number
 }
 
 /** Published availability for one resource and day. "free" means unreserved in this local data, nothing more. */
@@ -79,13 +82,14 @@ export function slotViews(
 ): SlotView[] {
   return slotsOn(s, resource, serviceDate).map((slot) => {
     const sEnd = instantMs(slot.endDate, slot.end)
-    const taken = s.reservations.find(
+    const here = s.reservations.filter(
       (r) =>
         isActive(r) &&
         r.resourceId === resource.id &&
         r.date === slot.startDate &&
         r.start === slot.start,
     )
+    const places = resource.slotCapacity ?? 1
     return {
       ...slot,
       state:
@@ -93,10 +97,12 @@ export function slotViews(
           ? 'past'
           : resource.status !== 'open'
             ? 'closed'
-            : taken
+            : here.length >= places
               ? 'reserved'
               : 'free',
-      mine: taken?.ownerProfileId === profileId,
+      mine: here.some((r) => r.ownerProfileId === profileId),
+      taken: here.length,
+      places,
     }
   })
 }
@@ -351,13 +357,17 @@ const UNIT_COUNTED: readonly Activity[] = [
 ]
 
 /**
- * Capacity in the right unit for the facility, or an explicit "Capacity not provided". Courts and tables are
- * counted from the demo fixtures (editable data, not a measurement). People or seats are never invented, and a
- * physical count is kept apart from per-booking group limits, reservations and self-reported check-ins.
+ * Capacity in the right unit for the facility. The people-at-a-time figure comes from the owner-supplied table;
+ * courts and tables are counted from the demo fixtures (editable data, not a measurement). A physical count is
+ * kept apart from per-booking group limits, reservations and self-reported check-ins.
  */
 export function capacityText(s: SportsStore, r: Resource): string {
-  if (!UNIT_COUNTED.includes(r.activity)) return 'Capacity not provided'
+  const people = r.referenceCapacity
+    ? `${r.referenceCapacityApproximate ? 'about ' : ''}${r.referenceCapacity} ${r.referenceCapacity === 1 ? 'person' : 'people'} at a time`
+    : null
+  if (!UNIT_COUNTED.includes(r.activity)) return people ?? 'Capacity not provided'
   const n = s.resources.filter((x) => x.activity === r.activity).length
   const noun = resourceNoun[r.activity]
-  return `${n} ${noun}${n === 1 ? '' : 's'} listed on this device fixtures (editable sample data)`
+  const count = `${n} ${noun}${n === 1 ? '' : 's'} on this device`
+  return people ? `${people} per ${noun} · ${count}` : count
 }

@@ -92,9 +92,11 @@ describe('snooker: two distinguishable tables under one facility (V3 T5)', () =>
     ])
   })
 
-  it('capacity uses the right unit, or says it was not provided', async () => {
+  it('capacity shows people at a time per table and the table count', async () => {
     renderApp('/bookings/resources/DEMO-SNOOKER-1')
     await screen.findByRole('heading', { level: 1, name: 'Snooker table 1' })
-    expect(screen.getByText(/2 tables listed on this device fixtures/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/2 people at a time per table · 2 tables on this device/),
+    ).toBeInTheDocument()
   })
 })

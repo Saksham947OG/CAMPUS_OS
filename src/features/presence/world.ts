@@ -2,7 +2,7 @@ export const facilities = [
   {
     id: 'library',
     label: 'Library',
-    capacity: 140,
+    capacity: 130,
     icon: '📚',
     action: 'studying',
     path: '/bookings/library',
@@ -26,7 +26,7 @@ export const facilities = [
   {
     id: 'classrooms',
     label: 'Classrooms',
-    capacity: 80,
+    capacity: 70,
     icon: '🧑‍🏫',
     action: 'in a project meeting',
     path: '/bookings/classrooms',
@@ -42,7 +42,7 @@ export const facilities = [
   {
     id: 'cafe',
     label: 'Chill Spot',
-    capacity: 30,
+    capacity: 40,
     icon: '☕',
     action: 'collecting a snack',
     path: '/services/chill-spot',

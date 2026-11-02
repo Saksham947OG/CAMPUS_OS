@@ -447,12 +447,24 @@ describe('gym and other sports (SP-T21 … SP-T25)', () => {
     expect(!noHours.ok && noHours.error.message).toMatch(/hours were not provided/)
   })
 
-  it('a known participant limit is respected, and an unknown one is not invented', async () => {
+  it('the owner-supplied people-per-court limits are respected, and the gym has none per reservation', async () => {
     const env = setup()
-    await env.ok(env.repo.setPolicy('basketball', { participantMax: 10 }))
     expect((await book(env, A, 'DEMO-BBALL-1', '12:00', { participants: 11 })).ok).toBe(false)
     expect((await book(env, A, 'DEMO-BBALL-1', '12:00', { participants: 10 })).ok).toBe(true)
-    expect((await env.repo.load()).config.policies.tableTennis.participantMax).toBeUndefined()
+    const p = (await env.repo.load()).config.policies
+    expect([p.badminton, p.tableTennis, p.pool, p.snooker].map((x) => x.participantMax)).toEqual([
+      4, 2, 2, 2,
+    ])
+    expect(p.gym.participantMax).toBeUndefined()
+  })
+
+  it('a gym slot holds up to 20 reservations, then is full; the same person cannot take two', async () => {
+    const env = setup()
+    const slot = '12:00'
+    for (let i = 0; i < 20; i++) expect((await book(env, `P${i}`, 'DEMO-GYM', slot)).ok).toBe(true)
+    const full = await book(env, 'P20', 'DEMO-GYM', slot)
+    expect(!full.ok && full.error.message).toMatch(/already reserved/)
+    expect((await book(env, 'P0', 'DEMO-GYM', '12:30')).ok).toBe(false) // one upcoming gym booking each
   })
 
   it('occupancy is a labelled simulated snapshot; unknown stays unknown and is never zero', async () => {

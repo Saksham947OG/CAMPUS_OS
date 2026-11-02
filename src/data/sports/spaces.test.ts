@@ -103,8 +103,10 @@ describe('one shared engine (SR-AT-02, SR-AT-04, SR-AT-06, SR-AT-32)', () => {
       expect(r.provenance.dataMode).toBe('demoSeed')
       expect(r.label).toMatch(/^Demo /)
     }
-    expect(store.config.policies.library.participantMax).toBeUndefined() // no capacity invented
-    expect(store.config.policies.musicRoom.participantMax).toBeUndefined()
+    // Only the owner-supplied capacity table sets a participant limit: 8 per library cabin, 40 in the music room.
+    expect(store.config.policies.library.participantMax).toBe(8)
+    expect(store.config.policies.musicRoom.participantMax).toBe(40)
+    expect(store.config.policies.chillZone.participantMax).toBeUndefined()
     expect(store.equipment.some((e) => e.facilityId === 'DEMO-MUSIC-1')).toBe(false)
     expect(store.loans).toEqual([])
     expect(store.catalogue.every((b) => /^Demo Book/.test(b.title))).toBe(true)
@@ -285,16 +287,15 @@ describe('library (SR-AT-05, SR-AT-07, SR-AT-08, SR-AT-10, SR-AT-11)', () => {
 })
 
 describe('music room (SR-AT-12 … SR-AT-16)', () => {
-  it('SR-AT-12: only published 90-minute slots inside the configured hours can be booked, and an unknown capacity is not invented', async () => {
+  it('SR-AT-12: only published 90-minute slots inside the configured hours can be booked, and the owner-supplied capacity of 40 is enforced', async () => {
     const env = setup()
     expect((await book(env, A, 'DEMO-MUSIC-1', '10:30', TODAY)).ok).toBe(false) // not on the 90-minute grid
     expect((await book(env, A, 'DEMO-MUSIC-1', '09:00', TODAY)).ok).toBe(false) // before opening
     expect((await book(env, A, 'DEMO-MUSIC-1', '21:00', TODAY)).ok).toBe(false) // would end after closing
     const ok = await env.ok(book(env, A, 'DEMO-MUSIC-1', '11:30', TODAY, { participants: 40 }))
-    expect(ok.reservation).toMatchObject({ start: '11:30', end: '13:00', participants: 40 }) // no cap exists, so none is enforced
-    await env.ok(env.repo.setPolicy('musicRoom', { participantMax: 6 }))
-    const over = await book(env, B, 'DEMO-MUSIC-1', '14:30', TODAY, { participants: 7 })
-    expect(!over.ok && over.error.message).toMatch(/up to 6 participants/)
+    expect(ok.reservation).toMatchObject({ start: '11:30', end: '13:00', participants: 40 })
+    const tooMany = await book(env, B, 'DEMO-MUSIC-1', '14:30', TODAY, { participants: 41 })
+    expect(!tooMany.ok && tooMany.error.message).toMatch(/up to 40 participants/)
   })
 
   it('SR-AT-13: equipment is unknown until supplied, and a supplied entry starts as status unknown', async () => {

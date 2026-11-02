@@ -132,7 +132,7 @@ export function personaEvidence(profileId: string): ProcessEvidence[] {
       ['persona-3-chart'],
       a
         ? '5–15 minute search is an illustrative planning assumption.'
-        : 'Library reference capacity is 140 (owner update; earlier chart 130); seat-search duration and current occupancy are missing.',
+        : 'Library capacity is 130 people at a time (owner-supplied); seat-search duration and current occupancy are missing.',
     ),
     process(
       'classrooms',

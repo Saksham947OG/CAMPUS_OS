@@ -36,7 +36,7 @@ describe('hub and library (SR-AT-01, SR-AT-03, SR-AT-05, SR-AT-09)', () => {
       screen.getByText(/Unknown. No occupancy snapshot has been recorded./),
     ).toBeInTheDocument()
     expect(screen.getByText(/Occupancy not verified/)).toBeInTheDocument()
-    expect(screen.getAllByText(/Capacity not supplied/).length).toBe(2)
+    expect(screen.getAllByText(/Study cabin: 8 people at a time/).length).toBe(2)
     await user.click(screen.getAllByRole('link', { name: 'Details and slots' })[0]!)
     await heading('Demo group study room 1')
     expect(
@@ -111,13 +111,13 @@ describe('music room (SR-AT-12, SR-AT-13)', () => {
     ).toBeInTheDocument()
   })
 
-  it('SR-AT-12: 90-minute slots inside the published hours are offered, with a private label and no invented capacity', async () => {
+  it('SR-AT-12: 90-minute slots inside the published hours are offered, with a private label and the owner-supplied capacity', async () => {
     const user = userEvent.setup()
     const { services } = renderApp('/bookings/music-room')
     await heading('Music Room')
     await user.click(await screen.findByRole('button', { name: '11:30 am' }))
     expect(await screen.findByText(/Review: Demo music room/)).toBeInTheDocument()
-    expect(screen.getByText(/No participant limit has been provided/)).toBeInTheDocument()
+    expect(screen.getByText(/Up to 40 on this device/)).toBeInTheDocument()
     await user.type(screen.getByLabelText('Private session label (optional)'), 'Jam')
     expect(screen.getByText(/Only you can see this/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Confirm local reservation' }))

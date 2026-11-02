@@ -1,5 +1,6 @@
 import { Coffee } from 'lucide-react'
 import { Link } from 'react-router'
+import { CapacityTable } from '@/components/capacity-note'
 import { PageHeader } from '@/components/page-header'
 import { RouteStatusBadge } from '@/components/status-badge'
 import { routeById, routes } from '@/app/routes'
@@ -35,6 +36,9 @@ export function ServicesHubPage() {
           )
         })}
       </ul>
+      <div className="mt-4">
+        <CapacityTable />
+      </div>
       <p className="mt-4 max-w-3xl text-sm text-ink-muted">
         Services use supplied campus information and clearly labelled planning assumptions. Other
         campus services (bookings, academics, administration and the rest) are not part of this

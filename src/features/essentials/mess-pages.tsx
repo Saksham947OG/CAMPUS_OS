@@ -6,6 +6,7 @@ import { Link } from 'react-router'
 import { DataModeBadge } from '@/components/data-mode-badge'
 import { Field, inputClass } from '@/components/form-kit'
 import { PageHeader } from '@/components/page-header'
+import { CapacityNote } from '@/components/capacity-note'
 import { Button } from '@/components/ui/button'
 import { useCampusData } from '@/hooks/use-campus-data'
 import {
@@ -258,6 +259,7 @@ export function MessPage() {
         description="Menus and serving windows exactly as supplied. Anything missing stays unknown: no days are filled in and no menu cycle is assumed."
         badge={<Pill tone="demo">Campus data</Pill>}
       />
+      <CapacityNote facility="mess" />
       <SubNav label="Mess sections" items={messTabs} current="menu" />
 
       <SectionCard

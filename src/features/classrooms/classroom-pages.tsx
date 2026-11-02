@@ -1,5 +1,6 @@
 import { ProcessTimeTax } from '../sources/process-time-tax'
 import { useServices } from '@/app/services'
+import { capacityOf } from '@/domain/capacity'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import { useConfirm } from '@/components/confirm-context'
@@ -128,8 +129,9 @@ export function ClassroomsPage() {
         className="rounded-md border border-border-strong bg-mist p-3 text-sm text-ink"
       >
         Booked, blocked and available mean “recorded on this device”. A room can be reserved and
-        still empty, or free on this device and occupied in real life. Capacity, equipment, hours
-        and approval rules have not been supplied.
+        still empty, or free on this device and occupied in real life. Rooms hold up to{' '}
+        {capacityOf('classroom')?.people} people (owner-supplied). Equipment, hours and approval
+        rules have not been supplied.
       </p>
       <form
         className="flex flex-wrap items-end gap-3"
@@ -218,7 +220,7 @@ export function ClassroomsPage() {
                 <p className="text-xs text-ink-muted">Next recorded opening: {next.start}.</p>
               ) : null}
               <p className="text-xs text-ink-muted">
-                Capacity {r.capacity ?? 'not provided'} ·{' '}
+                {r.capacity ? `Up to ${r.capacity} people` : 'Capacity not provided'} ·{' '}
                 {r.features?.join(', ') ?? 'equipment not provided'} ·{' '}
                 {r.bookingMode === 'approval'
                   ? 'requests need a (simulated) review'

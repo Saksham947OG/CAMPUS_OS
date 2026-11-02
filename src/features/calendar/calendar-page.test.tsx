@@ -20,6 +20,24 @@ describe('Calendar page', () => {
     expect(screen.getAllByText(/All day & due/i).length).toBeGreaterThan(0)
   })
 
+  it('keeps the side panel closed until you pick something, then opens it with the details', async () => {
+    renderApp(`/calendar?view=agenda&date=${MON}`)
+    const user = userEvent.setup()
+    await screen.findByRole('heading', { level: 1, name: 'Calendar' })
+    expect(screen.queryByRole('complementary', { name: 'Calendar side panel' })).toBeNull()
+    expect(screen.getByRole('button', { name: /Details & tasks/ })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
+    const [row] = await button(/Class: Sample Course A — lecture/)
+    await user.click(row!)
+    expect(
+      await screen.findByRole('complementary', { name: 'Calendar side panel' }),
+    ).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Hide panel' }))
+    expect(screen.queryByRole('complementary', { name: 'Calendar side panel' })).toBeNull()
+  })
+
   it('C-T01: the same source item appears in Month, Week, Day and Agenda for one date', async () => {
     renderApp(`/calendar?date=${MON}`)
     const user = userEvent.setup()
@@ -112,7 +130,7 @@ describe('Calendar page', () => {
     renderApp(`/calendar?view=day&date=${MON}`)
     const user = userEvent.setup()
     expect(screen.queryByText(/sample serving window/)).not.toBeInTheDocument()
-    await user.click(await screen.findByRole('checkbox', { name: /Show dining times on the grid/ }))
+    await user.click(await screen.findByRole('checkbox', { name: /Dining times overlay/ }))
     expect((await screen.findAllByText(/sample serving window/)).length).toBeGreaterThan(0)
     // Never listed as a commitment in the agenda.
     expect(screen.queryByRole('button', { name: /Breakfast|Lunch|Dinner/ })).not.toBeInTheDocument()

@@ -43,7 +43,7 @@ describe('Find a time', () => {
     await user.click(within(cards[0]!).getByRole('button', { name: /Choose this time/ }))
     const rooms = await screen.findByTestId('rooms')
     expect(within(rooms).getAllByRole('listitem')).toHaveLength(4)
-    expect(within(rooms).getAllByText(/Capacity not provided/).length).toBe(4)
+    expect(within(rooms).getAllByText(/Up to 70 people/).length).toBe(4)
     await user.click(
       within(rooms)
         .getAllByRole('button')

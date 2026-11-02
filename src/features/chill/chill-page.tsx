@@ -1,3 +1,4 @@
+import { CapacityNote } from '@/components/capacity-note'
 import { orderPath } from './paths'
 import { Coffee, Search, ShoppingCart } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
@@ -166,6 +167,9 @@ export function ChillSpotPage() {
           photographs. Orders are saved on this device; café acceptance, live stock and opening
           hours need confirmation. No payment is taken.
         </p>
+        <div className="mt-2">
+          <CapacityNote facility="chillSpot" />
+        </div>
       </div>
 
       <nav aria-label="Chill Spot sections" className="flex gap-1 border-b border-border">

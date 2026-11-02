@@ -38,7 +38,7 @@ export function ClubsPage() {
     <article className="flex max-w-5xl flex-col gap-4">
       <PageHeader
         title="Clubs & Committees"
-        description="Fictional clubs and one committee. No phone number, handle or private contact is shown anywhere."
+        description="Clubs and committees listed in supplied research; BMS activity and contacts need confirmation. No phone number, handle or private contact is shown anywhere."
         badge={<Pill tone="demo">Source-labelled club directory</Pill>}
       />
       <SubNav label="Community sections" items={communityTabs} current="clubs" />

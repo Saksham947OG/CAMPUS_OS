@@ -165,9 +165,11 @@ export function CoursesPage() {
                   <span className="text-base font-semibold text-ink">
                     {c.code} · {c.title}
                   </span>
-                  <span className="text-sm text-ink-muted">
-                    {unread} unread sample notice{unread === 1 ? '' : 's'}
-                  </span>
+                  {unread > 0 ? (
+                    <span className="text-sm text-ink-muted">
+                      {unread} unread sample notice{unread === 1 ? '' : 's'}
+                    </span>
+                  ) : null}
                 </Link>
               </li>
             )

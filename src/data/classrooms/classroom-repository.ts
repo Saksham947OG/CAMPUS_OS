@@ -1,4 +1,4 @@
-import { initialClassroomStore } from '@/data/seeds/demo/classroom-data'
+import { CLASSROOM_CAPACITY, initialClassroomStore } from '@/data/seeds/demo/classroom-data'
 import { createStoreRunner } from '@/data/service-runner'
 import { storageKey, type StorageAdapter } from '@/data/storage/storage-adapter'
 import type { NotificationsState } from '@/data/prefs/reminder-prefs'
@@ -67,6 +67,13 @@ export function createClassroomRepository(o: ClassroomRepositoryOptions): Classr
     key: CLASSROOM_STORE_KEY,
     schema: classroomStoreSchema,
     starting: () => initialClassroomStore(nowMs()),
+    // A store saved before the owner supplied a capacity gets it; a value someone already set is kept.
+    normalize: (s) => ({
+      ...s,
+      rooms: s.rooms.map((r) =>
+        r.capacity === undefined ? { ...r, capacity: CLASSROOM_CAPACITY } : r,
+      ),
+    }),
     notifications: o.notifications,
     nowMs,
     newId: o.newId,

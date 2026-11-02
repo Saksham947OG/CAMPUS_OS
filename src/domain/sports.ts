@@ -102,9 +102,11 @@ export const resourceSchema = z.object({
   bookable: z.boolean().optional(),
   label: z.string().min(1).max(60),
   location: z.string().max(80).optional(),
-  /** Source-reported reference capacity; never treated as measured occupancy or booking capacity. */
+  /** Owner-supplied people-at-a-time figure (see capacity.ts); never treated as measured occupancy. */
   referenceCapacity: z.number().int().min(1).max(1000).optional(),
   referenceCapacityApproximate: z.boolean().optional(),
+  /** How many separate reservations one slot holds. Absent means exclusive (one). The gym uses it. */
+  slotCapacity: z.number().int().min(1).max(100).optional(),
   /** Published opening hours. Null means not supplied. A `close` at or before `open` means the next day. */
   hours: z.object({ open: localTimeSchema, close: localTimeSchema }).nullable(),
   status: z.enum(['open', 'closed', 'unknown']),

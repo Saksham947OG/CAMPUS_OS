@@ -677,7 +677,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Fictional clubs and committees.',
+    summary: 'Clubs and committees from supplied research, with local requests.',
     registryRefs: ['COS-COMMUNITY-001'],
   },
   {
@@ -788,7 +788,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Fictional faculty profiles and sample windows.',
+    summary: 'Supplied faculty names; office hours are not supplied.',
     registryRefs: ['COS-ACADEMICS-001'],
   },
   {
@@ -1042,7 +1042,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'utility',
     mobile: 'more',
-    summary: 'Persona, data labels and storage status. Reminder and reset controls arrive later.',
+    summary: 'Persona, appearance, data labels, storage and reset.',
     registryRefs: ['S34 (IA)'],
   },
 ]

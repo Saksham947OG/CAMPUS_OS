@@ -6,6 +6,7 @@ import { itemsInRange } from './occurrences'
 import { isCancelled, isTimed } from './items'
 import { examsFor, profileCourseIds, seatText, seatView } from './exams'
 import type { ProfileData } from '@/domain/records'
+import { CAPACITY_SOURCE, FACILITY_CAPACITY, capacityOf } from '@/domain/capacity'
 import type { DateOnly, LocalTime } from '@/lib/time'
 
 /**
@@ -73,6 +74,36 @@ export function answer(raw: string, c: AssistantContext): Answer {
       source: 'Demo labels',
       link: { to: '/settings#data-labels', label: 'View data labels' },
     }
+  if (has(q, /\bcapacity\b|how many (people|students|persons)|\bfit\b|at a time|how big/)) {
+    const named: [RegExp, string][] = [
+      [/\bmess\b|dining/, 'mess'],
+      [/cabin/, 'cabin'],
+      [/library/, 'library'],
+      [/\bgym\b/, 'gym'],
+      [/laundry|washing|machine/, 'laundry'],
+      [/classroom|\bcr\b|\bg12\b|conference/, 'classroom'],
+      [/chill spot|café|cafe/, 'chillSpot'],
+      [/music/, 'musicRoom'],
+      [/basketball/, 'basketball'],
+      [/badminton/, 'badminton'],
+      [/table tennis|ping/, 'tableTennis'],
+      [/\bpool\b/, 'pool'],
+      [/snooker/, 'snooker'],
+    ]
+    const key = named.find(([re]) => re.test(q))?.[1]
+    const row = key ? capacityOf(key) : undefined
+    return row
+      ? {
+          text: `${row.label}: ${row.text}. This is a reference figure, not a live headcount${row.per === 'unit' ? ' (counted per court or table)' : ''}.`,
+          source: CAPACITY_SOURCE,
+          link: { to: '/services', label: 'See every capacity' },
+        }
+      : {
+          text: `Capacities: ${FACILITY_CAPACITY.map((c) => `${c.label} ${c.text}`).join('; ')}.`,
+          source: CAPACITY_SOURCE,
+          link: { to: '/services', label: 'See every capacity' },
+        }
+  }
   if (has(q, /find a time|meeting time|group (time|meeting)|schedule a meeting/))
     return {
       text: 'I can’t pick a time for you. Find a time compares everyone’s recorded schedules and shows up to three real options, then you review and confirm.',

@@ -1,7 +1,7 @@
 import { useServices } from '@/app/services'
 import { ProcessTimeTax } from '../sources/process-time-tax'
 import { FlaskConical } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { Field, inputClass } from '@/components/form-kit'
 import { cn } from '@/lib/utils'
@@ -72,15 +72,25 @@ export function SubNav({
   items: { id: string; label: string; to: string }[]
   current: string
 }) {
+  const ref = useRef<HTMLElement>(null)
+  // Long section lists scroll sideways in one row; the current section is brought into view.
+  useEffect(() => {
+    const here = ref.current?.querySelector('[aria-current="page"]')
+    here?.scrollIntoView?.({ inline: 'center', block: 'nearest' })
+  }, [current])
   return (
-    <nav aria-label={label} className="flex flex-wrap gap-1 border-b border-border">
+    <nav
+      ref={ref}
+      aria-label={label}
+      className="flex flex-nowrap gap-0.5 overflow-x-auto border-b border-border [scrollbar-width:thin]"
+    >
       {items.map((i) => (
         <Link
           key={i.id}
           to={i.to}
           aria-current={current === i.id ? 'page' : undefined}
           className={cn(
-            'min-h-11 border-b-4 px-4 py-2.5 text-sm font-medium text-ink',
+            'min-h-11 shrink-0 whitespace-nowrap border-b-4 px-3 py-2.5 text-sm font-medium text-ink',
             current === i.id ? 'border-coffee font-semibold' : 'border-transparent hover:bg-mist',
           )}
         >

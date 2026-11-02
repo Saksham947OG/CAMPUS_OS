@@ -448,7 +448,8 @@ export function FindATimePage() {
                 <span>
                   <strong>{r.displayName}</strong> · {r.kindLabel}
                   <span className="block text-xs text-ink-muted">
-                    {statusText(s).label} · Capacity {r.capacity ?? 'not provided'}
+                    {statusText(s).label} ·{' '}
+                    {r.capacity ? `Up to ${r.capacity} people` : 'Capacity not provided'}
                     {groupSize ? ' (unverified for your group size)' : ''} ·{' '}
                     {r.bookingMode === 'approval'
                       ? 'needs a (simulated) review'

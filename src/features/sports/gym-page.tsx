@@ -56,22 +56,19 @@ export function GymPage() {
             : ''}
           .
         </p>
-        <p className="mt-1 text-xs text-ink-muted">
-          Self-reported and simulated figures cover only personas, so they are not a live or
-          verified headcount. Current occupancy is not known.
-        </p>
+        {gym?.referenceCapacity ? (
+          <p className="mt-1">
+            <strong>Capacity:</strong> {gym.referenceCapacityApproximate ? 'about ' : ''}
+            {gym.referenceCapacity} people at a time (owner-supplied); each 30-minute slot holds up
+            to {gym.slotCapacity ?? 1} reservations on this device.
+          </p>
+        ) : null}
         <p className="mt-2 text-xs text-ink-muted">
-          Hours and session duration were supplied by the project owner. Local reservations hold a
-          slot in this app only; official capacity and booking rules require confirmation.
+          Self-reported and simulated figures are not a live or verified headcount, and current
+          occupancy is not known. Hours and slot length were supplied by the project owner; a
+          reservation holds a place in this app only.
         </p>
       </SectionCard>
-
-      {gym?.referenceCapacity ? (
-        <p className="rounded-md bg-mist p-3 text-sm">
-          Persona reference capacity: {gym.referenceCapacityApproximate ? 'approximately ' : ''}
-          {gym.referenceCapacity} people. This is not a live headcount or a verified booking limit.
-        </p>
-      ) : null}
       <SlotBooker activity="gym" />
 
       <SectionCard id="gym-visit-h" title="My visit (self-reported)">

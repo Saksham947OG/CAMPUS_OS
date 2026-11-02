@@ -12,6 +12,7 @@ import {
   type SportsStore,
   defaultSnookerPolicy,
 } from '@/domain/sports'
+import { GYM_SLOT_PLACES, participantLimit, resourceCapacity } from '@/domain/capacity'
 import { addDays, fixedClock, isoFromMs, todayIn } from '@/lib/time'
 import type { LocalTime } from '@/lib/time'
 
@@ -39,7 +40,8 @@ const base: Policy = {
 /**
  * `demoSportsConfig` (COS-SPORTS-001 §10): illustrative values for a reproducible presentation.
  * They are NOT campus policy. Each activity has its own row; pool is information-only.
- * Gym hours and 30-minute intervals were supplied by the owner; participant limits remain unknown.
+ * Gym hours and 30-minute intervals were supplied by the owner. Participant limits per court, table or room come
+ * from the owner capacity table (withOwnerCapacity), not from here.
  */
 export const demoSportsConfig = (): SportsConfig => ({
   policies: {
@@ -215,7 +217,44 @@ export function exampleReservations(nowMs: number): SportsReservation[] {
   ]
 }
 
+/**
+ * Applies the owner-supplied capacity table (domain/capacity.ts) to a store. It is derived and idempotent, so a
+ * store saved before the table existed is brought up to date without touching reservations or closures.
+ */
+export function withOwnerCapacity(s: SportsStore): SportsStore {
+  const policies = { ...s.config.policies }
+  for (const a of Object.keys(policies) as Activity[]) {
+    const limit = participantLimit(a)
+    if (limit !== undefined && policies[a].participantMax !== limit)
+      policies[a] = { ...policies[a], participantMax: limit }
+  }
+  return {
+    ...s,
+    config: { ...s.config, policies },
+    resources: s.resources.map((r) => {
+      const c = resourceCapacity(r)
+      const { slotCapacity: _drop, ...rest } = r
+      void _drop
+      return {
+        ...rest,
+        label: r.label.replace(/^./, (ch) => ch.toUpperCase()),
+        ...(c
+          ? {
+              referenceCapacity: c.people,
+              ...(c.approximate ? { referenceCapacityApproximate: true } : {}),
+            }
+          : {}),
+        ...(r.activity === 'gym' ? { slotCapacity: GYM_SLOT_PLACES } : {}),
+      }
+    }),
+  }
+}
+
 export function initialSportsStore(nowMs: number, examples = false): SportsStore {
+  return withOwnerCapacity(buildInitialSportsStore(nowMs, examples))
+}
+
+function buildInitialSportsStore(nowMs: number, examples: boolean): SportsStore {
   const nowIso = isoFromMs(nowMs)
   const label = 'Illustrative sample facility (not a real campus facility)'
   const resource = (
@@ -309,7 +348,7 @@ export function normalizeSportsStore(
               : r,
           ),
         }
-  return reconcileLeases(topUp(upgraded, nowMs, examples), nowMs)
+  return reconcileLeases(withOwnerCapacity(topUp(upgraded, nowMs, examples)), nowMs)
 }
 
 function topUp(stored: SportsStore, nowMs: number, examples: boolean): SportsStore {

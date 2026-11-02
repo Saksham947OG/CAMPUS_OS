@@ -17,8 +17,21 @@ import {
 import { Empty, Loading, Pill, SectionCard, SubNav, TripScenario } from '../essentials/ess-common'
 import { SlotBooker } from './slot-booker'
 import { bookingTabs } from './sports-nav'
+import { capacitySentence } from '@/domain/capacity'
 import { useSports } from './sports-hooks'
 import { SportsOps } from './sports-ops'
+
+const CARD_CAPACITY: Record<string, string> = {
+  Gym: 'gym',
+  Badminton: 'badminton',
+  'Table Tennis': 'tableTennis',
+  Pool: 'pool',
+  Snooker: 'snooker',
+  Basketball: 'basketball',
+  Library: 'library',
+  'Music Room': 'musicRoom',
+  Classrooms: 'classroom',
+}
 
 const DEMO_BADGE = <Pill tone="demo">Campus facilities</Pill>
 
@@ -36,6 +49,11 @@ export function BookingsHubPage() {
           {icon} {title}
         </span>
         <span className="text-sm text-ink-muted">{text}</span>
+        {CARD_CAPACITY[title] ? (
+          <span className="mt-auto pt-1 text-xs font-medium text-ink">
+            Capacity · {capacitySentence(CARD_CAPACITY[title]!)}
+          </span>
+        ) : null}
       </Link>
     </li>
   )
@@ -150,7 +168,7 @@ export function BadmintonPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Badminton"
-        description="Reserve a court slot on this devicenstration. A reservation holds a time slot in this app's data; it does not show who is on the court."
+        description="Reserve a court slot on this device. A reservation holds a time slot in this app's data; it does not show who is on the court."
         badge={DEMO_BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="badminton" />

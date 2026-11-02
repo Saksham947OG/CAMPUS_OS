@@ -97,23 +97,19 @@ export function campusSports(): SportsStore {
     label: r.label
       .replace(/^Demo /, '')
       .replace('Demo', '')
-      .trim(),
+      .trim()
+      .replace(/^./, (c) => c.toUpperCase()),
     location: r.activity === 'gym' ? 'Campus gym' : 'Campus facility · location to confirm',
     sourceLabel:
       r.activity === 'gym'
         ? 'Owner-supplied 06:00–22:00 · 30-minute slots'
         : r.activity === 'library'
-          ? 'Owner capacity 140; older chart 130; booking rules illustrative'
+          ? 'Owner capacity 130 · booking rules illustrative'
           : source,
     provenance:
       r.activity === 'gym'
         ? supplied('Owner-supplied gym hours and slot duration')
         : illustrative(source),
-    ...(r.id === 'DEMO-LIBRARY'
-      ? { referenceCapacity: 140 }
-      : r.id === 'DEMO-GYM'
-        ? { referenceCapacity: 20, referenceCapacityApproximate: true }
-        : {}),
   }))
   s.equipment = s.equipment.map((e) => ({
     ...e,

@@ -173,7 +173,7 @@ export function CalendarPage() {
     go({
       date: d,
       event: undefined,
-      panel: isXl ? 'context' : panel === 'details' ? undefined : panel,
+      panel: panel === 'details' ? (isXl ? 'context' : undefined) : panel,
     })
   const clearFilters = () => {
     void cal.update((p) => ({
@@ -196,6 +196,10 @@ export function CalendarPage() {
 
   const activePanel: InspectorPanel = panel ?? (selectedItem || url.event ? 'details' : 'context')
   const sheetOpen = !isXl && panel !== undefined
+  // On wide screens the side panel opens when you pick something (an event, a day) or ask for it, so the
+  // schedule gets the full width by default instead of sharing it with a second copy of the same day.
+  const inspectorVisible = isXl && (panel !== undefined || Boolean(url.event))
+  const closeInspector = () => go({ panel: undefined, event: undefined }, true)
 
   const emptyMessage =
     allItems.length === 0
@@ -339,16 +343,18 @@ export function CalendarPage() {
               variant="ghost"
               className="min-h-11 gap-2"
               onClick={() =>
-                void cal.update((p) => ({ ...p, inspectorCollapsed: !p.inspectorCollapsed }))
+                inspectorVisible
+                  ? closeInspector()
+                  : go({ panel: selectedItem ? 'details' : 'context' }, true)
               }
-              aria-pressed={!prefs.inspectorCollapsed}
+              aria-pressed={inspectorVisible}
             >
-              {prefs.inspectorCollapsed ? (
-                <PanelRightOpen aria-hidden="true" />
-              ) : (
+              {inspectorVisible ? (
                 <PanelRightClose aria-hidden="true" />
+              ) : (
+                <PanelRightOpen aria-hidden="true" />
               )}
-              {prefs.inspectorCollapsed ? 'Show panel' : 'Hide panel'}
+              {inspectorVisible ? 'Hide panel' : 'Details & tasks'}
             </Button>
           </div>
         ) : null}
@@ -550,7 +556,7 @@ export function CalendarPage() {
           ) : null}
         </div>
 
-        {isXl && !prefs.inspectorCollapsed ? (
+        {inspectorVisible ? (
           <aside
             aria-label="Calendar side panel"
             className="sticky top-20 max-h-[calc(100dvh-6rem)] w-[22rem] shrink-0 overflow-y-auto rounded-lg border border-border bg-surface p-4"

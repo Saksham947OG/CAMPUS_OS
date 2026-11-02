@@ -430,3 +430,8 @@ titles to real results. It records what was executed here; it does not certify a
 - All personas receive explicitly illustrative potential-reduction totals where supplied baselines are missing. Conference Hall column 3 rows 5–7 are labelled assumed seats; source-store migration preserves user-created records. Chat entry points now say Ask Campus AI.
 - Passed: typecheck, lint, format check, production build and 744 tests. The production build retains the existing large-chunk warning. In-app browser inspection confirmed animated changing counters, capacity cards and the activity stream in the built app. Command-line Playwright remains unavailable under the previously documented macOS sandbox restriction.
 - No real student tracking was enabled during verification. Campus boundaries and a production shared-presence service are not configured; GPS counters are not verified occupancy or reservable inventory. See `PRESENCE_SETUP.md`.
+
+## Capacity table and Calendar declutter — 2026-11-03
+
+- Added `src/domain/capacity.test.ts` (table rows verbatim, library facility vs cabins, per-unit participant limits), assistant capacity answers, hub/gym capacity text, a gym slot that holds exactly 20 reservations then reads full, classroom capacity 70, and a Calendar side panel that stays closed until a selection and closes again.
+- Fixed wording found in a walkthrough: "on this devicenstration" (four pages), "Available locally schedule", lowercase court and table names, stale "Fictional faculty/clubs" and "arrive later" descriptions, 24-hour exam start times, and a stale "capacity not supplied" note on Classrooms.

@@ -18,6 +18,7 @@ it('requires explicit opt-in, two accurate fixes and clears tracking on checkout
     renderApp('/', { services: makeServices({ sourceData: true }).services })
     await screen.findByRole('heading', { level: 1, name: /Ananya/ })
     expect(watchPosition).not.toHaveBeenCalled()
+    await user.click(screen.getByRole('button', { name: 'Show all places' }))
     await user.click(screen.getByRole('button', { name: 'Real check-in setup' }))
     await user.type(screen.getByLabelText('Latitude'), '30')
     await user.type(screen.getByLabelText('Longitude'), '77')

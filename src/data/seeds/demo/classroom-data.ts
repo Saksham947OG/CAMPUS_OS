@@ -1,6 +1,10 @@
 import type { Provenance } from '@/domain/provenance'
 import type { Blocker, ClassroomStore, Room } from '@/domain/classrooms'
+import { capacityOf } from '@/domain/capacity'
 import { isoFromMs, type LocalTime } from '@/lib/time'
+
+/** The owner-supplied classroom figure: people at a time. It describes the room, not an approval or a seat plan. */
+export const CLASSROOM_CAPACITY = capacityOf('classroom')?.people
 
 const demo = (nowIso: string): Provenance => ({
   dataMode: 'demoSeed',
@@ -13,8 +17,8 @@ const demo = (nowIso: string): Provenance => ({
 /**
  * The starting classroom scenario. The four names are the owner's; everything else is illustrative:
  * which hours the schedule "covers", which classes block which room, and which room needs approval.
- * G12's demo schedule only covers the morning, so its afternoon is UNKNOWN rather than free. No
- * capacity, equipment or approval authority is stated, because none has been supplied.
+ * G12's demo schedule only covers the morning, so its afternoon is UNKNOWN rather than free. The
+ * owner supplied one capacity for classrooms (70). Equipment and approval authority have not been supplied.
  */
 export function initialClassroomStore(nowMs: number): ClassroomStore {
   const nowIso = isoFromMs(nowMs)
@@ -22,6 +26,7 @@ export function initialClassroomStore(nowMs: number): ClassroomStore {
   const src = 'Demonstration room record (not the real room)'
   const room = (r: Omit<Room, 'sourceLabel' | 'provenance'>): Room => ({
     ...r,
+    capacity: CLASSROOM_CAPACITY,
     sourceLabel: src,
     provenance: demo(nowIso),
   })

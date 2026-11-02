@@ -183,6 +183,7 @@ function validateNew(
     resourceId: resource.id,
     active: activeBookings(s),
     maxActivePerOwner: policy.maxActive,
+    capacity: resource.slotCapacity,
     bufferMinutes: policy.bufferMinutes,
     countsTowardLimit: (b) =>
       limitGroupOf(s, activityOf(s, b.resourceId)) === limitGroupOf(s, resource.activity),

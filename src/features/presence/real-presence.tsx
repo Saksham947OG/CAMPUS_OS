@@ -15,7 +15,7 @@ export function RealPresence() {
   const [latitude, setLat] = useState('')
   const [longitude, setLon] = useState('')
   const [radius, setRadius] = useState('50')
-  const [capacity, setCapacity] = useState('140')
+  const [capacity, setCapacity] = useState('130')
   const [message, setMessage] = useState('Location is off. Configure a boundary before opting in.')
   const [tracking, setTracking] = useState(false)
   const [inside, setInside] = useState(false)

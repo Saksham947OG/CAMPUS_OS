@@ -1,3 +1,4 @@
+import { formatTime } from '@/lib/time'
 import type { Exam, SeatAllocation, SharedStore } from '@/domain/shared'
 import type { ProfileData } from '@/domain/records'
 
@@ -44,4 +45,4 @@ export const seatText = (x: Pick<SeatAllocation, 'hall' | 'room' | 'row' | 'colu
     .join(', ')
 
 export const examTimeText = (e: Exam) =>
-  e.startTime ? `starts ${e.startTime}` : 'start time not provided'
+  e.startTime ? `starts ${formatTime(e.startTime)}` : 'start time not provided'

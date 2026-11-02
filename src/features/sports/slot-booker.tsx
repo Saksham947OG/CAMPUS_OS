@@ -38,8 +38,23 @@ function mergeUnits(perUnit: SlotView[][]): SlotView[] {
         : same.every((x) => x.state === 'closed')
           ? 'closed'
           : 'reserved'
-    return { ...slot, state, mine: same.some((x) => x.mine) }
+    return {
+      ...slot,
+      state,
+      mine: same.some((x) => x.mine),
+      taken: same.reduce((n, x) => n + x.taken, 0),
+      places: same.reduce((n, x) => n + x.places, 0),
+    }
   })
+}
+
+/** The short suffix on a slot button: whose it is, how full it is, or why it cannot be chosen. */
+function slotNote(s: SlotView): string {
+  if (s.state === 'past') return ' · past'
+  if (s.state === 'closed') return ' · closed'
+  if (s.mine) return ' · yours'
+  if (s.state === 'reserved') return s.places > 1 ? ' · full' : ' · reserved'
+  return s.places > 1 && s.taken > 0 ? ` · ${s.places - s.taken} left` : ''
 }
 
 const ACCESS_NOTE: Partial<Record<Activity, string>> = {
@@ -78,7 +93,7 @@ function ResourceInfo({ r, activity }: { r: Resource; activity: Activity }) {
       <p className="text-xs text-ink-muted">
         Planning rules for {activityLabel[activity].toLowerCase()}:{' '}
         {p.bookable
-          ? `${p.slotMinutes}-minute slots, up to ${p.horizonDays} days ahead, ${p.maxActive} upcoming at a time, ${p.graceMinutes}-minute grace${p.participantMax ? `, up to ${p.participantMax} participants` : ', participant limit not provided'}.`
+          ? `${p.slotMinutes}-minute slots, up to ${p.horizonDays} days ahead, ${p.maxActive} upcoming at a time, ${p.graceMinutes}-minute grace${p.participantMax ? `, up to ${p.participantMax} participants` : (r.slotCapacity ?? 1) > 1 ? `, up to ${r.slotCapacity} reservations per slot` : ', participant limit not provided'}.`
           : 'booking is not configured.'}
       </p>
     </div>
@@ -279,7 +294,7 @@ export function SlotBooker({ activity }: { activity: Activity }) {
                 variant="outline"
                 className="min-h-11"
                 aria-pressed={slot === keyOf(s)}
-                disabled={s.state !== 'free'}
+                disabled={s.state !== 'free' || s.mine}
                 onClick={() => {
                   setSlot(keyOf(s))
                   setMessage('')
@@ -287,15 +302,7 @@ export function SlotBooker({ activity }: { activity: Activity }) {
               >
                 {formatTime(s.start)}
                 {s.startDate !== date ? ` (${formatDateShort(s.startDate)})` : ''}
-                {s.state === 'reserved'
-                  ? s.mine
-                    ? ' · yours'
-                    : ' · reserved'
-                  : s.state === 'past'
-                    ? ' · past'
-                    : s.state === 'closed'
-                      ? ' · closed'
-                      : ''}
+                {slotNote(s)}
               </Button>
             ))}
           </div>

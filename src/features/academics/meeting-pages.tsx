@@ -34,7 +34,7 @@ export function FacultyDirectoryPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Faculty Connect"
-        description="Fictional faculty profiles with published sample windows. Presence is never shown: nothing here says someone is in their office."
+        description="Faculty names come from supplied documents; office hours and meeting windows are not supplied. Presence is never shown: nothing here says someone is in their office."
         badge={<Pill tone="demo">Local · fictional people</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current="faculty" />

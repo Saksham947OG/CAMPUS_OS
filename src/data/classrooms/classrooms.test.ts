@@ -266,11 +266,11 @@ describe('classroom reservations', () => {
     expect(await e.notes(B)).toHaveLength(0)
   })
 
-  it('the starting scenario names exactly the four rooms and states no capacity or equipment', async () => {
+  it('the starting scenario names exactly the four rooms and carries the owner-supplied capacity and no equipment', async () => {
     const e = setup()
     const s = await e.repo.load()
     expect(s.rooms.map((r) => r.displayName)).toEqual(['CR Conference Hall', 'CR1', 'CR3', 'G12'])
-    expect(s.rooms.every((r) => r.capacity === undefined && r.features === undefined)).toBe(true)
+    expect(s.rooms.every((r) => r.capacity === 70 && r.features === undefined)).toBe(true)
     expect(JSON.stringify(s.rooms)).toMatch(/Demonstration/)
     await e.repo.resetAll()
     expect((await e.repo.load()).reservations).toHaveLength(0)
