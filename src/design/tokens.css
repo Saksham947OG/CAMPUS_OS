@@ -1,0 +1,110 @@
+/*
+ * CampusOS design tokens — single source of truth.
+ * Every foreground/background pair used in the UI is validated by
+ * `npm run check:contrast` (scripts/check-contrast.mjs), which reads the hex
+ * values in this :root block. Change a value here, re-run that script.
+ *
+ * Initial palette comes from COS-HOME-001 §4.2. Values marked "derived" were added in
+ * Phase 0 because the specified tokens alone fail WCAG contrast for some uses.
+ */
+:root {
+  /* ── Brand palette (COS-HOME-001 §4.2) ─────────────────────────── */
+  --canvas: #f7f5f0;
+  --ink: #192b34;
+  --accent-teal: #317c72;
+  --accent-terracotta: #d58a65;
+  --mist: #e9edf3;
+  --surface: #ffffff;
+  --border: #dfe3e3; /* decorative dividers only; never the sole boundary of a control */
+
+  /* ── Derived (Phase 0) ─────────────────────────────────────────── */
+  --ink-muted: #4d5f67; /* secondary text */
+  --border-strong: #7b898c; /* input / control outlines (≥3:1 non-text contrast) */
+  --teal-strong: #25605a; /* teal text on mist / tinted surfaces */
+  --terracotta-text: #a2512c; /* terracotta used as text or icon on light surfaces */
+  --terracotta-tint: #f6e4da; /* soft terracotta fill; pair with --ink */
+  --teal-tint: #dcebe8; /* soft teal fill; pair with --ink */
+  --focus-ring: #317c72;
+  /* Chill Spot café accent (COS-CHILL-001 §2): warm coffee tones inside the shared palette. */
+  --coffee: #6b4a38; /* coffee text / icons on light surfaces */
+  --coffee-tint: #f1e6dd; /* soft coffee fill; pair with --ink */
+
+  /* ── Status (always pair with an icon + label, never colour alone) ── */
+  --status-success: #1d7448;
+  --status-warning: #8a5a00;
+  --status-danger: #b42318;
+  --status-info: #2b5fa8;
+
+  /* ── Event categories (non-text marks; label + icon always accompany) ── */
+  --cat-class: #2f6f9f;
+  --cat-exam: #a8325e;
+  --cat-assignment: #a5640f;
+  --cat-project: #6b52ae;
+  --cat-birthday: #c0447a;
+  --cat-campus: #2e7d5b;
+  --cat-sports: #b8541a;
+  --cat-personal: #317c72;
+  --cat-booking: #5b6c8f;
+  --cat-admin: #6e6a5e;
+
+  /* ── Radii ─────────────────────────────────────────────────────── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* ── Spacing (4px rhythm) ──────────────────────────────────────── */
+  --space-unit: 4px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* ── Component sizing ──────────────────────────────────────────── */
+  --touch-target: 44px;
+  --sidebar-width: 248px;
+  --sidebar-rail-width: 72px;
+  --topbar-height: 64px;
+  --content-max: 1440px;
+
+  /* ── Elevation ─────────────────────────────────────────────────── */
+  --shadow-card: 0 1px 2px rgb(25 43 52 / 0.06), 0 1px 1px rgb(25 43 52 / 0.04);
+  --shadow-overlay: 0 12px 32px rgb(25 43 52 / 0.16), 0 2px 6px rgb(25 43 52 / 0.08);
+
+  /* ── Motion (reduced-motion override below) ────────────────────── */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ── Typography ────────────────────────────────────────────────── */
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, 'Times New Roman', serif;
+
+  /* ── shadcn/ui semantic aliases (mapped onto the tokens above) ──── */
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--accent-teal);
+  --primary-foreground: var(--surface);
+  --secondary: var(--mist);
+  --secondary-foreground: var(--ink);
+  --muted: var(--mist);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--teal-tint);
+  --accent-foreground: var(--ink);
+  --destructive: var(--status-danger);
+  --input: var(--border-strong);
+  --ring: var(--focus-ring);
+  --radius: var(--radius-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-base: 0.01ms;
+  }
+}
