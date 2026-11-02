@@ -24,8 +24,8 @@ it('loads every source-backed service and all three personas without schema erro
   const profiles = await services.profiles.list()
   expect(profiles.map((p) => p.displayName)).toEqual([
     'Ananya Sharma',
-    'Rohan Mehta',
-    'Aanya Sharma',
+    'Abeer Sethi',
+    'Myra Kapoor',
   ])
   for (const profile of campusProfiles) {
     const data = await services.campus.load(profile.id)

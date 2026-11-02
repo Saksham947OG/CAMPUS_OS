@@ -33,7 +33,7 @@ export const campusProfiles: readonly Profile[] = [
   },
   {
     id: 'demo-student-b',
-    displayName: 'Rohan Mehta',
+    displayName: 'Abeer Sethi',
     description: 'Year 2 · Committee organiser · Name illustrative; routine supplied in Profile 2',
     dataMode: 'provided',
     cohortId: 'bms-year-2-b',
@@ -41,7 +41,7 @@ export const campusProfiles: readonly Profile[] = [
   },
   {
     id: 'demo-student-empty',
-    displayName: 'Aanya Sharma',
+    displayName: 'Myra Kapoor',
     description: 'Year 2 · Club planner · Rooms, parcels, laundry and protected focus time',
     dataMode: 'provided',
     cohortId: 'bms-year-2-a',
