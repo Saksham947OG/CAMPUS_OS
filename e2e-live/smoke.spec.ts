@@ -12,7 +12,7 @@ const pages: [string, string][] = [
   ['/bookings', 'Bookings'],
   ['/administration', 'Administration'],
   ['/academics', 'Academics'],
-  ['/academics/courses/bms-ibo', 'IBO'],
+  ['/academics/courses/bms-fms', 'FMS'],
   ['/community', 'Community'],
   ['/community/clubs', 'Clubs & Committees'],
   ['/time-tax', 'Time Tax'],
