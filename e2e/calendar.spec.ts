@@ -89,8 +89,8 @@ test.describe('Calendar behaviour (desktop)', () => {
     await expect(
       page.getByRole('button', { name: /Sample Course A — lecture/ }).first(),
     ).toBeVisible()
-    await page.getByRole('button', { name: /demo profile/i }).click()
-    await page.getByRole('menuitemradio', { name: /Demo Student \(no schedule\)/ }).click()
+    await page.getByRole('button', { name: /persona/i }).click()
+    await page.getByRole('menuitemradio', { name: /Reference Student \(no schedule\)/ }).click()
     await expect(page.getByRole('button', { name: /Sample Course A — lecture/ })).toHaveCount(0)
     // Campus-wide public records remain; the personal schedule does not.
     await expect(

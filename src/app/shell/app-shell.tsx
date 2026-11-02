@@ -28,14 +28,14 @@ function MainContent() {
   const error = useAppStore((s) => s.error)
 
   if (status === 'loading') {
-    return <output className="block text-ink-muted">Loading demo profiles…</output>
+    return <output className="block text-ink-muted">Loading personas…</output>
   }
   if (status === 'error') {
     return (
       <div role="alert" className="rounded-lg border border-border-strong bg-surface p-6">
         <h1 className="font-display text-2xl font-semibold text-ink">CampusOS could not start</h1>
         <p className="mt-2 text-ink-muted">
-          {error ?? 'Something went wrong loading the demo profiles.'}
+          {error ?? 'Something went wrong loading the personas.'}
         </p>
       </div>
     )

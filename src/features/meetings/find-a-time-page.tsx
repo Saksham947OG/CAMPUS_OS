@@ -136,7 +136,7 @@ export function FindATimePage() {
             : {}),
           opId,
         }),
-      'Meeting set in the demo.',
+      'Meeting set on this device.',
     )
     if (r.ok) nav(`/calendar/meetings/${r.value.meeting.id}`)
     else setError(r.error.message)
@@ -155,7 +155,7 @@ export function FindATimePage() {
           requiredIds: parts.filter((p) => p.required).map((p) => p.id),
           candidates: cands.map((c) => ({ date: c.date, start: c.start, end: c.end })),
         }),
-      'Poll opened in the demo.',
+      'Poll opened on this device.',
     )
     if (r.ok) nav(`/calendar/polls/${r.value.id}`)
     else setError(r.error.message)
@@ -281,7 +281,7 @@ export function FindATimePage() {
               ))}
             </ul>
           ) : q.trim() ? (
-            <p className="text-sm text-ink-muted">No demo profile matches that name.</p>
+            <p className="text-sm text-ink-muted">No persona matches that name.</p>
           ) : null}
           <ul className="flex flex-col gap-1 text-sm" aria-label="People">
             <li>
@@ -452,7 +452,7 @@ export function FindATimePage() {
                     {groupSize ? ' (unverified for your group size)' : ''} ·{' '}
                     {r.bookingMode === 'approval'
                       ? 'needs a (simulated) review'
-                      : 'instant demo booking'}
+                      : 'instant local booking'}
                   </span>
                 </span>
                 <Button

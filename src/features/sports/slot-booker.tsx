@@ -48,7 +48,7 @@ const ACCESS_NOTE: Partial<Record<Activity, string>> = {
   library:
     'A demo room reservation: it does not create seats, and nobody has verified the room will be free or open.',
   musicRoom:
-    'A demo reservation: it does not guarantee equipment, and a session running past its slot is not authorised.',
+    'A local reservation: it does not guarantee equipment, and a session running past its slot is not authorised.',
 }
 
 function ResourceInfo({ r, activity }: { r: Resource; activity: Activity }) {
@@ -76,7 +76,7 @@ function ResourceInfo({ r, activity }: { r: Resource; activity: Activity }) {
         {r.sourceLabel} · as of {formatInstant(r.asOf)}
       </p>
       <p className="text-xs text-ink-muted">
-        Demo rules for {activityLabel[activity].toLowerCase()}:{' '}
+        Planning rules for {activityLabel[activity].toLowerCase()}:{' '}
         {p.bookable
           ? `${p.slotMinutes}-minute slots, up to ${p.horizonDays} days ahead, ${p.maxActive} upcoming at a time, ${p.graceMinutes}-minute grace${p.participantMax ? `, up to ${p.participantMax} participants` : ', participant limit not provided'}.`
           : 'booking is not configured.'}
@@ -171,7 +171,7 @@ export function SlotBooker({ activity }: { activity: Activity }) {
           ...(partner.trim() ? { partnerNote: partner.trim() } : {}),
           ...(people ? { participants: Number(people) } : {}),
         }),
-      `Reservation saved in the demo: ${target.label}, ${spanText(chosen)}.`,
+      `Reservation saved on this device: ${target.label}, ${spanText(chosen)}.`,
     )
     setBusy(false)
     if (r.ok) {
@@ -186,7 +186,7 @@ export function SlotBooker({ activity }: { activity: Activity }) {
   const waitlist = async (s: SlotView) => {
     await act(
       () => repo.joinWaitlist(profileId, resource.id, s.startDate, s.start),
-      'Added to the recorded demo waitlist. This is not a reservation.',
+      'Added to the recorded local waitlist. This is not a reservation.',
     )
   }
 
@@ -194,7 +194,7 @@ export function SlotBooker({ activity }: { activity: Activity }) {
     <SectionCard
       id={`book-${activity}`}
       title={`Book a ${resourceNoun[activity]}`}
-      action={<Pill tone="demo">Demo reservation</Pill>}
+      action={<Pill tone="demo">Local reservation</Pill>}
     >
       <div className="grid gap-3 sm:grid-cols-2">
         <Field
@@ -301,8 +301,8 @@ export function SlotBooker({ activity }: { activity: Activity }) {
           </div>
         )}
         <p className="mt-1 text-xs text-ink-muted">
-          “Free” means no recorded booking in this demo data. It does not show whether anyone is
-          physically using the {resourceNoun[activity]}.
+          “Free” means no recorded booking in this reference data. It does not show whether anyone
+          is physically using the {resourceNoun[activity]}.
         </p>
       </fieldset>
 
@@ -318,7 +318,7 @@ export function SlotBooker({ activity }: { activity: Activity }) {
                 className="min-h-11"
                 onClick={() => void waitlist(s)}
               >
-                Join demo waitlist for {formatTime(s.start)}
+                Join local waitlist for {formatTime(s.start)}
               </Button>
             ))}
         </div>
@@ -338,7 +338,7 @@ export function SlotBooker({ activity }: { activity: Activity }) {
           {units ? (
             <div data-testid="unit-status" className="mt-2 rounded-md bg-surface p-2 text-sm">
               <p className="font-medium">
-                {units.reservable} of {units.total} {resourceNoun[activity]}s reservable in demo
+                {units.reservable} of {units.total} {resourceNoun[activity]}s reservable locally
                 schedule
               </p>
               <ul className="mt-1 space-y-0.5">
@@ -349,9 +349,9 @@ export function SlotBooker({ activity }: { activity: Activity }) {
                 ))}
               </ul>
               <p className="mt-1 text-xs text-ink-muted">
-                {units.total} {resourceNoun[activity]}s are listed in the demo data. Maintenance on
-                one changes what can be reserved, not how many exist. This is a recorded schedule,
-                not live availability.
+                {units.total} {resourceNoun[activity]}s are listed in the reference data.
+                Maintenance on one changes what can be reserved, not how many exist. This is a
+                recorded schedule, not live availability.
               </p>
             </div>
           ) : null}
@@ -389,7 +389,7 @@ export function SlotBooker({ activity }: { activity: Activity }) {
               label="Participants (optional)"
               hint={
                 policy.participantMax
-                  ? `Up to ${policy.participantMax} in this demo.`
+                  ? `Up to ${policy.participantMax} on this device.`
                   : 'No participant limit has been provided.'
               }
             >
@@ -406,14 +406,14 @@ export function SlotBooker({ activity }: { activity: Activity }) {
             </Field>
           </div>
           <p className="mt-2 text-xs text-ink-muted">
-            A demo reservation: it gives no rights at a real facility and does not show who will be
+            A local reservation: it gives no rights at a real facility and does not show who will be
             there. Reminders are in-app only.
           </p>
           {ACCESS_NOTE[activity] ? (
             <p className="mt-1 text-xs font-medium text-ink">{ACCESS_NOTE[activity]}</p>
           ) : null}
           <Button className="mt-2 min-h-11" disabled={busy} onClick={() => void confirm()}>
-            Confirm demo reservation
+            Confirm local reservation
           </Button>
         </div>
       ) : null}

@@ -186,7 +186,7 @@ describe('exam seating', () => {
       [2, 'Demo Hall 3'],
       [3, 'Demo Hall 4'],
     ])
-    const mine = (await env.notes(A)).filter((n) => n.title === 'Your exam seating changed (demo)')
+    const mine = (await env.notes(A)).filter((n) => n.title === 'Your exam seating changed (local)')
     expect(mine).toHaveLength(2) // one per distinct version
     expect(mine[0]!.significance).toBe('critical')
     expect(mine[0]!.href).toBe('/academics/exams/exam-1')
@@ -224,7 +224,7 @@ describe('exam seating', () => {
     expect(s.seats).toEqual(before)
     for (const p of [A, B, E])
       expect(
-        (await env.notes(p)).filter((n) => n.title === 'Exam details changed (demo)'),
+        (await env.notes(p)).filter((n) => n.title === 'Exam details changed (local)'),
       ).toHaveLength(1)
   })
 

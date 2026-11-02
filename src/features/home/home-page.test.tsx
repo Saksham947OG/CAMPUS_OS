@@ -16,7 +16,7 @@ describe('Home page', () => {
   it('H-T01: first visit shows greeting, date, default Agenda mode and the core widgets', async () => {
     renderApp('/')
     expect(
-      await screen.findByRole('heading', { level: 1, name: /Good morning, Demo Student A/ }),
+      await screen.findByRole('heading', { level: 1, name: /Good morning, Reference Student A/ }),
     ).toBeInTheDocument()
     expect(screen.getAllByText(/Monday, 2 November 2026/).length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: 'Agenda' })).toHaveAttribute('aria-pressed', 'true')
@@ -145,7 +145,7 @@ describe('Home page', () => {
   it('H-T18: with no personal schedule the widgets show honest empty states', async () => {
     renderApp('/')
     const user = userEvent.setup()
-    await user.click(await screen.findByRole('button', { name: /demo profile/i }))
+    await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
     await user.click(await screen.findByRole('menuitemradio', { name: /no schedule/ }))
     const focus = await widget('Deadline focus')
     await waitFor(() =>
@@ -164,8 +164,8 @@ describe('Home page', () => {
     expect(
       within(await widget('Deadline focus')).getByText('Review sample notes'),
     ).toBeInTheDocument()
-    await user.click(await screen.findByRole('button', { name: /demo profile/i }))
-    await user.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     const focus = await widget('Deadline focus')
     await waitFor(() =>
       expect(within(focus).queryByText('Review sample notes')).not.toBeInTheDocument(),

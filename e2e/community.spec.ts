@@ -54,7 +54,7 @@ test.describe('phone', () => {
     await page.getByLabel('Start').fill('12:00')
     await page.getByLabel('End').fill('12:30')
     await audit(page, 'Club request form (phone)')
-    await page.getByRole('button', { name: 'Record request in demo' }).click()
+    await page.getByRole('button', { name: 'Record request locally' }).click()
     await expect(page.getByRole('heading', { level: 1, name: 'My club requests' })).toBeVisible()
     await expect(page.getByText(/Request recorded \(not sent to anyone\)/)).toBeVisible()
     expect(await noOverflow(page)).toBe(false)
@@ -77,7 +77,7 @@ test.describe('desktop', () => {
     await audit(page, 'Claim page')
 
     await page.goto('/settings')
-    await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+    await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
     await page.goto('/community/lost-found')
     const ops = page.getByTestId('demo-ops')
     await expect(ops).toBeVisible()
@@ -104,7 +104,7 @@ test.describe('desktop', () => {
 
   test('CO-AT-34: a simulated reschedule shows one change history entry', async ({ page }) => {
     await page.goto('/settings')
-    await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+    await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
     await page.goto('/community/sports-events/fixtures/fx-1')
     const ops = page.getByTestId('demo-ops')
     await ops.getByLabel('New date').fill('2030-02-01')

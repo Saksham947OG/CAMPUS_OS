@@ -38,11 +38,11 @@ export type LoadStage = z.infer<typeof loadStageSchema>
 
 export const loadStageLabel: Record<LoadStage, string> = {
   registered: 'Registered by you (not yet confirmed received)',
-  received: 'Receipt recorded (demo provider)',
-  processing: 'Processing (demo provider)',
-  returnedToCampus: 'Returned to campus (demo provider)',
-  readyForCollection: 'Ready for collection (demo provider)',
-  collected: 'Collection recorded (demo provider)',
+  received: 'Receipt recorded (local provider scenario)',
+  processing: 'Processing (local provider scenario)',
+  returnedToCampus: 'Returned to campus (local provider scenario)',
+  readyForCollection: 'Ready for collection (local provider scenario)',
+  collected: 'Collection recorded (local provider scenario)',
 }
 
 export const loadStageChip: Record<LoadStage, string> = {
@@ -134,8 +134,8 @@ export const reservationStateLabel: Record<ReservationState, string> = {
   used: 'Cycle started (self-reported)',
   completed: 'Finished (self-reported)',
   cancelled: 'Cancelled',
-  noShow: 'Marked no-show (demo)',
-  blockedByOutage: 'Affected by an outage (demo)',
+  noShow: 'Marked no-show (local)',
+  blockedByOutage: 'Affected by an outage (local)',
 }
 
 export const reservationSchema = z.object({

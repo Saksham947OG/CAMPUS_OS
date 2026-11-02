@@ -31,7 +31,7 @@ export function initialClassroomStore(nowMs: number): ClassroomStore {
     weekday: number,
     start: string,
     end: string,
-    label = 'Scheduled class (demo)',
+    label = 'Scheduled class (local)',
   ): Blocker => ({
     id,
     roomId,
@@ -82,7 +82,7 @@ export function initialClassroomStore(nowMs: number): ClassroomStore {
         cls(`blk-cr3-${d}`, 'CR3', d, '11:00', '12:00'),
       ]),
       cls('blk-g12-1', 'G12', 1, '08:00', '09:00'),
-      cls('blk-hall-3', 'CR_CONFERENCE_HALL', 3, '14:00', '16:00', 'Scheduled event (demo)'),
+      cls('blk-hall-3', 'CR_CONFERENCE_HALL', 3, '14:00', '16:00', 'Scheduled event (local)'),
     ],
     reservations: [],
   }

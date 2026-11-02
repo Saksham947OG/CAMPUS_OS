@@ -54,7 +54,7 @@ test('SH-AT-19 / SH-AT-22: an exam seating change is critical, private and keeps
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto('/settings')
-  await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+  await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
   await page.goto('/academics/exams')
   const ops = page.getByTestId('demo-ops')
   await ops.getByLabel('Hall').fill('Demo Hall 7')

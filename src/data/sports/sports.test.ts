@@ -140,7 +140,9 @@ describe('booking engine (SP-T05 … SP-T13)', () => {
     expect(r.history.map((h) => h.action)).toEqual(['confirmedDemo', 'disrupted'])
     const blocked = await book(env, B, 'DEMO-COURT-1', '15:00')
     expect(!blocked.ok && blocked.error.message).toMatch(/closed/)
-    const n = (await env.notes(A)).find((x) => x.title === 'Your demo reservation may be affected')!
+    const n = (await env.notes(A)).find(
+      (x) => x.title === 'Your local reservation may be affected',
+    )!
     expect(n.href).toBe(`/bookings/my/${reservation.id}`)
     expect(env.repo.bookingRefs(A)[0]).toMatchObject({ status: 'active' })
     expect(env.repo.bookingRefs(A)[0]!.resource).toMatch(/may be affected/)
@@ -256,7 +258,7 @@ describe('badminton partner, waitlist and no-show (SP-T15 … SP-T20)', () => {
     expect(store.waitlist).toHaveLength(1)
     expect(store.reservations.filter((r) => r.ownerProfileId === B)).toEqual([])
     expect(
-      (await env.notes(B)).filter((x) => x.title === 'Added to recorded demo waitlist'),
+      (await env.notes(B)).filter((x) => x.title === 'Added to recorded local waitlist'),
     ).toHaveLength(1)
     expect((await env.repo.joinWaitlist(A, 'DEMO-COURT-1', TODAY, t('12:00'))).ok).toBe(false) // you hold it
     expect((await env.repo.joinWaitlist(B, 'DEMO-COURT-2', TODAY, t('12:00'))).ok).toBe(false) // free: book instead
@@ -341,7 +343,7 @@ describe('badminton partner, waitlist and no-show (SP-T15 … SP-T20)', () => {
     expect(store.reservations[0]!.state).toBe('noShow')
     expect(store.occupancy).toBeNull() // nothing asserted about the court
     expect(
-      (await env.notes(A)).find((x) => x.title === 'Demo booking released after no-show')!.body,
+      (await env.notes(A)).find((x) => x.title === 'Local booking released after no-show')!.body,
     ).toMatch(/does not mean the resource is physically empty/)
     expect((await env.repo.processNoShow(reservation.id)).ok).toBe(false)
   })
@@ -384,7 +386,7 @@ describe('gym schedule upgrade', () => {
     })
     expect(upgraded.reservations).toEqual(old.reservations)
     expect(upgraded.gymSessions).toEqual(old.gymSessions)
-    // A later demo policy edit is respected once the upgrade has been saved.
+    // A later planning policy edit is respected once the upgrade has been saved.
     upgraded.config.policies.gym.bookable = false
     env.memory.storage.setItem(SPORTS_STORE_KEY, JSON.stringify(upgraded))
     expect((await env.build().load()).config.policies.gym.bookable).toBe(false)

@@ -143,7 +143,7 @@ export interface EssRepositoryOptions {
   clock: Clock
   newId: (prefix: string) => string
   notifications: PreferencesRepository<NotificationsState>
-  /** Every demo profile, for announcements addressed to everyone (a provider visit). */
+  /** Every persona, for announcements addressed to everyone (a provider visit). */
   profileIds: readonly string[]
 }
 
@@ -176,7 +176,7 @@ export function createEssRepository(options: EssRepositoryOptions): EssRepositor
         return {
           id: r.id,
           ownerProfileId: r.ownerProfileId,
-          resource: `${m?.label ?? 'Machine'} (demo reservation)`,
+          resource: `${m?.label ?? 'Machine'} (local reservation)`,
           date: r.date,
           start: r.start,
           end: r.end,

@@ -4,7 +4,7 @@ import { useMeetingState } from '@/app/meetings-store'
 import { useServices } from '@/app/services'
 import { useNow } from '@/hooks/use-now'
 
-/** The signed-in demo profile's view of meetings and polls, with the room records they depend on. */
+/** The signed-in persona's view of meetings and polls, with the room records they depend on. */
 export function useMeetings() {
   const meetings = useMeetingState((s) => s.meetings)
   const status = useMeetingState((s) => s.status)

@@ -1,4 +1,4 @@
-import { FlaskConical } from 'lucide-react'
+import { Database } from 'lucide-react'
 import { Link } from 'react-router'
 
 /**
@@ -8,13 +8,13 @@ import { Link } from 'react-router'
 export function DemoBadge() {
   return (
     <Link
-      to="/settings#data-labels"
-      aria-label="Demo prototype. All data is sample or created on this device. Open data labels."
+      to="/sources"
+      aria-label="Campus data. Supplied sources, planning assumptions and missing data."
       className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-border-strong bg-terracotta-tint px-3 text-xs font-semibold text-ink"
     >
-      <FlaskConical className="size-4" aria-hidden="true" />
+      <Database className="size-4" aria-hidden="true" />
       <span>
-        Demo<span className="hidden sm:inline"> prototype</span>
+        Campus<span className="hidden sm:inline"> data</span>
       </span>
     </Link>
   )

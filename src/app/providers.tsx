@@ -58,7 +58,7 @@ export function AppProviders({ children, services }: { children: ReactNode; serv
     meetingStore,
   ])
 
-  // Keep the data store in step with the active demo profile.
+  // Keep the data store in step with the active persona.
   useEffect(() => {
     const sync = () => {
       const { status, activeProfileId } = store.getState()

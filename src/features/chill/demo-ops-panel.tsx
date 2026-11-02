@@ -265,7 +265,7 @@ export function DemoOpsPanel({ café }: { café: ChillStore }) {
               const c = await confirm({
                 title: 'Reset the café scenario?',
                 description:
-                  'This removes every Chill Spot demo order on this device (yours and simulated walk-ins) and restores the starting queue and counter report. It does not touch your Home, Calendar, tasks or settings.',
+                  'This removes every Chill Spot local order on this device (yours and simulated walk-ins) and restores the starting queue and counter report. It does not touch your Home, Calendar, tasks or settings.',
                 confirmLabel: 'Reset café scenario',
                 danger: true,
               })

@@ -25,11 +25,11 @@ export function MailPage() {
       <PageHeader
         title="Campus Mail"
         description="A simulated mailbox. No real account is connected and nothing is fetched; messages arrive only from the demo lab."
-        badge={<Pill tone="demo">Demo only · simulated mail</Pill>}
+        badge={<Pill tone="demo">Saved on this device · simulated mail</Pill>}
       />
       <p className="text-sm text-ink" data-testid="mail-status">
-        Mailbox: <strong>{alias ?? 'none'}</strong> · Demo only · last sync: not applicable (nothing
-        is synced) · {actionableUnread(all)} unread that need a look
+        Mailbox: <strong>{alias ?? 'none'}</strong> · Saved on this device · last sync: not
+        applicable (nothing is synced) · {actionableUnread(all)} unread that need a look
       </p>
       <p>
         <Link to="/notifications" className="text-sm font-medium text-coffee underline">
@@ -153,7 +153,7 @@ export function MailDetailPage() {
           <div>
             <dt className="font-medium">Source</dt>
             <dd>
-              {e.provenance === 'DEMO_SIMULATED' ? 'Simulated (demo)' : e.provenance} ·{' '}
+              {e.provenance === 'DEMO_SIMULATED' ? 'Simulated (local)' : e.provenance} ·{' '}
               {e.syncState.toLowerCase().replace('_', ' ')}
             </dd>
           </div>
@@ -169,7 +169,7 @@ export function MailDetailPage() {
             {e.attachments.map((a) => (
               <li key={a.name}>
                 {a.name}:{' '}
-                {a.readable ? 'readable' : 'could not be read in this demo; inspect the source'}
+                {a.readable ? 'readable' : 'could not be read on this device; inspect the source'}
               </li>
             ))}
           </ul>

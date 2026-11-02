@@ -18,7 +18,7 @@ export const REPORT_STATUSES = [
   'WONT_FIX',
 ] as const
 export const reportStatusLabel: Record<(typeof REPORT_STATUSES)[number], string> = {
-  RECEIVED: 'Recorded in this demo',
+  RECEIVED: 'Recorded on this device',
   TRIAGED: 'Looked at (simulated)',
   IN_PROGRESS: 'Being worked on (simulated)',
   RESOLVED: 'Marked resolved (simulated)',

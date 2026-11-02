@@ -1,3 +1,5 @@
+import { ProcessTimeTax } from '../sources/process-time-tax'
+import { useServices } from '@/app/services'
 import { ExternalLink, UtensilsCrossed } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router'
@@ -63,9 +65,9 @@ function Feedback({ date }: { date: DateOnly }) {
   const mine = ownFeedback(ess, profileId).slice(0, 5)
   const chosen = mealId || meals[0]?.id || ''
   return (
-    <SectionCard id="fb-h" title="Meal feedback (demo)">
+    <SectionCard id="fb-h" title="Meal feedback (local)">
       <p className="text-ink-muted">
-        Demo feedback: it is stored only in this browser under your demo profile and goes nowhere.
+        Meal feedback: it is stored only in this browser under your persona and goes nowhere.
       </p>
       {meals.length === 0 ? (
         <Empty>
@@ -135,7 +137,7 @@ function Feedback({ date }: { date: DateOnly }) {
           </Field>
           <div className="sm:col-span-3">
             <Button type="submit" className="min-h-11">
-              Save demo feedback
+              Save illustrative feedback
             </Button>
           </div>
         </form>
@@ -190,10 +192,10 @@ function Crowd() {
           <Button
             className="min-h-11"
             onClick={() =>
-              void act(() => repo.setMessOptIn(profileId, true), 'You joined the self-report demo.')
+              void act(() => repo.setMessOptIn(profileId, true), 'You joined self-reporting.')
             }
           >
-            Join the self-report demo
+            Join self-reporting
           </Button>
         ) : (
           <>
@@ -222,13 +224,10 @@ function Crowd() {
               variant="ghost"
               className="min-h-11"
               onClick={() =>
-                void act(
-                  () => repo.setMessOptIn(profileId, false),
-                  'You left the self-report demo.',
-                )
+                void act(() => repo.setMessOptIn(profileId, false), 'You left self-reporting.')
               }
             >
-              Leave demo
+              Leave self-reporting
             </Button>
           </>
         )}
@@ -241,6 +240,7 @@ function Crowd() {
 }
 
 export function MessPage() {
+  const { sourceData } = useServices()
   const { data, status: dataStatus } = useCampusData()
   const { ess, status, showDemoOps, now } = useEss()
   const [date, setDate] = useState<DateOnly | null>(null)
@@ -256,7 +256,7 @@ export function MessPage() {
       <PageHeader
         title="Mess"
         description="Menus and serving windows exactly as supplied. Anything missing stays unknown: no days are filled in and no menu cycle is assumed."
-        badge={<Pill tone="demo">Demo · sample data</Pill>}
+        badge={<Pill tone="demo">Campus data</Pill>}
       />
       <SubNav label="Mess sections" items={messTabs} current="menu" />
 
@@ -350,6 +350,7 @@ export function MessPage() {
       <Crowd />
       <Feedback date={day} />
       {showDemoOps ? <MessOps /> : null}
+      {sourceData ? <ProcessTimeTax service="mess" /> : null}
     </article>
   )
 }

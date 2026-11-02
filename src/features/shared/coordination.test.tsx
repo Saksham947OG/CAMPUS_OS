@@ -17,7 +17,7 @@ describe('Time Tax coordination activity (V3 §11)', () => {
     })
     renderApp('/time-tax', { services })
     const card = within(
-      await screen.findByRole('region', { name: 'Coordination activity in this demo' }),
+      await screen.findByRole('region', { name: 'Coordination activity on this device' }),
     )
     expect(card.getByText('Snooker unit reservations').nextSibling).toHaveTextContent('1')
     expect(card.getByText('Meetings you organised').nextSibling).toHaveTextContent('0')

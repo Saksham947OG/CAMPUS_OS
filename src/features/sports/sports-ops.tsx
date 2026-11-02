@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Field, inputClass } from '@/components/form-kit'
 import { useConfirm } from '@/components/confirm-context'
 import { Button } from '@/components/ui/button'
-import { demoProfiles } from '@/data/seeds/demo/profiles'
+import { campusProfiles as demoProfiles } from '@/data/campus/catalogue'
 import { EQUIPMENT_STATUSES, equipmentStatusLabel, reservationStateLabel } from '@/domain/sports'
 import { offerExpired } from '@/domain/sports-logic'
 import {
@@ -50,7 +50,7 @@ export function SportsOps() {
   const lapsed = sports.waitlist.filter((w) => offerExpired(w, now.ms))
 
   return (
-    <OpsCard id="ops-sports-h" title="Demo Controls: Sports" message={message}>
+    <OpsCard id="ops-sports-h" title="Local Controls: Sports" message={message}>
       <div>
         <h3 className="mb-1 text-sm font-semibold">
           Resources (closure blocks new bookings and flags existing ones)
@@ -111,7 +111,7 @@ export function SportsOps() {
       </div>
 
       <div>
-        <h3 className="mb-1 text-sm font-semibold">Reservations (all demo profiles)</h3>
+        <h3 className="mb-1 text-sm font-semibold">Reservations (all personas)</h3>
         {sports.reservations.length === 0 ? (
           <p className="text-sm text-ink-muted">None yet. Book a slot as a student first.</p>
         ) : null}
@@ -542,7 +542,7 @@ export function SportsOps() {
             const c = await confirm({
               title: 'Reset the Sports demo records?',
               description:
-                'This removes every demo sports booking, waitlist entry, gym self-report and fault note, and restores the sample facilities. Home, Calendar, Chill Spot and Essentials data are not touched.',
+                'This removes every local sports booking, waitlist entry, gym self-report and fault note, and restores the sample facilities. Home, Calendar, Chill Spot and Essentials data are not touched.',
               confirmLabel: 'Reset Sports records',
               danger: true,
             })

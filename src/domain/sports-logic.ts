@@ -191,12 +191,12 @@ function validateNew(
     return fail('That time range is not valid: it must end after it starts.')
   if (refusal === 'past') return fail('That slot has already finished.')
   if (refusal === 'beyondHorizon')
-    return fail(`Bookings open up to ${policy.horizonDays} days ahead in this demo.`)
+    return fail(`Bookings open up to ${policy.horizonDays} days ahead on this device.`)
   if (refusal === 'ownerLimit')
     return fail(
       `This demo allows ${policy.maxActive} upcoming ${policy.maxActive === 1 ? 'booking' : 'bookings'} ${policy.limitGroup ? 'across the space services' : 'for this activity'} at a time. Cancel one first.`,
     )
-  if (refusal === 'conflict') return fail('That slot is already reserved in this demo data.')
+  if (refusal === 'conflict') return fail('That slot is already reserved in this reference data.')
   return { ok: true, resource, end: slot.end, endDate: slot.endDate }
 }
 
@@ -255,7 +255,7 @@ export function reserveSlot(
         reservation.id,
         ev,
         'Reservation saved in CampusOS demo',
-        `${v.resource.label}, ${i.date} ${i.start}. A demo reservation, not a campus booking.`,
+        `${v.resource.label}, ${i.date} ${i.start}. A local reservation, not a campus booking.`,
         bookingPath(reservation.id),
       ),
     ],
@@ -314,7 +314,7 @@ export function studentAct(
         profileId,
         r.id,
         ev,
-        'Your demo booking was cancelled',
+        'Your local booking was cancelled',
         `${labelOf(s, r)} ${r.date} ${r.start}.`,
         bookingPath(r.id),
       ),
@@ -376,7 +376,7 @@ export function processNoShow(
       r.ownerProfileId,
       r.id,
       ev,
-      'Demo booking released after no-show',
+      'Local booking released after no-show',
       'The booking was released. This does not mean the resource is physically empty.',
       bookingPath(r.id),
     ),
@@ -393,7 +393,7 @@ export function closeResource(
 ): Change<number> {
   const res = findResource(s, resourceId)
   if (!res) return fail('That resource was not found.')
-  const text = noteText.trim() || 'Closed in the demo simulator'
+  const text = noteText.trim() || 'Closed on this device simulator'
   const notices: Notice[] = []
   let flagged = 0
   const reservations = s.reservations.map((r) => {
@@ -406,7 +406,7 @@ export function closeResource(
         r.ownerProfileId,
         r.id,
         ev,
-        'Your demo reservation may be affected',
+        'Your local reservation may be affected',
         `${res.label} is closed: ${text}. Nothing was cancelled for you; open the booking for next steps.`,
         bookingPath(r.id),
         'important',
@@ -486,7 +486,7 @@ export function resolveDisruption(
       r.ownerProfileId,
       r.id,
       ev,
-      'Your demo booking was cancelled',
+      'Your local booking was cancelled',
       'It was cancelled because the resource is closed. No payment was involved.',
       bookingPath(r.id),
       'important',
@@ -561,7 +561,7 @@ export function joinWaitlist(
         input.profileId,
         id,
         ev,
-        'Added to recorded demo waitlist',
+        'Added to recorded local waitlist',
         'This is not a reservation. You only get a slot if an offer is made and you accept it.',
         WAITLIST_PATH,
         'optional',
@@ -913,7 +913,7 @@ export function addEquipment(
     facilityId,
     label: name.slice(0, 60),
     status: 'unknown',
-    sourceLabel: 'Entered in the demo simulator (not an inventory)',
+    sourceLabel: 'Entered on this device simulator (not an inventory)',
     asOf: c.nowIso,
     provenance: simulatedProvenance(c.nowIso),
   }
@@ -952,7 +952,7 @@ export function addDemoLoan(
     updatedAt: c.nowIso,
     provenance: simulatedProvenance(
       c.nowIso,
-      'Entered in the demo simulator (not library circulation data)',
+      'Entered on this device simulator (not library circulation data)',
     ),
   }
   return ok(
@@ -1049,7 +1049,7 @@ export function dueLoanNotices(s: SportsStore, nowMs: number, c: Ctx): Change<nu
         l.profileId,
         l.id,
         ev,
-        'Library book due soon (demo)',
+        'Library book due soon (local)',
         `${book?.title ?? 'A demo book'} is due ${l.dueDate}. A date-only due date, so no time is implied. This is a demo record, not library data.`,
         LOANS_PATH,
       ),

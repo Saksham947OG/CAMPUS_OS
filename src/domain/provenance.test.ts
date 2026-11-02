@@ -61,7 +61,7 @@ describe('provenance schema', () => {
   })
 })
 
-describe('demo profiles', () => {
+describe('personas', () => {
   it('are valid, uniquely identified and all labelled demoSeed', () => {
     const ids = new Set(demoProfiles.map((p) => p.id))
     expect(ids.size).toBe(demoProfiles.length)

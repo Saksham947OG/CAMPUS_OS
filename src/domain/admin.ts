@@ -6,7 +6,7 @@ import { dateOnlySchema, localTimeSchema } from './records'
 /**
  * Administration (COS-ADMIN-001): Leave & Out-Time, Facility Complaints, Teaching-Aid reports. One
  * request substrate with typed variants. Leave and tickets keep SEPARATE status sets: a resolved
- * ticket is never an approval. Every decision is a simulated, audited step in the demo and none is
+ * ticket is never an approval. Every decision is a simulated, audited step on this device and none is
  * an institutional permission, gate pass or maintenance action.
  */
 
@@ -78,11 +78,11 @@ export const leaveStatusLabel: Record<LeaveStatus, string> = {
   underReview: 'Under review (simulated)',
   changesRequested: 'Changes requested (simulated)',
   resubmitted: 'Resubmitted to demo',
-  approvedInDemo: 'Approved in demo — NOT A VALID GATE PASS',
-  rejected: 'Rejected in demo',
+  approvedInDemo: 'Approved locally — NOT A VALID GATE PASS',
+  rejected: 'Rejected locally',
   withdrawn: 'Withdrawn',
-  gateDepartureLogged: 'Departure logged in demo',
-  gateReturnLogged: 'Return logged in demo',
+  gateDepartureLogged: 'Departure logged locally',
+  gateReturnLogged: 'Return logged locally',
 }
 
 export const LEAVE_OPEN: readonly LeaveStatus[] = [
@@ -196,7 +196,7 @@ export const ticketStatusLabel: Record<TicketStatus, string> = {
   awaitingParts: 'Awaiting parts (simulated)',
   resolvedInDemo: 'Marked resolved (simulated)',
   reopened: 'Reopened',
-  closedInDemo: 'Closed (demo)',
+  closedInDemo: 'Closed (local)',
   cancelledByReporter: 'Cancelled',
 }
 export const TICKET_OPEN: readonly TicketStatus[] = [
@@ -249,9 +249,9 @@ export const ticketSchema = z.object({
 export type Ticket = z.infer<typeof ticketSchema>
 
 export const adminConfigSchema = z.object({
-  /** Gate actions exist only when this demo policy is on. */
+  /** Gate actions exist only when this planning policy is on. */
   gateEnabled: z.boolean(),
-  /** Default demo policy: a reporter may cancel only until work starts. */
+  /** Default planning policy: a reporter may cancel only until work starts. */
   cancelUntilWorkStarts: z.boolean(),
   /** Demo team labels offered to the simulator. They are not real teams. */
   teams: z.array(z.string().min(1).max(60)).min(1).max(10),

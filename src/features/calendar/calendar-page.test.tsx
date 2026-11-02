@@ -41,7 +41,7 @@ describe('Calendar page', () => {
     const details = await screen.findByRole('article', { name: /Details: Sample Assignment 1/ })
     expect(within(details).getByText(/Due date only \(no time given\)/)).toBeInTheDocument()
     expect(within(details).getByText('Tentative')).toBeInTheDocument()
-    expect(within(details).getByText('Sample data')).toBeInTheDocument()
+    expect(within(details).getByText('Illustrative')).toBeInTheDocument()
   })
 
   it('C-T26: unknown fields read "Not provided" rather than being guessed', async () => {

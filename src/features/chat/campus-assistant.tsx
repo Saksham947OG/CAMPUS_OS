@@ -16,7 +16,7 @@ export const OPEN_ASSISTANT_EVENT = 'campusos:open-assistant'
 /**
  * The CampusOS Assistant (COS-CHAT-001): one bottom-right panel for the whole shell. It is deterministic
  * and local: it applies fixed rules to the active profile's records, makes no network request, uses no
- * key, never claims demo data is live or official, and never takes an action. It answers with a source
+ * key, never claims reference data is live or official, and never takes an action. It answers with a source
  * and a link to the screen that owns the information.
  */
 export function CampusAssistant() {

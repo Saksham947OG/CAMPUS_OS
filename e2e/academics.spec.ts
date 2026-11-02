@@ -54,7 +54,7 @@ test.describe('desktop', () => {
     const select = page.getByLabel('Published sample window')
     await select.focus()
     await select.selectOption({ index: 1 })
-    const submit = page.getByRole('button', { name: 'Record request in demo' })
+    const submit = page.getByRole('button', { name: 'Record request locally' })
     await submit.focus()
     await page.keyboard.press('Enter')
     await expect(
@@ -65,7 +65,7 @@ test.describe('desktop', () => {
     await audit(page, 'Meeting detail')
 
     await page.goto('/settings')
-    await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+    await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
     await page.goto('/academics/faculty/appointments')
     const ops = page.getByTestId('demo-ops')
     await expect(ops).toBeVisible()
@@ -76,7 +76,7 @@ test.describe('desktop', () => {
       .first()
       .click()
     await expect(
-      page.getByText(/Accepted in demo \(not an official appointment\)/).first(),
+      page.getByText(/Accepted locally \(not an official appointment\)/).first(),
     ).toBeVisible()
 
     await page.goto('/calendar?view=agenda')

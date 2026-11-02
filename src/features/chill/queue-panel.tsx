@@ -61,7 +61,7 @@ export function QueuePanel({
         <output className="block mt-3 flex items-start gap-2 rounded-md border border-border-strong bg-surface p-3 text-sm text-ink">
           <PauseCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <span>
-            <strong>Temporarily not taking new requests.</strong> Reason (demo):{' '}
+            <strong>Temporarily not taking new requests.</strong> Reason (local):{' '}
             {snapshot.paused.reason}. Orders already placed continue.
           </span>
         </output>

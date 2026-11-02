@@ -20,7 +20,7 @@ import { bookingTabs } from './sports-nav'
 import { useSports } from './sports-hooks'
 import { SportsOps } from './sports-ops'
 
-const DEMO_BADGE = <Pill tone="demo">Demo · sample facilities</Pill>
+const DEMO_BADGE = <Pill tone="demo">Campus facilities</Pill>
 
 export function BookingsHubPage() {
   const { sports, status, profileId, now } = useSports()
@@ -43,7 +43,7 @@ export function BookingsHubPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Bookings"
-        description="Facility information and demo reservations for the gym, badminton and other sports. Nothing here is a real campus booking, and no hours, counts or rules are real."
+        description="Facility information and local reservations for the gym, badminton and other sports. Hours and reference capacities use supplied information where available; bookings and operational updates are saved on this device."
         badge={DEMO_BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="hub" />
@@ -51,13 +51,13 @@ export function BookingsHubPage() {
         {card(
           '/bookings/gym',
           'Gym',
-          '6 AM–10 PM in 30-minute slots, demo reservations, equipment notices and self-check-in.',
+          '6 AM–10 PM in 30-minute slots, local reservations, equipment notices and self-check-in.',
           <Dumbbell className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
           '/bookings/badminton',
           'Badminton',
-          'Pick a court, date and slot. Optional partner note and a demo waitlist.',
+          'Pick a court, date and slot. Optional partner note and a local waitlist.',
           <Trophy className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
@@ -83,7 +83,7 @@ export function BookingsHubPage() {
         {card(
           '/bookings/library',
           'Library',
-          'Study-room reservations, a self-reported occupancy sample and a labelled demo catalogue.',
+          'Study-room reservations, a self-reported occupancy sample and a labelled illustrative catalogue.',
           <BookOpen className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
@@ -137,7 +137,7 @@ export function BookingsHubPage() {
       </SectionCard>
       <p className="text-xs text-ink-muted">
         Team sign-ups, fixtures and results are a separate, later feature and are not part of this
-        page. Fault reports are local demo notes, not complaint tickets.
+        page. Fault reports are local local notes, not complaint tickets.
       </p>
     </article>
   )
@@ -150,7 +150,7 @@ export function BadmintonPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Badminton"
-        description="Reserve a court slot in this demonstration. A reservation holds a time slot in this app's data; it does not show who is on the court."
+        description="Reserve a court slot on this devicenstration. A reservation holds a time slot in this app's data; it does not show who is on the court."
         badge={DEMO_BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="badminton" />
@@ -219,7 +219,7 @@ export function ResourcePage() {
           Resource not found
         </h1>
         <p className="mt-2 text-ink-muted">
-          That facility does not exist in this demo. Nothing was changed.
+          That facility does not exist on this device. Nothing was changed.
         </p>
         <Button asChild className="mt-4 min-h-11">
           <Link to="/bookings">Back to Bookings</Link>
@@ -258,7 +258,7 @@ export function ResourcePage() {
                 ? 'Closed'
                 : 'Status unknown'}
           </Pill>
-          <Pill tone="demo">Demo · sample facility</Pill>
+          <Pill tone="demo">Campus facility</Pill>
         </div>
         <p className="mt-1 text-sm text-ink-muted">
           {activityLabel[r.activity]} · {r.location}
@@ -279,7 +279,7 @@ export function ResourcePage() {
           <dt className="text-ink-muted">Capacity</dt>
           <dd>{capacityText(sports, r)}</dd>
           <dt className="text-ink-muted">Booking</dt>
-          <dd>{p.bookable ? 'Configured (demo rules)' : 'Not configured'}</dd>
+          <dd>{p.bookable ? 'Configured (planning rules)' : 'Not configured'}</dd>
           {p.bookable ? (
             <>
               <dt className="text-ink-muted">Slot length</dt>

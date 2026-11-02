@@ -15,6 +15,7 @@ afterEach(() => {
 
 const open = (memory: ReturnType<typeof createMemoryStorage>) =>
   createServices({
+    sourceData: false,
     storage: createStorageAdapter({ backend: memory.storage }),
     clock: fixedClock('2026-11-02T04:30:00Z'),
   })

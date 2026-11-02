@@ -2,7 +2,7 @@ import type { MeetingStore } from '@/domain/meetings'
 import type { SportsStore } from '@/domain/sports'
 
 /**
- * Counts of coordination work recorded in THIS browser for one demo profile (COS-V3 §11). These are event
+ * Counts of coordination work recorded in THIS browser for one persona (COS-V3 §11). These are event
  * counts from local demo records. They are not time saved, not measured outcomes and not campus results:
  * an event log alone cannot establish the counterfactual, so no minutes or percentages are derived here.
  */

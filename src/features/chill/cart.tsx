@@ -215,7 +215,7 @@ export function CheckoutSheet({
         }
       >
         <SheetHeader className="p-0 pb-3">
-          <SheetTitle>Review your demo order</SheetTitle>
+          <SheetTitle>Review your local order</SheetTitle>
           <SheetDescription>
             This is a demonstration. Nothing here reaches a real café.
           </SheetDescription>
@@ -254,7 +254,7 @@ export function CheckoutSheet({
           </p>
           {snapshot.paused ? (
             <p className="font-semibold">
-              New requests are paused (demo): {snapshot.paused.reason}.
+              New requests are paused (local): {snapshot.paused.reason}.
             </p>
           ) : null}
         </div>
@@ -284,7 +284,7 @@ export function CheckoutSheet({
             disabled={pending || !validation.canSubmit}
             onClick={() => void submit()}
           >
-            {pending ? 'Placing request…' : 'Place demo order request'}
+            {pending ? 'Placing request…' : 'Place local order request'}
           </Button>
           <Button variant="outline" className="min-h-11" onClick={() => onOpenChange(false)}>
             Back to cart

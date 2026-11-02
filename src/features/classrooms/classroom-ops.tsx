@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Field, inputClass } from '@/components/form-kit'
 import { Button } from '@/components/ui/button'
-import { demoProfiles } from '@/data/seeds/demo/profiles'
+import { campusProfiles as demoProfiles } from '@/data/campus/catalogue'
 import { formatDateShort, isDateOnly, type DateOnly, type LocalTime } from '@/lib/time'
 import { OpsCard, Pill } from '../essentials/ess-common'
 import { useAction } from '../essentials/ess-hooks'
@@ -27,7 +27,7 @@ export function ClassroomOps() {
   return (
     <OpsCard
       id="ops-classrooms-h"
-      title="Demo Operations: classroom reviews and schedule"
+      title="Local Operations: classroom reviews and schedule"
       message={message}
     >
       <h3 className="text-sm font-semibold text-ink">Waiting requests ({pending.length})</h3>

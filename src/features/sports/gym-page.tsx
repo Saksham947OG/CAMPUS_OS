@@ -27,8 +27,8 @@ export function GymPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Gym"
-        description="Gym sessions from 6:00 AM to 10:00 PM in 30-minute intervals, self-check-in and equipment notices. Reservations and occupancy remain local demo data."
-        badge={<Pill tone="demo">Demo · sample facility</Pill>}
+        description="Gym sessions from 6:00 AM to 10:00 PM in 30-minute intervals, self-check-in and equipment notices. Reservations and occupancy are saved on this device."
+        badge={<Pill tone="demo">Campus facility</Pill>}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="gym" />
 
@@ -43,13 +43,13 @@ export function GymPage() {
 
       <SectionCard id="gym-over-h" title="Overview">
         <p>
-          <strong>Published hours:</strong> {v.hours ? `${v.hours} (demo)` : 'Not provided'}
+          <strong>Published hours:</strong> {v.hours ? `${v.hours} (local)` : 'Not provided'}
         </p>
         <p className="mt-1">
           <strong>Occupancy:</strong> {v.snapshot}
         </p>
         <p className="mt-1">
-          <strong>Self-reported demo count:</strong> {v.selfReportedNow}{' '}
+          <strong>Self-reported count:</strong> {v.selfReportedNow}{' '}
           {v.selfReportedNow === 1 ? 'person has' : 'people have'} checked in on this device
           {v.staleForReview
             ? `, plus ${v.staleForReview} older ${v.staleForReview === 1 ? 'session' : 'sessions'} set aside for review`
@@ -57,15 +57,21 @@ export function GymPage() {
           .
         </p>
         <p className="mt-1 text-xs text-ink-muted">
-          Self-reported and simulated figures cover only demo profiles, so they are not a live or
-          verified headcount, and no “x of y” or percentage is shown. Capacity is not provided.
+          Self-reported and simulated figures cover only personas, so they are not a live or
+          verified headcount. Current occupancy is not known.
         </p>
         <p className="mt-2 text-xs text-ink-muted">
-          Hours and session duration were supplied by the project owner. Demo reservations hold a
-          slot in this app only; gym capacity and official booking rules are not provided.
+          Hours and session duration were supplied by the project owner. Local reservations hold a
+          slot in this app only; official capacity and booking rules require confirmation.
         </p>
       </SectionCard>
 
+      {gym?.referenceCapacity ? (
+        <p className="rounded-md bg-mist p-3 text-sm">
+          Persona reference capacity: {gym.referenceCapacityApproximate ? 'approximately ' : ''}
+          {gym.referenceCapacity} people. This is not a live headcount or a verified booking limit.
+        </p>
+      ) : null}
       <SlotBooker activity="gym" />
 
       <SectionCard id="gym-visit-h" title="My visit (self-reported)">
@@ -152,7 +158,7 @@ export function GymPage() {
                   className="min-h-11"
                   onClick={() => setFaultFor(faultFor === e.id ? '' : e.id)}
                 >
-                  Report a fault (demo note)
+                  Report a fault (local note)
                 </Button>
                 {faultFor === e.id ? (
                   <form

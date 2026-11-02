@@ -20,8 +20,8 @@ describe('app shell', () => {
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeInTheDocument()
     expect(screen.getByRole('navigation', { name: 'Main navigation, mobile' })).toBeInTheDocument()
 
-    const badge = screen.getByRole('link', { name: /demo prototype/i })
-    expect(badge).toHaveAttribute('href', '/settings#data-labels')
+    const badge = screen.getByRole('link', { name: /Campus data/i })
+    expect(badge).toHaveAttribute('href', '/sources')
   })
 
   it('makes the skip link the first tab stop', async () => {
@@ -98,17 +98,19 @@ describe('app shell', () => {
   })
 })
 
-describe('demo profiles', () => {
+describe('personas', () => {
   it('switches profile from the menu, persists the choice, and reflects it in Settings', async () => {
     const { services, data } = makeServices()
     const { router } = renderApp('/settings', { services })
     expect(await screen.findByRole('heading', { level: 1, name: 'Settings' })).toBeInTheDocument()
-    expect(screen.getByText('Demo Student A', { selector: 'strong' })).toBeInTheDocument()
+    expect(screen.getByText('Reference Student A', { selector: 'strong' })).toBeInTheDocument()
 
-    await userEvent.click(screen.getByRole('button', { name: /demo profile/i }))
-    await userEvent.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await userEvent.click(screen.getByRole('button', { name: /^Persona:/i }))
+    await userEvent.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
 
-    expect(await screen.findByText('Demo Student B', { selector: 'strong' })).toBeInTheDocument()
+    expect(
+      await screen.findByText('Reference Student B', { selector: 'strong' }),
+    ).toBeInTheDocument()
     expect(JSON.parse(data.get('campusos:app:v1')!)).toMatchObject({
       activeProfileId: 'demo-student-b',
     })
@@ -122,13 +124,15 @@ describe('demo profiles', () => {
     const stored = makeServices({ storage: createStorageAdapter({ backend: memory.storage }) })
     renderApp('/settings', { services: stored.services })
     expect(
-      await screen.findByText('Demo Student (no schedule)', { selector: 'strong' }),
+      await screen.findByText('Reference Student (no schedule)', { selector: 'strong' }),
     ).toBeInTheDocument()
 
     const bad = createMemoryStorage({ 'campusos:app:v1': '{"activeProfileId":"someone-else"}' })
     const fallback = makeServices({ storage: createStorageAdapter({ backend: bad.storage }) })
     renderApp('/settings', { services: fallback.services })
-    expect(await screen.findAllByText('Demo Student A', { selector: 'strong' })).not.toHaveLength(0)
+    expect(
+      await screen.findAllByText('Reference Student A', { selector: 'strong' }),
+    ).not.toHaveLength(0)
   })
 })
 

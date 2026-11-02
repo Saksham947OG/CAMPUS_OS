@@ -78,7 +78,7 @@ export function ClubsPage() {
         </Link>
       </div>
       {rows.length === 0 ? (
-        <Empty>No club matches. Only the sample clubs listed in this demo can be found.</Empty>
+        <Empty>No club matches. Only the sample clubs listed on this device can be found.</Empty>
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
           {rows.map((c) => (
@@ -297,7 +297,7 @@ export function ClubPage() {
           </SectionCard>
           <SectionCard id="cb-req-h" title="Request a conversation">
             <p role="note" className="mb-2 rounded-md bg-mist p-2">
-              This is a local demo request. It has not been sent to any club officer.
+              This is a local local request. It has not been sent to any club officer.
             </p>
             <form
               className="flex flex-col gap-3"
@@ -322,7 +322,7 @@ export function ClubPage() {
                       },
                       key,
                     ),
-                  'Request recorded in the demo.',
+                  'Request recorded on this device.',
                 )
                 if (r.ok) nav('/community/clubs/requests')
                 else setError(r.error.message)
@@ -407,7 +407,7 @@ export function ClubPage() {
                 </p>
               ) : null}
               <Button type="submit" className="min-h-11 self-start">
-                Record request in demo
+                Record request locally
               </Button>
             </form>
           </SectionCard>

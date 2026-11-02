@@ -105,6 +105,7 @@ describe('route registry', () => {
         'parcels',
         'services',
         'settings',
+        'sources',
         'time-tax',
         'time-tax-observations',
         'time-tax-scenarios',

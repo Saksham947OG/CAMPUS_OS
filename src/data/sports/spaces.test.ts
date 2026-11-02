@@ -244,7 +244,7 @@ describe('library (SR-AT-05, SR-AT-07, SR-AT-08, SR-AT-10, SR-AT-11)', () => {
     env.setNow('2026-11-03T03:45:00Z') // 09:15 IST
     expect(await env.repo.checkDue()).toBe(1)
     expect(await env.repo.checkDue()).toBe(0)
-    const n = (await env.notes(A)).filter((x) => x.title === 'Library book due soon (demo)')
+    const n = (await env.notes(A)).filter((x) => x.title === 'Library book due soon (local)')
     expect(n).toHaveLength(1)
     expect(n[0]!.body).toMatch(/date-only due date, so no time is implied/)
     expect(n[0]!.body).toMatch(/not library data/)
@@ -273,7 +273,9 @@ describe('library (SR-AT-05, SR-AT-07, SR-AT-08, SR-AT-10, SR-AT-11)', () => {
   it('SR-AT-09: the catalogue is explicitly fictional and its statuses are snapshots, never live availability', async () => {
     const env = setup()
     const store = await env.repo.load()
-    expect(store.catalogue.every((b) => /Fictional demo catalogue/.test(b.sourceLabel))).toBe(true)
+    expect(
+      store.catalogue.every((b) => /Fictional illustrative catalogue/.test(b.sourceLabel)),
+    ).toBe(true)
     expect(store.catalogue.map((b) => b.status)).toEqual(
       expect.arrayContaining(['availableSnapshot', 'onLoanSnapshot', 'unknown']),
     )
@@ -320,13 +322,13 @@ describe('music room (SR-AT-12 … SR-AT-16)', () => {
       disruptionNote: 'Floor repair',
     })
     const alerts = (await env.notes(A)).filter(
-      (x) => x.title === 'Your demo reservation may be affected',
+      (x) => x.title === 'Your local reservation may be affected',
     ) // SR-AT-25
     expect(alerts).toHaveLength(1)
     expect(alerts[0]!.href).toBe(`/bookings/my/${reservation.id}`)
     await env.ok(env.repo.closeResource('DEMO-MUSIC-1', 'Again')) // closing twice does not repeat the alert
     expect(
-      (await env.notes(A)).filter((x) => x.title === 'Your demo reservation may be affected'),
+      (await env.notes(A)).filter((x) => x.title === 'Your local reservation may be affected'),
     ).toHaveLength(1)
   })
 
@@ -410,7 +412,7 @@ describe('chill zone and midnight (SR-AT-17 … SR-AT-21, SR-AT-34)', () => {
     expect(views[0]).toMatchObject({ start: '19:45', startDate: '2026-11-07' })
     const after = views.find((v) => v.start === '00:15')!
     expect(after).toMatchObject({ startDate: '2026-11-08', endDate: '2026-11-08', end: '00:45' })
-    expect(hoursText(spot.hours)).toBe('7:45 pm–1:45 am (next day) (demo)')
+    expect(hoursText(spot.hours)).toBe('7:45 pm–1:45 am (next day) (local)')
     const { reservation } = await env.ok(
       book(env, A, 'DEMO-CHILL-1', '00:15', '2026-11-08' as DateOnly),
     )

@@ -183,7 +183,7 @@ function NewTicketPage({ kind }: { kind: 'complaint' | 'teachingAid' }) {
           },
           key,
         ),
-      'Ticket recorded in the demo.',
+      'Ticket recorded on this device.',
     )
     setBusy(false)
     if (!r.ok) {
@@ -420,7 +420,7 @@ export function TicketDetailPage() {
           Ticket not found
         </h1>
         <p className="mt-2 text-ink-muted">
-          We could not find that ticket for this demo profile. It may not exist, or it may belong to
+          We could not find that ticket for this persona. It may not exist, or it may belong to
           another profile. Nothing was changed.
         </p>
         <Button asChild className="mt-4 min-h-11">
@@ -642,7 +642,7 @@ export function TicketDetailPage() {
                 onClick={() =>
                   void act(
                     () => repo.ticketAct(t.id, 'acknowledge', 'student', { profileId }),
-                    'Closed in the demo.',
+                    'Closed on this device.',
                   )
                 }
               >

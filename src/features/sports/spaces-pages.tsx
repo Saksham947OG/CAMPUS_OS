@@ -42,7 +42,7 @@ function LibraryHeader({ current, title = 'Library' }: { current: string; title?
     <>
       <PageHeader
         title={title}
-        description="Study-room reservations and a labelled demo catalogue. No real library system is connected, and the hours, rooms and books here are fictional."
+        description="Study-room reservations and a labelled illustrative catalogue. No real library system is connected, and the hours, rooms and books here are fictional."
         badge={BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="library" />
@@ -67,20 +67,20 @@ export function LibraryPage() {
         action={<Pill tone="demo">Demo hours · not supplied by the campus</Pill>}
       >
         <p>
-          <strong>Published hours:</strong> {v.hours ? `${v.hours} (demo)` : 'Hours not supplied'}
+          <strong>Published hours:</strong> {v.hours ? `${v.hours} (local)` : 'Hours not supplied'}
         </p>
         <p className="mt-1">
           <strong>Occupancy:</strong> {v.snapshot}
         </p>
         <p className="mt-1">
-          <strong>Self-reported demo count:</strong> {v.selfReportedNow}{' '}
+          <strong>Self-reported count:</strong> {v.selfReportedNow}{' '}
           {v.selfReportedNow === 1 ? 'person has' : 'people have'} checked in on this device
           {v.staleForReview ? `, plus ${v.staleForReview} older session set aside for review` : ''}.
         </p>
         <p className="mt-1 text-xs text-ink-muted">
-          Occupancy not verified. A self-report or simulated snapshot covers only demo profiles, so
-          it is not a headcount, a room reservation is not attendance, and no check-ins does not
-          mean the library is empty.
+          Occupancy not verified. A self-report or simulated snapshot covers only personas, so it is
+          not a headcount, a room reservation is not attendance, and no check-ins does not mean the
+          library is empty.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           <Button
@@ -127,7 +127,7 @@ export function LibraryPage() {
       <SectionCard id="lib-spaces-h" title="Study spaces">
         <p className="text-ink-muted">
           General reading areas are information only and cannot be reserved. Only the group rooms
-          below can be booked, and only in this demo.
+          below can be booked, and only on this device.
         </p>
         <ul className="mt-2 grid gap-2 sm:grid-cols-2">
           {rooms.map((r) => (
@@ -148,6 +148,12 @@ export function LibraryPage() {
       </SectionCard>
 
       <SlotBooker activity="library" />
+      {sports.resources.find((r) => r.id === LIBRARY_ID)?.referenceCapacity ? (
+        <p className="rounded-md bg-mist p-3 text-sm">
+          Library reference capacity: 130 people, supplied in the persona chart. Current occupancy
+          is not known.
+        </p>
+      ) : null}
       <PersonMinutesScenario id="lib-tt-h" noun="library trips to full or unavailable rooms" />
       {showDemoOps ? <SportsOps /> : null}
     </article>
@@ -166,9 +172,9 @@ export function LibraryBooksPage() {
         role="note"
         className="rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm"
       >
-        <strong>Catalogue not connected.</strong> The titles below are a fictional demo catalogue so
-        you can see how search works. They are not the real library’s books, and no status here is
-        live or guaranteed on the shelf.
+        <strong>Catalogue not connected.</strong> The titles below are a fictional illustrative
+        catalogue so you can see how search works. They are not the real library’s books, and no
+        status here is live or guaranteed on the shelf.
       </p>
       <SectionCard id="books-h" title={`Demo catalogue (${found.length})`}>
         <Field label="Search titles and authors">
@@ -219,8 +225,8 @@ export function LibraryLoansPage() {
         className="rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm"
       >
         <strong>Not connected to a library system.</strong> Loans appear here only if someone enters
-        them in the demo simulator. They are not circulation records, no fines are calculated, and
-        only the simulator can record a return.
+        them on this device simulator. They are not circulation records, no fines are calculated,
+        and only the simulator can record a return.
       </p>
       <SectionCard id="loans-h" title={`My loans (${mine.length})`}>
         {mine.length === 0 ? (
@@ -236,7 +242,7 @@ export function LibraryLoansPage() {
                 </p>
                 <p className="text-sm text-ink-muted">
                   {loan.returnedOn
-                    ? `Return recorded in the demo on ${formatDateShort(loan.returnedOn)}.`
+                    ? `Return recorded on this device on ${formatDateShort(loan.returnedOn)}.`
                     : 'Not recorded as returned. Only the demo simulator can record a return.'}
                 </p>
                 <p className="text-xs text-ink-muted">{loan.provenance.sourceLabel}</p>
@@ -291,7 +297,7 @@ export function MusicRoomPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Music Room"
-        description="Reserve a jam session in this demonstration. A reservation holds a time slot in this app’s data; it does not show who is in the room or what equipment works."
+        description="Reserve a jam session on this devicenstration. A reservation holds a time slot in this app’s data; it does not show who is in the room or what equipment works."
         badge={BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="music" />
@@ -344,7 +350,7 @@ export function ChillZonePage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Chill Zone"
-        description="Coordinate midnight celebration spots in this demonstration. The three spots are illustrative placeholders, and a demo slot is not a campus allocation."
+        description="Coordinate midnight celebration spots on this devicenstration. The three spots are illustrative placeholders, and a demo slot is not a campus allocation."
         badge={BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="chill" />

@@ -1,3 +1,5 @@
+import { useServices } from '@/app/services'
+import { ProcessTimeTax } from '../sources/process-time-tax'
 import { useState } from 'react'
 import { Field, inputClass } from '@/components/form-kit'
 import { PageHeader } from '@/components/page-header'
@@ -45,7 +47,7 @@ function CoordinationActivity() {
   const c = coordinationCounts(meetings, sports, profileId)
   const units = Object.entries(c.unitReservations)
   return (
-    <SectionCard id="tt-coord-h" title="Coordination activity in this demo">
+    <SectionCard id="tt-coord-h" title="Coordination activity on this device">
       <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 text-sm">
         <dt>Meetings you organised</dt>
         <dd>{c.meetingsOrganized}</dd>
@@ -55,7 +57,7 @@ function CoordinationActivity() {
         <dd>{c.pollsCreated}</dd>
         <dt>Polls that became a meeting</dt>
         <dd>{c.pollsFinalizedToMeeting}</dd>
-        <dt>Meetings with a room held in the demo</dt>
+        <dt>Meetings with a room held on this device</dt>
         <dd>{c.meetingsWithRoom}</dd>
         <dt>Stale digital check-ins closed by the app</dt>
         <dd>{c.staleCheckInsClosed}</dd>
@@ -67,16 +69,31 @@ function CoordinationActivity() {
         ))}
       </dl>
       <p className="mt-2 text-xs text-ink-muted">
-        These are counts of records saved in this browser by the active demo profile. They are not
-        time saved, not measured outcomes and not campus results: a log of app events cannot show
-        what would have happened without the app. A real comparison needs timed, comparable tasks
-        with a recorded method and sample.
+        These are counts of records saved in this browser by the active persona. They are not time
+        saved, not measured outcomes and not campus results: a log of app events cannot show what
+        would have happened without the app. A real comparison needs timed, comparable tasks with a
+        recorded method and sample.
       </p>
     </SectionCard>
   )
 }
 
 export function TimeTaxPage() {
+  const { sourceData } = useServices()
+  if (sourceData)
+    return (
+      <article className="flex max-w-5xl flex-col gap-4">
+        <PageHeader
+          title="Time Tax"
+          description="Source-based process analysis, operational activity and your timed observations."
+        />
+        <SubNav label="Time Tax sections" items={tabs} current="overview" />
+        <ProcessTimeTax />
+      </article>
+    )
+  return <LegacyTimeTaxPage />
+}
+function LegacyTimeTaxPage() {
   const { shared, status, profileId } = useShared()
   if (status === 'loading' || !shared) return <Loading />
   const mine = shared.scenarios.filter((s) => s.ownerProfileId === profileId)
@@ -150,6 +167,10 @@ export function TimeTaxPage() {
 }
 
 export function TimeTaxScenariosPage() {
+  return <LegacyTimeTaxScenariosPage />
+}
+function LegacyTimeTaxScenariosPage() {
+  const { sourceData } = useServices()
   const { shared, status, profileId, repo } = useShared()
   const { act, message } = useAction()
   const [serviceId, setServiceId] = useState(presets[0]!.serviceId)
@@ -199,6 +220,7 @@ export function TimeTaxScenariosPage() {
         badge={<Pill tone="warn">Illustrative scenario — not observed</Pill>}
       />
       <SubNav label="Time Tax sections" items={tabs} current="scenarios" />
+      {sourceData ? <ProcessTimeTax compact /> : null}
       <SectionCard id="sc-h" title="Assumptions">
         <Field label="Service">
           {(a) => (
@@ -300,6 +322,21 @@ export function TimeTaxScenariosPage() {
 }
 
 export function TimeTaxObservationsPage() {
+  const { sourceData } = useServices()
+  if (sourceData)
+    return (
+      <article className="flex max-w-5xl flex-col gap-4">
+        <PageHeader
+          title="Time Tax"
+          description="Source-based process analysis, operational activity and your timed observations."
+        />
+        <SubNav label="Time Tax sections" items={tabs} current="overview" />
+        <ProcessTimeTax />
+      </article>
+    )
+  return <LegacyTimeTaxObservationsPage />
+}
+function LegacyTimeTaxObservationsPage() {
   return (
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
@@ -315,8 +352,8 @@ export function TimeTaxObservationsPage() {
         </Empty>
         <p className="mt-3 text-sm">
           To describe a result as field-observed, record the protocol, sample size, units,
-          observation windows, missing-value treatment and date. A demo order’s timestamps are not a
-          student-hour field study.
+          observation windows, missing-value treatment and date. A local order’s timestamps are not
+          a student-hour field study.
         </p>
       </SectionCard>
     </article>

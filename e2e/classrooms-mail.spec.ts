@@ -62,7 +62,7 @@ test.describe('desktop', () => {
     await page.getByLabel('Group name (optional)').fill('Ops project')
     await page.getByRole('button', { name: 'Confirm booking' }).click()
     await expect(page.getByRole('heading', { level: 1, name: 'CR3 booking' })).toBeVisible()
-    await expect(page.getByText('Confirmed (demo)').first()).toBeVisible()
+    await expect(page.getByText('Confirmed (local)').first()).toBeVisible()
     await audit(page, 'Classroom booking')
     await page.getByRole('link', { name: 'View My bookings' }).click()
     await expect(page.getByText(/Classrooms \(1\)/)).toBeVisible()
@@ -86,7 +86,7 @@ test.describe('desktop', () => {
     page,
   }) => {
     await page.goto('/settings')
-    await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+    await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
     await page.goto('/notifications/mail')
     await expect(page.getByText(/Demo only · simulated mail/)).toBeVisible()
     const lab = page.getByTestId('demo-ops')

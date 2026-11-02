@@ -108,7 +108,7 @@ export interface UnitView {
 }
 export interface UnitSummary {
   units: UnitView[]
-  /** Physical inventory the demo data lists. Maintenance never changes this number. */
+  /** Physical inventory the reference data lists. Maintenance never changes this number. */
   total: number
   reservable: number
 }
@@ -147,7 +147,7 @@ export function unitSummary(
 }
 
 export const unitStateLabel: Record<UnitState, string> = {
-  available: 'Available in demo schedule',
+  available: 'Available locally schedule',
   reserved: 'Reserved',
   mine: 'Reserved by you',
   maintenance: 'Maintenance',
@@ -327,7 +327,7 @@ export { policyFor, timeToMinutes }
 export function hoursText(h: Resource['hours']): string {
   if (!h) return 'Not provided'
   const overnight = timeToMinutes(h.close) <= timeToMinutes(h.open)
-  return `${formatTime(h.open)}–${formatTime(h.close)}${overnight ? ' (next day)' : ''} (demo)`
+  return `${formatTime(h.open)}–${formatTime(h.close)}${overnight ? ' (next day)' : ''} (local)`
 }
 
 /** Both dates are always shown when a slot crosses midnight, e.g. "Sat, 14 Nov 11:45 pm → Sun, 15 Nov 12:15 am". */
@@ -359,5 +359,5 @@ export function capacityText(s: SportsStore, r: Resource): string {
   if (!UNIT_COUNTED.includes(r.activity)) return 'Capacity not provided'
   const n = s.resources.filter((x) => x.activity === r.activity).length
   const noun = resourceNoun[r.activity]
-  return `${n} ${noun}${n === 1 ? '' : 's'} listed in the demo fixtures (editable sample data)`
+  return `${n} ${noun}${n === 1 ? '' : 's'} listed on this device fixtures (editable sample data)`
 }

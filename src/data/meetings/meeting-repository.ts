@@ -37,7 +37,7 @@ import { busyOf } from '@/selectors/availability'
 /**
  * The owner of group meetings and polls. Room holds belong to the Classrooms store; this repository
  * coordinates the two, revalidating people and room at confirmation, and undoing the room when the
- * meeting cannot be written. Local demo only: it makes no claim about separate devices.
+ * meeting cannot be written. Local on this device only: it makes no claim about separate devices.
  */
 export const MEETING_STORE_KEY = storageKey({ area: 'meetings', version: 1 })
 type Out<T> = Promise<Result<T>>
@@ -209,7 +209,7 @@ export function createMeetingRepository(o: MeetingRepositoryOptions): MeetingRep
         .map((m) => ({
           id: m.id,
           ownerProfileId: profileId,
-          resource: `Meeting: ${m.title} (demo)`,
+          resource: `Meeting: ${m.title} (local)`,
           date: m.date,
           start: m.start,
           end: m.end,

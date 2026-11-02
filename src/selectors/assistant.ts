@@ -111,12 +111,12 @@ export function answer(raw: string, c: AssistantContext): Answer {
     return next
       ? {
           text: `${next.name} on ${next.date}${next.startTime ? ` at ${next.startTime}` : ' (start time not provided)'}.`,
-          source: 'Exam records (demo)',
+          source: 'Exam records (local)',
           link: { to: `/academics/exams/${next.id}`, label: 'Open the exam' },
         }
       : {
           text: 'No upcoming exam is recorded for your courses.',
-          source: 'Exam records (demo)',
+          source: 'Exam records (local)',
           link: { to: '/academics/exams', label: 'Open exams' },
         }
   }
@@ -164,14 +164,14 @@ export function answer(raw: string, c: AssistantContext): Answer {
     if (!first)
       return {
         text: 'No attendance sessions are recorded for this profile.',
-        source: 'Attendance records (demo)',
+        source: 'Attendance records (local)',
       }
     const p = plan({ attended: first.attended, held: first.held, target: first.target })
     if (!p.ok) return { text: p.reason, source: 'Shared attendance calculator' }
     const after = ((100 * first.attended) / (first.held + 1)).toFixed(1)
     return {
       text: `${first.code}: ${p.value.current?.toFixed(1)}% now against a demo target of ${Math.round(first.target * 100)}%. Missing the next session would make it ${after}%. ${p.value.meetsTarget ? 'It meets the configured target today.' : 'It is below the target today.'} Attendance is not exam eligibility.`,
-      source: 'Shared attendance calculator · demo counts',
+      source: 'Shared attendance calculator · self-reported counts',
       link: { to: '/academics/attendance', label: 'Open Attendance planner' },
     }
   }
@@ -218,25 +218,25 @@ export function answer(raw: string, c: AssistantContext): Answer {
   )
     return {
       text: 'Bookings holds the local demonstration flows for sports, study spaces and classrooms. Availability and confirmations there are not live campus data.',
-      source: 'Bookings (demo)',
+      source: 'Bookings (local)',
       link: { to: '/bookings', label: 'Open Bookings' },
     }
   if (has(q, /laundry|parcel|cafe|café|chill spot|\bservices?\b/))
     return {
       text: 'Campus Services brings together Chill Spot, Laundry, Mess and Parcels. Each uses clearly labelled demo records, not provider or courier integrations.',
-      source: 'Services (demo)',
+      source: 'Services (local)',
       link: { to: '/services', label: 'Open Campus Services' },
     }
   if (has(q, /course|faculty|mentor|academic|professor/))
     return {
       text: 'Academics includes course material, exams, faculty meeting requests, grades and attendance planners and mentorship as local demonstration workflows.',
-      source: 'Academics (demo)',
+      source: 'Academics (local)',
       link: { to: '/academics', label: 'Open Academics' },
     }
   if (has(q, /club|community|lost|found|fixture|committee/))
     return {
       text: 'Community includes demonstration flows for clubs, Lost & Found and sports teams and fixtures.',
-      source: 'Community (demo)',
+      source: 'Community (local)',
       link: { to: '/community', label: 'Open Community' },
     }
   if (has(q, /administration|complaint|report|leave|ticket|track/))

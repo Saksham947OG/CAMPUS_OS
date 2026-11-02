@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { makeServices, renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 const A = 'demo-student-a'
 beforeEach(() => setViewport(1600))
 afterEach(() => clearViewport())
@@ -16,7 +16,7 @@ async function enableOps(
   then: string,
 ) {
   await router.navigate('/settings')
-  await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+  await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
   await router.navigate(then)
 }
 
@@ -41,14 +41,14 @@ describe('Lost & Found', () => {
     const user = userEvent.setup()
     const { router, services } = renderApp('/community/lost-found/new?type=lost')
     await heading('Report something lost')
-    await user.click(screen.getByRole('button', { name: 'Publish in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Publish locally' }))
     expect(await screen.findByRole('alert')).toHaveTextContent(/short title/)
     await user.type(screen.getByLabelText('Title (public)'), 'Grey umbrella')
     const file = new File(['x'], 'pic.gif', { type: 'image/gif' })
     fireEvent.change(screen.getByLabelText(/Picture \(optional\)/), { target: { files: [file] } })
     expect(await screen.findByText(/Only JPEG, PNG or WebP/)).toBeInTheDocument()
     expect(screen.getByLabelText('Title (public)')).toHaveValue('Grey umbrella') // draft kept
-    await user.click(screen.getByRole('button', { name: 'Publish in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Publish locally' }))
     await heading('Grey umbrella')
     expect(
       (await services.community.load()).reports.filter((r) => r.ownerProfileId === A),
@@ -56,10 +56,10 @@ describe('Lost & Found', () => {
     await router.navigate('/community/lost-found/new?type=lost')
     await user.type(await screen.findByLabelText('Title (public)'), 'grey umbrella')
     expect(await screen.findByText(/You already have a similar open report/)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Publish in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Publish locally' }))
     expect(await screen.findByRole('alert')).toHaveTextContent(/similar open report/)
     await user.click(screen.getByRole('checkbox', { name: /different item/ }))
-    await user.click(screen.getByRole('button', { name: 'Publish in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Publish locally' }))
     await heading('grey umbrella')
   })
 
@@ -74,7 +74,7 @@ describe('Lost & Found', () => {
       'Library area',
     )
     await user.type(screen.getByLabelText(/Private identifying details/), 'torn zip')
-    await user.click(screen.getByRole('button', { name: 'Publish in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Publish locally' }))
     await heading('Black rucksack')
     expect(await screen.findByText('Possible match')).toBeInTheDocument()
     expect(screen.getByText(/not proof that it is yours/)).toBeInTheDocument()
@@ -99,8 +99,8 @@ describe('Lost & Found', () => {
     expect(screen.getByText(/not a real security or lost-property decision/)).toBeInTheDocument()
     // Another profile cannot open it.
     await router.navigate('/settings')
-    await user.click(await screen.findByRole('button', { name: /demo profile/i }))
-    await user.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     await router.navigate(`/community/lost-found/claims/${claimId}`)
     await heading('Claim not found')
     expect(screen.getByRole('main').textContent).not.toMatch(/blue keychain/)
@@ -192,13 +192,13 @@ describe('Clubs', () => {
     const user = userEvent.setup()
     const { router, services } = renderApp('/community/clubs/club-quiz?tab=connect')
     await heading('Demo Quiz Club')
-    await user.click(await screen.findByRole('button', { name: 'Record request in demo' }))
+    await user.click(await screen.findByRole('button', { name: 'Record request locally' }))
     expect(await screen.findByRole('alert')).toHaveTextContent(/Propose a date/)
     await user.type(screen.getByLabelText('Preferred date'), '2026-11-04')
     await user.type(screen.getByLabelText('Start'), '12:00')
     await user.type(screen.getByLabelText('End'), '12:30')
     expect(screen.getByText(/has not been sent to any club officer/)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Record request in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Record request locally' }))
     await heading('My club requests')
     expect(await screen.findByText(/Request recorded \(not sent to anyone\)/)).toBeInTheDocument()
     const m = (await services.academics.load()).meetings[0]!
@@ -212,7 +212,7 @@ describe('Clubs', () => {
     const ops = await screen.findByTestId('demo-ops')
     await user.click(within(ops).getByRole('button', { name: 'Accept' }))
     expect(
-      (await screen.findAllByText(/Accepted in demo \(simulated club representative\)/)).length,
+      (await screen.findAllByText(/Accepted locally \(simulated club representative\)/)).length,
     ).toBeGreaterThan(0)
     expect(services.academics.bookingRefs(A)).toHaveLength(1)
     expect(services.academics.bookingRefs(A)[0]).toMatchObject({

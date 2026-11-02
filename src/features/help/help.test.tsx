@@ -21,7 +21,7 @@ describe('Report an issue', () => {
       screen.getByText(/Your grades, attendance, mail and seating are never attached/),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Save report' }))
-    expect((await screen.findAllByText(/Recorded in this demo/)).length).toBeGreaterThan(0)
+    expect((await screen.findAllByText(/Recorded on this device/)).length).toBeGreaterThan(0)
     const s = await services.reports.load()
     expect(s.issues).toHaveLength(1)
     expect(s.issues[0]).toMatchObject({
@@ -32,7 +32,7 @@ describe('Report an issue', () => {
     })
     expect(
       (await services.prefs.notifications.load('demo-student-a')).value.items.some((n) =>
-        /Report recorded \(demo\)/.test(n.title),
+        /Report recorded \(local\)/.test(n.title),
       ),
     ).toBe(true)
     // A repeated submission with the same operation id makes no second report.
@@ -49,7 +49,7 @@ describe('Report an issue', () => {
   it('a simulated reviewer moves the status, and only the owner sees the report', async () => {
     const user = userEvent.setup()
     const { services, router } = renderApp('/settings')
-    await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+    await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
     const r = await services.reports.submit('demo-student-a', {
       category: 'Bug',
       description: 'Broken',
@@ -71,8 +71,8 @@ describe('Report an issue', () => {
       'student',
       'demoReviewer',
     ])
-    await user.click(await screen.findByRole('button', { name: /demo profile/i }))
-    await user.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     await router.navigate('/help/report')
     await heading('Report an issue')
     expect(await screen.findByText('You have not filed a report.')).toBeInTheDocument()

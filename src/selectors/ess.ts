@@ -183,10 +183,10 @@ export function messOccupancy(s: EssStore, nowMs: number) {
     participants: s.messOptIn.length,
     text:
       s.messOptIn.length === 0
-        ? 'No one has joined the self-report demo, so there is no sample to show.'
+        ? 'No one has joined self-reporting, so there is no sample to show.'
         : `${fresh} ${fresh === 1 ? 'person has' : 'people have'} self-reported being in the mess (sample of ${s.messOptIn.length} demo ${s.messOptIn.length === 1 ? 'profile' : 'profiles'}).`,
     caveat:
-      'Self-reported sample from demo profiles only. Not actual occupied seats, not a live count, and capacity is unknown, so no percentage or free-seat number is shown.',
+      'Self-reported sample from personas only. Not actual occupied seats, not a live count, and capacity is unknown, so no percentage or free-seat number is shown.',
   }
 }
 
@@ -292,7 +292,7 @@ export function essActivity(s: EssStore, profileId: string, nowMs: number): Acti
       id: l.id,
       type: 'Laundry load',
       label: l.reference ? `SS Laundry load ${l.reference}` : 'SS Laundry load',
-      status: l.cancelled ? 'Withdrawn' : 'Collection recorded (demo)',
+      status: l.cancelled ? 'Withdrawn' : 'Collection recorded (local)',
       when: `Updated ${formatInstant(l.updatedAt)}`,
       mode: l.provenance.dataMode,
       href: loadPath(l.id),

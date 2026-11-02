@@ -84,7 +84,7 @@ export function LaundryHubPage() {
       <PageHeader
         title="Laundry"
         description="Two different services: SS Laundry (an outside provider you hand clothes to) and the self-service washing machines. A demonstration with sample data."
-        badge={<Pill tone="demo">Demo · sample data</Pill>}
+        badge={<Pill tone="demo">Campus data</Pill>}
       />
       <SubNav label="Laundry sections" items={laundryTabs} current="hub" />
       <div className="grid gap-3 sm:grid-cols-2">
@@ -180,7 +180,7 @@ function RegisterForm() {
       {done ? (
         <output className="mt-3 block rounded-md border border-border-strong bg-coffee-tint p-3 font-medium">
           Registered as <strong>Student reported</strong>. Receipt is only recorded later, by the
-          demo provider simulator.
+          local provider scenario simulator.
         </output>
       ) : null}
       <form
@@ -278,8 +278,8 @@ export function SsLaundryPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="SS Laundry"
-        description="Register your own loads and follow what the demo provider records. Your registration and the provider's records are kept separate."
-        badge={<Pill tone="demo">Demo · sample data</Pill>}
+        description="Register your own loads and follow what the local provider scenario records. Your registration and the provider's records are kept separate."
+        badge={<Pill tone="demo">Campus data</Pill>}
       />
       <SubNav label="Laundry sections" items={laundryTabs} current="ss" />
       <VisitBanner />
@@ -331,7 +331,7 @@ export function LoadDetailPage() {
           Load not found
         </h1>
         <p className="mt-2 text-ink-muted">
-          That load does not exist for this demo profile. Nothing was changed.
+          That load does not exist for this persona. Nothing was changed.
         </p>
         <Button asChild className="mt-4 min-h-11">
           <Link to="/services/laundry/ss">Back to SS Laundry</Link>
@@ -458,7 +458,7 @@ export function LoadDetailPage() {
               </time>
               <span className="font-medium">{h.action}</span>
               <Pill tone={h.actorKind === 'student' ? 'plain' : 'demo'}>
-                {h.actorKind === 'student' ? 'You' : 'Simulated (demo provider)'}
+                {h.actorKind === 'student' ? 'You' : 'Simulated (local provider scenario)'}
               </Pill>
               {h.note ? <span className="text-ink-muted">{h.note}</span> : null}
             </li>
@@ -489,7 +489,7 @@ export function LoadDetailPage() {
         {l.studentReportedCollected && l.stage !== 'collected' ? (
           <p className="text-sm text-ink-muted">
             You reported collecting this. It stays self-reported until a handover is recorded by the
-            demo provider.
+            local provider scenario.
           </p>
         ) : null}
       </div>

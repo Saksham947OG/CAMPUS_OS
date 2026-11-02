@@ -311,7 +311,7 @@ export function ReportPage() {
         )}
       </SectionCard>
       {showOps ? (
-        <OpsCard id="ops-reports-h" title="Demo Operations: report review" message="">
+        <OpsCard id="ops-reports-h" title="Local Operations: report review" message="">
           <ul className="flex flex-col gap-2">
             {(store?.issues ?? []).map((i) => (
               <li key={i.id} className="flex flex-wrap items-center gap-2 text-sm">

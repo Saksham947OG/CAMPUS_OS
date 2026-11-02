@@ -1,5 +1,5 @@
 import type { ZodType } from 'zod'
-import { buildDemoDataset } from '@/data/seeds/demo/campus-data'
+import { type DemoDataset, buildDemoDataset } from '@/data/seeds/demo/campus-data'
 import { storageKey, type StorageAdapter } from '@/data/storage/storage-adapter'
 import type { Profile } from '@/domain/profile'
 import type { Provenance } from '@/domain/provenance'
@@ -77,6 +77,8 @@ export interface CampusDataRepository {
 export interface CampusRepositoryOptions {
   storage: StorageAdapter
   clock: Clock
+  enrolledCourseIds?: (profileId: string) => string[]
+  dataset?: (today: ReturnType<typeof todayIn>) => DemoDataset
   profiles: readonly Profile[]
   /** Id factory for new user records; injected so tests are deterministic. */
   newId: (prefix: string) => string
@@ -145,6 +147,7 @@ function keepValid<T>(
 
 export function createCampusRepository(options: CampusRepositoryOptions): CampusDataRepository {
   const { storage, clock, profiles, newId, extraBookings } = options
+  const dataset = options.dataset ?? buildDemoDataset
   const listeners = new Set<(profileId: string) => void>()
   const notify = (profileId: string) => listeners.forEach((l) => l(profileId))
 
@@ -190,7 +193,7 @@ export function createCampusRepository(options: CampusRepositoryOptions): Campus
     const profile = profileOf(profileId)
     if (!profile) throw new Error(`Unknown profile: ${profileId}`)
     const warnings: string[] = []
-    const seed = buildDemoDataset(todayIn(clock))
+    const seed = dataset(todayIn(clock))
     const { data: user, warnings: userWarnings } = readUser(profileId)
     warnings.push(...userWarnings)
 
@@ -218,6 +221,9 @@ export function createCampusRepository(options: CampusRepositoryOptions): Campus
 
     return {
       profileId,
+      ...(options.enrolledCourseIds
+        ? { enrolledCourseIds: options.enrolledCourseIds(profileId) }
+        : {}),
       courses: keepValid(seed.courses, courseSchema, 'course', warnings),
       events: [...visible(keepValid(seed.events, eventSchema, 'event', warnings)), ...user.events],
       series: [...seedSeries, ...user.series],
@@ -443,10 +449,10 @@ export function createCampusRepository(options: CampusRepositoryOptions): Campus
 
   function readSeedTask(id: string | undefined): PersonalTask | undefined {
     if (!id) return undefined
-    return buildDemoDataset(todayIn(clock)).tasks.find((t) => t.id === id)
+    return dataset(todayIn(clock)).tasks.find((t) => t.id === id)
   }
 
   function readSeedBirthday(id: string): BirthdayReminder | undefined {
-    return buildDemoDataset(todayIn(clock)).birthdays.find((b) => b.id === id)
+    return dataset(todayIn(clock)).birthdays.find((b) => b.id === id)
   }
 }

@@ -102,6 +102,9 @@ export const resourceSchema = z.object({
   bookable: z.boolean().optional(),
   label: z.string().min(1).max(60),
   location: z.string().max(80).optional(),
+  /** Source-reported reference capacity; never treated as measured occupancy or booking capacity. */
+  referenceCapacity: z.number().int().min(1).max(1000).optional(),
+  referenceCapacityApproximate: z.boolean().optional(),
   /** Published opening hours. Null means not supplied. A `close` at or before `open` means the next day. */
   hours: z.object({ open: localTimeSchema, close: localTimeSchema }).nullable(),
   status: z.enum(['open', 'closed', 'unknown']),
@@ -125,12 +128,12 @@ export const reservationStateSchema = z.enum(RESERVATION_STATES)
 export type ReservationState = z.infer<typeof reservationStateSchema>
 
 export const reservationStateLabel: Record<ReservationState, string> = {
-  confirmedDemo: 'Confirmed (demo)',
+  confirmedDemo: 'Confirmed (local)',
   checkedIn: 'Checked in (self-reported)',
   inUse: 'In use',
   completed: 'Finished (self-reported)',
   cancelled: 'Cancelled',
-  noShow: 'Released after no-show (demo)',
+  noShow: 'Released after no-show (local)',
   checkInExpired: 'Check-in expired; physical use unconfirmed',
 }
 
@@ -231,7 +234,7 @@ export const equipmentSchema = z.object({
 })
 export type Equipment = z.infer<typeof equipmentSchema>
 
-/** A local demo note. It is not a ticket in the future complaints module (F12) and starts no repair. */
+/** A local local note. It is not a ticket in the future complaints module (F12) and starts no repair. */
 export const faultReportSchema = z.object({
   id,
   equipmentId: id,
@@ -254,7 +257,7 @@ export const demoOperationSchema = z.object({
 })
 export type DemoOperation = z.infer<typeof demoOperationSchema>
 
-/** A fictional demo catalogue entry. No real library system is connected. */
+/** A fictional illustrative catalogue entry. No real library system is connected. */
 export const bookSchema = z.object({
   id,
   title: z.string().min(1).max(120),

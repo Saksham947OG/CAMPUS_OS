@@ -6,7 +6,7 @@ import { makeServices, renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 import type { LeaveInput, TicketInput } from '@/domain/admin-logic'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 const MON = '2026-11-02' as DateOnly
 const A = 'demo-student-a'
 const B = 'demo-student-b'
@@ -25,7 +25,7 @@ async function enableOps(
   then: string,
 ) {
   await router.navigate('/settings')
-  await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+  await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
   await router.navigate(then)
 }
 
@@ -105,17 +105,17 @@ describe('leave journey (AD-AT-03 … AD-AT-11, AD-AT-34)', () => {
     await heading('New leave request')
     await user.type(screen.getByLabelText('Reason'), 'Family visit')
     await user.click(screen.getByRole('button', { name: 'Review request' }))
-    expect(await screen.findByText('Review your demo request')).toBeInTheDocument()
+    expect(await screen.findByText('Review your local request')).toBeInTheDocument()
     expect(
       screen.getByText(/not received by the university and is not a campus permission/),
     ).toBeInTheDocument()
-    await user.dblClick(screen.getByRole('button', { name: 'Submit demo request' }))
+    await user.dblClick(screen.getByRole('button', { name: 'Submit local request' }))
     await waitFor(async () => expect((await services.admin.load()).leaves).toHaveLength(1))
     expect((await services.admin.load()).leaves).toHaveLength(1)
     await waitFor(() =>
       expect(router.state.location.pathname).toMatch(/^\/administration\/leave\/leave-/),
     )
-    expect(await screen.findByText(/Saved in the demo as leave-/)).toHaveTextContent(
+    expect(await screen.findByText(/Saved on this device as leave-/)).toHaveTextContent(
       'It has not been sent to anyone',
     )
     expect(screen.getByText('Submitted to demo', { selector: 'span' })).toBeInTheDocument()
@@ -140,7 +140,7 @@ describe('leave journey (AD-AT-03 … AD-AT-11, AD-AT-34)', () => {
     expect(await screen.findByRole('alert')).toBeInTheDocument()
   })
 
-  it('AD-AT-06: no simulator or approval control exists until Demo Operations is switched on', async () => {
+  it('AD-AT-06: no simulator or approval control exists until Local Operations is switched on', async () => {
     const user = userEvent.setup()
     const { services, router } = renderApp('/administration')
     await services.admin.submitLeave(A, leave(), `k${++k}`)
@@ -154,7 +154,7 @@ describe('leave journey (AD-AT-03 … AD-AT-11, AD-AT-34)', () => {
     ).not.toBeInTheDocument()
     await enableOps(user, router, '/administration/leave')
     const ops = await screen.findByTestId('demo-ops')
-    expect(ops.textContent).toMatch(/Demo Operations: Administration/)
+    expect(ops.textContent).toMatch(/Local Operations: Administration/)
     expect(ops.textContent).toMatch(/No real person, team or office is involved/)
   })
 
@@ -191,10 +191,10 @@ describe('leave journey (AD-AT-03 … AD-AT-11, AD-AT-34)', () => {
     await router.navigate('/administration/leave')
     const ops2 = await screen.findByTestId('demo-ops')
     await user.click(await within(ops2).findByRole('button', { name: 'Start review' }))
-    await user.click(await within(ops2).findByRole('button', { name: 'Approve in demo' }))
+    await user.click(await within(ops2).findByRole('button', { name: 'Approve locally' }))
     await router.navigate(`/administration/leave/${id}`)
     await heading('Personal request')
-    await many('Approved in demo — NOT A VALID GATE PASS')
+    await many('Approved locally — NOT A VALID GATE PASS')
     expect(screen.getByText(/It is NOT A VALID GATE PASS/)).toBeInTheDocument()
     expect(
       screen.queryByText(/valid campus permission|official permission granted/i),
@@ -227,7 +227,7 @@ describe('leave journey (AD-AT-03 … AD-AT-11, AD-AT-34)', () => {
     await user.click(classBox)
     await user.type(screen.getByLabelText('Reason'), 'Appointment')
     await user.click(screen.getByRole('button', { name: 'Review request' }))
-    await user.click(await screen.findByRole('button', { name: 'Submit demo request' }))
+    await user.click(await screen.findByRole('button', { name: 'Submit local request' }))
     await waitFor(async () => expect((await services.admin.load()).leaves).toHaveLength(1))
     const l = (await services.admin.load()).leaves[0]!
     expect(l.classesMissed).toHaveLength(1)
@@ -248,7 +248,7 @@ describe('leave journey (AD-AT-03 … AD-AT-11, AD-AT-34)', () => {
     renderApp('/administration/leave/new')
     await heading('New leave request')
     expect(
-      screen.getByText(/Do not attach real medical or personal documents to this demo/),
+      screen.getByText(/Do not attach real medical or personal documents to this app/),
     ).toBeInTheDocument()
     await user.upload(
       screen.getByLabelText('Supporting proof (optional)'),
@@ -497,20 +497,22 @@ describe('requests, privacy and integration (AD-AT-27 … AD-AT-33)', () => {
     expect(await screen.findByText(/Under review \(simulated\)/)).toBeInTheDocument()
   })
 
-  it('AD-AT-33: view filters never delete, and Reset demo data clears only through its own confirmed step', async () => {
+  it('AD-AT-33: view filters never delete, and Reset reference data clears only through its own confirmed step', async () => {
     const user = userEvent.setup()
     const { services, router } = renderApp('/administration/requests')
     await services.admin.submitLeave(A, leave(), `k${++k}`)
     await services.admin.submitTicket(A, complaint(), `k${++k}`)
     await router.navigate('/settings')
-    await user.click(await screen.findByRole('button', { name: /Reset demo data/ }))
+    await user.click(await screen.findByRole('button', { name: /Reset reference data/ }))
     expect(
       await screen.findByText(
         /Leave requests, complaints and teaching-aid reports, with their histories/,
       ),
     ).toBeInTheDocument()
     expect((await services.admin.load()).leaves).toHaveLength(1) // not cleared until confirmed
-    await user.click(await screen.findByRole('button', { name: 'Reset demo data', hidden: false }))
+    await user.click(
+      await screen.findByRole('button', { name: 'Reset reference data', hidden: false }),
+    )
     await waitFor(async () => {
       const s = await services.admin.load()
       expect(s.leaves).toHaveLength(0)

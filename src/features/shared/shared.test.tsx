@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { makeServices, renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 const A = 'demo-student-a'
 beforeEach(() => setViewport(1600))
 afterEach(() => clearViewport())
@@ -16,7 +16,7 @@ async function enableOps(
   then: string,
 ) {
   await router.navigate('/settings')
-  await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+  await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
   await router.navigate(then)
 }
 
@@ -36,7 +36,7 @@ describe('notification center', () => {
     await first.services.shared.changeSeat('exam-1', 'demo-student-b', { hall: 'Demo Hall 6' })
     await heading('Notifications')
     const link = await screen.findByRole('link', {
-      name: /Open: Your exam seating changed \(demo\)/,
+      name: /Open: Your exam seating changed \(local\)/,
     })
     expect(screen.getAllByRole('link', { name: /Open: Your exam seating changed/ })).toHaveLength(1) // B's is not here
     expect(screen.getByText(/Exams · Critical/)).toBeInTheDocument()
@@ -58,9 +58,9 @@ describe('notification center', () => {
     await heading('Notifications')
     expect(await screen.findByText(/\(0 unread\)/)).toBeInTheDocument() // read state survived the reload
     await user.click(
-      await screen.findByRole('link', { name: /Open: Your exam seating changed \(demo\)/ }),
+      await screen.findByRole('link', { name: /Open: Your exam seating changed \(local\)/ }),
     )
-    await heading('Sample Course A: mid-term (demo)')
+    await heading('Sample Course A: mid-term (local)')
     expect(link).toBeDefined()
   })
 
@@ -102,22 +102,20 @@ describe('exam pages', () => {
     const user = userEvent.setup()
     renderApp('/academics/exams')
     await heading('Exams')
-    expect(await screen.findByText('Sample Course A: mid-term (demo)')).toBeInTheDocument()
+    expect(await screen.findByText('Sample Course A: mid-term (local)')).toBeInTheDocument()
     expect(screen.getByText('Your seating is available.')).toBeInTheDocument()
-    expect(
-      screen.getAllByText('Seating not provided for this demo profile.').length,
-    ).toBeGreaterThan(0)
+    expect(screen.getAllByText('Seating not provided for this persona.').length).toBeGreaterThan(0)
     expect(screen.getAllByText(/start time not provided/).length).toBeGreaterThan(0)
     expect(screen.getByRole('main').textContent).not.toMatch(/Demo Hall 2|row 1, column 2/) // B's seat
     await user.click(screen.getAllByRole('link', { name: 'View my seating' })[0]!)
-    await heading('Sample Course A: mid-term (demo)')
+    await heading('Sample Course A: mid-term (local)')
     expect(await screen.findByText('Demo Hall 1, row 3, column 5')).toBeInTheDocument()
     expect(screen.getByText(/Not an official allotment/)).toBeInTheDocument()
   })
 
   it('SH-AT-20 / SH-AT-26: a profile without the course gets "not found", and the private seat never leaks through a deep link', async () => {
     const { router } = renderApp('/academics/exams/exam-1')
-    await heading('Sample Course A: mid-term (demo)')
+    await heading('Sample Course A: mid-term (local)')
     await router.navigate('/academics/exams/exam-99')
     expect(await heading('Exam not found')).toBeVisible()
   })

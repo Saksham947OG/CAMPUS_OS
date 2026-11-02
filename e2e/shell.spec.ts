@@ -33,7 +33,7 @@ for (const vp of viewports) {
       test(`${path} renders without horizontal overflow`, async ({ page }) => {
         await page.goto(path)
         await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible()
-        await expect(page.getByRole('link', { name: /demo prototype/i })).toBeVisible()
+        await expect(page.getByRole('link', { name: /campus data/i })).toBeVisible()
         expect(await hasHorizontalOverflow(page)).toBe(false)
       })
     }
@@ -98,7 +98,7 @@ test.describe('desktop navigation (1280px)', () => {
     await expect(main.getByRole('link', { name: /Chill Spot/ })).toBeVisible()
     await expect(main.getByText(/not part of this prototype yet/i)).toBeVisible()
     await page.goto('/settings')
-    await expect(page.getByRole('heading', { name: 'Reset demo data' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Reset reference data' })).toBeVisible()
   })
 
   test('unknown addresses show a not-found page inside the shell', async ({ page }) => {
@@ -109,20 +109,18 @@ test.describe('desktop navigation (1280px)', () => {
     ).toBeVisible()
   })
 
-  test('demo profile choice persists across reload and is visible in Settings', async ({
-    page,
-  }) => {
+  test('persona choice persists across reload and is visible in Settings', async ({ page }) => {
     await page.goto('/settings')
-    await page.getByRole('button', { name: /demo profile/i }).click()
-    await page.getByRole('menuitemradio', { name: /Demo Student B/ }).click()
-    await expect(page.locator('strong', { hasText: 'Demo Student B' })).toBeVisible()
+    await page.getByRole('button', { name: /persona/i }).click()
+    await page.getByRole('menuitemradio', { name: /Reference Student B/ }).click()
+    await expect(page.locator('strong', { hasText: 'Reference Student B' })).toBeVisible()
     await page.reload()
-    await expect(page.locator('strong', { hasText: 'Demo Student B' })).toBeVisible()
+    await expect(page.locator('strong', { hasText: 'Reference Student B' })).toBeVisible()
   })
 
   test('data-label legend is reachable from the demo badge', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('link', { name: /demo prototype/i }).click()
+    await page.getByRole('link', { name: /campus data/i }).click()
     await expect(page).toHaveURL(/\/settings#data-labels$/)
     await expect(page.getByRole('heading', { name: 'What the data labels mean' })).toBeVisible()
     await expect(

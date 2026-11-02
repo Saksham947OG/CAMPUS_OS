@@ -6,7 +6,7 @@ export function statusText(s: SlotStatus): { label: string; detail: string } {
     case 'available':
       return {
         label: 'Available for this slot',
-        detail: 'No conflict in the demo schedule. This does not show the room is empty.',
+        detail: 'No conflict on this device schedule. This does not show the room is empty.',
       }
     case 'booked':
       return {

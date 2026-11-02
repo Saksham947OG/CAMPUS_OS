@@ -1,3 +1,8 @@
+import { createObservationRepository } from '@/data/campus/observations'
+import { campusProfiles, curriculum, courseId } from '@/data/campus/catalogue'
+import { buildCampusDataset } from '@/data/campus/dataset'
+import { campusMenu } from '@/data/campus/menu'
+import { withCampusSources } from '@/data/campus/source-storage'
 import { createReportRepository, type ReportRepository } from '@/data/reports/report-repository'
 import { createMeetingRepository, type MeetingRepository } from '@/data/meetings/meeting-repository'
 import { createMailRepository, type MailRepository } from '@/data/mail/mail-repository'
@@ -39,6 +44,8 @@ import { systemClock, type Clock } from '@/lib/time'
  */
 export interface Services {
   clock: Clock
+  sourceData: boolean
+  observations: ReturnType<typeof createObservationRepository>
   storage: StorageAdapter
   profiles: ProfileRepository
   appState: AppStateRepository
@@ -65,9 +72,14 @@ export function createServices(
   overrides: Partial<Pick<Services, 'clock' | 'storage' | 'newId'>> & {
     /** Presentation fixtures such as the example bookings. Tests that need a clean engine baseline turn this off. */
     demoExamples?: boolean
+    /** Source-backed data is the production default; fixture tests opt out explicitly. */
+    sourceData?: boolean
   } = {},
 ): Services {
-  const storage = overrides.storage ?? createStorageAdapter()
+  const sourceData = overrides.sourceData ?? true
+  const baseStorage = overrides.storage ?? createStorageAdapter()
+  const storage = sourceData ? withCampusSources(baseStorage) : baseStorage
+  const profiles = sourceData ? campusProfiles : demoProfiles
   const clock = overrides.clock ?? systemClock
   const newId = overrides.newId ?? randomId
   const prefs = createPrefsRepositories(storage)
@@ -76,14 +88,14 @@ export function createServices(
     clock,
     newId,
     notifications: prefs.notifications,
-    profileIds: demoProfiles.map((p) => p.id),
+    profileIds: profiles.map((p) => p.id),
   })
   const sports = createSportsRepository({
     storage,
     clock,
     newId,
     notifications: prefs.notifications,
-    examples: overrides.demoExamples ?? true,
+    examples: overrides.demoExamples ?? !sourceData,
   })
   const admin = createAdminRepository({ storage, clock, newId, notifications: prefs.notifications })
   const shared = createSharedRepository({
@@ -91,7 +103,7 @@ export function createServices(
     clock,
     newId,
     notifications: prefs.notifications,
-    profileIds: demoProfiles.map((p) => p.id),
+    profileIds: profiles.map((p) => p.id),
   })
   const community = createCommunityRepository({
     storage,
@@ -138,7 +150,14 @@ export function createServices(
   const campus = createCampusRepository({
     storage,
     clock,
-    profiles: demoProfiles,
+    profiles,
+    ...(sourceData
+      ? {
+          dataset: buildCampusDataset,
+          enrolledCourseIds: (profileId: string) =>
+            curriculum[profileId === 'demo-student-a' ? 1 : 3]!.map((c) => courseId(c.code)),
+        }
+      : {}),
     newId,
     extraBookings: (profileId) => [
       ...ess.bookingRefs(profileId),
@@ -151,6 +170,8 @@ export function createServices(
   })
   campusRepo = campus
   return {
+    sourceData,
+    observations: createObservationRepository(storage),
     ess,
     academics,
     community,
@@ -164,8 +185,14 @@ export function createServices(
     clock,
     storage,
     newId,
-    chill: createChillRepository({ storage, clock, newId, notifications: prefs.notifications }),
-    profiles: createSeedProfileRepository(demoProfiles),
+    chill: createChillRepository({
+      storage,
+      clock,
+      newId,
+      notifications: prefs.notifications,
+      ...(sourceData ? { menu: campusMenu } : {}),
+    }),
+    profiles: createSeedProfileRepository(profiles),
     appState: createAppStateRepository(storage),
     prefs,
     campus,

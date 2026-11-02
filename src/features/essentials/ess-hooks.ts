@@ -6,7 +6,7 @@ import { useToast } from '@/components/toast-context'
 import type { Result } from '@/data/repositories/types'
 import { useNow } from '@/hooks/use-now'
 
-/** The signed-in demo profile's view of Campus Essentials. Other profiles' records never come through here. */
+/** The signed-in persona's view of Campus Essentials. Other profiles' records never come through here. */
 export function useEss() {
   const ess = useEssState((s) => s.ess)
   const status = useEssState((s) => s.status)

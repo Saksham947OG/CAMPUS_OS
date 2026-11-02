@@ -460,7 +460,7 @@ export function nextStep(order: ChillOrder): string {
     case 'pending':
       return 'Awaiting café acceptance; this is not a confirmed order. You can cancel the request until it is accepted.'
     case 'queued':
-      return 'Accepted and in the recorded preparation backlog. You cannot cancel it in this demo.'
+      return 'Accepted and in the recorded preparation backlog. You cannot cancel it on this device.'
     case 'preparing':
       return 'Preparation started. No verified pickup time is available.'
     case 'ready':

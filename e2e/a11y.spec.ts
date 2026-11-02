@@ -156,7 +156,7 @@ test.describe('overlays', () => {
     await page.getByRole('button', { name: 'Cancel' }).click()
 
     await page.goto('/settings')
-    await page.getByRole('button', { name: /Reset demo data/ }).click()
+    await page.getByRole('button', { name: /Reset reference data/ }).click()
     await expect(page.getByRole('dialog')).toBeVisible()
     await audit(page, 'Reset confirmation')
   })

@@ -134,7 +134,7 @@ export function MyRequestsPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="My requests"
-        description="Every request you have made in this demo, in one place. Filters only change what is shown."
+        description="Every request you have made on this device, in one place. Filters only change what is shown."
         badge={<Pill tone="demo">Demo · your records only</Pill>}
       />
       <SubNav label="Administration sections" items={adminTabs} current="requests" />
@@ -277,7 +277,7 @@ export function RequestLinkPage() {
         Request not found
       </h1>
       <p className="mt-2 text-ink-muted">
-        We could not find that request for this demo profile. It may not exist, or it may belong to
+        We could not find that request for this persona. It may not exist, or it may belong to
         another profile. Nothing was changed.
       </p>
       <Button asChild className="mt-4 min-h-11">

@@ -86,7 +86,7 @@ export const REPORT_STATUSES = ['draft', 'published', 'returned', 'closed'] as c
 export type ReportStatus = (typeof REPORT_STATUSES)[number]
 export const reportStatusLabel: Record<ReportStatus, string> = {
   draft: 'Draft (only you can see it)',
-  published: 'Published in the demo',
+  published: 'Published on this device',
   returned: 'Returned',
   closed: 'Closed',
 }
@@ -127,8 +127,8 @@ export type ClaimStatus = (typeof CLAIM_STATUSES)[number]
 export const claimStatusLabel: Record<ClaimStatus, string> = {
   requested: 'Requested (not yet reviewed)',
   reviewPending: 'Under demo review',
-  demoApproved: 'Approved in demo (simulated)',
-  demoRejected: 'Not approved in demo',
+  demoApproved: 'Approved locally (simulated)',
+  demoRejected: 'Not approved locally',
   withdrawn: 'Withdrawn',
 }
 export const CLAIM_ACTIVE: readonly ClaimStatus[] = ['requested', 'reviewPending']
@@ -217,8 +217,8 @@ export const teamStatusLabel: Record<TeamStatus, string> = {
   recruiting: 'Recruiting',
   rosterClosed: 'Roster closed',
   submitted: 'Submitted for demo approval',
-  approvedDemo: 'Approved in demo (simulated committee)',
-  declinedDemo: 'Declined in demo',
+  approvedDemo: 'Approved locally (simulated committee)',
+  declinedDemo: 'Declined locally',
   withdrawn: 'Cancelled by captain',
 }
 
@@ -226,7 +226,7 @@ export const teamSchema = z.object({
   id,
   sport: z.enum(SPORTS),
   name: text(40).min(1),
-  /** A demo profile who captains the team, or absent for a fictional captain. */
+  /** A persona who captains the team, or absent for a fictional captain. */
   captainProfileId: id.optional(),
   captainLabel: z.string().min(1).max(40),
   maxRoster: z.number().int().min(2).max(30),
@@ -277,7 +277,7 @@ export const fixtureStatusLabel: Record<FixtureStatus, string> = {
   tentative: 'Tentative',
   rescheduled: 'Rescheduled',
   cancelled: 'Cancelled',
-  completedDemo: 'Marked completed in demo',
+  completedDemo: 'Marked completed locally',
 }
 
 export const fixtureSchema = z.object({

@@ -17,7 +17,7 @@ import { instantMs, type Now } from './now'
 
 /** Courses this profile really has, read off its own schedule and deadlines. Nothing is guessed. */
 export function coursesFor(data: ProfileData): Course[] {
-  const ids = profileCourseIds(data)
+  const ids = new Set([...profileCourseIds(data), ...(data.enrolledCourseIds ?? [])])
   return data.courses.filter((c) => ids.has(c.id)).sort((a, b) => a.code.localeCompare(b.code))
 }
 

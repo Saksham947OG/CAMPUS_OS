@@ -52,7 +52,7 @@ for (const width of [320, 375, 768, 1024, 1440]) {
 
 async function enableOps(page: Page) {
   await page.goto('/settings')
-  await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+  await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
 }
 
 /** Late enough that "now" never makes the slot past, whenever the suite runs. */
@@ -71,7 +71,7 @@ test.describe('phone journey', () => {
     await page.getByRole('button', { name: lateSlot }).first().click()
     await expect(page.getByText(/Review: Demo badminton court 1/)).toBeVisible()
     await audit(page, 'Badminton review (phone)')
-    await page.getByRole('button', { name: 'Confirm demo reservation' }).click()
+    await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
     expect(await noOverflow(page)).toBe(false)
     await page.goto('/bookings/my')
@@ -90,7 +90,7 @@ test.describe('desktop journeys', () => {
     const slot = page.getByRole('button', { name: lateSlot }).first()
     await slot.focus()
     await page.keyboard.press('Enter')
-    const confirm = page.getByRole('button', { name: 'Confirm demo reservation' })
+    const confirm = page.getByRole('button', { name: 'Confirm local reservation' })
     await expect(confirm).toBeVisible()
     await confirm.focus()
     await page.keyboard.press('Enter')
@@ -102,7 +102,7 @@ test.describe('desktop journeys', () => {
   }) => {
     await page.goto('/bookings/badminton')
     await page.getByRole('button', { name: lateSlot }).first().click()
-    await page.getByRole('button', { name: 'Confirm demo reservation' }).click()
+    await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await page.getByRole('link', { name: 'View this booking' }).click()
     await expect(
       page.getByRole('heading', { level: 1, name: 'Demo badminton court 1' }),
@@ -112,7 +112,7 @@ test.describe('desktop journeys', () => {
     await expect(
       page
         .getByRole('region', { name: 'My activity' })
-        .getByText(/Demo badminton court 1 \(demo reservation\)/),
+        .getByText(/Demo badminton court 1 \(local reservation\)/),
     ).toHaveCount(1)
     await page.goto('/bookings/my')
     await page.locator('a[href^="/bookings/my/bk-"], a[href*="/classrooms/bookings/crb-"]').click()
@@ -121,7 +121,7 @@ test.describe('desktop journeys', () => {
     await expect(page.getByText('Cancelled', { exact: true }).first()).toBeVisible()
     await page.goto('/')
     await expect(
-      page.getByRole('region', { name: 'My activity' }).getByText(/Reserved \(demo reservation\)/),
+      page.getByRole('region', { name: 'My activity' }).getByText(/Reserved \(local reservation\)/),
     ).toHaveCount(0)
   })
 
@@ -132,20 +132,20 @@ test.describe('desktop journeys', () => {
     // Student A books; the waitlist is joined by a second profile.
     await page.goto('/bookings/badminton')
     await page.getByRole('button', { name: lateSlot }).first().click()
-    await page.getByRole('button', { name: 'Confirm demo reservation' }).click()
+    await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
-    await page.getByRole('button', { name: /demo profile/i }).click()
-    await page.getByRole('menuitemradio', { name: /Demo Student B/ }).click()
+    await page.getByRole('button', { name: /persona/i }).click()
+    await page.getByRole('menuitemradio', { name: /Reference Student B/ }).click()
     await page
-      .getByRole('button', { name: /Join demo waitlist for/ })
+      .getByRole('button', { name: /Join local waitlist for/ })
       .first()
       .click()
     await page.goto('/bookings/waitlist')
     await expect(page.getByText(/Waiting \(not a reservation\)/)).toBeVisible()
     await expect(page.getByText(/Position 1 of 1 recorded demo entries/)).toBeVisible()
     // Back to A: cancel, then the simulator offers the freed slot.
-    await page.getByRole('button', { name: /demo profile/i }).click()
-    await page.getByRole('menuitemradio', { name: /Demo Student A/ }).click()
+    await page.getByRole('button', { name: /persona/i }).click()
+    await page.getByRole('menuitemradio', { name: /Reference Student A/ }).click()
     await page.goto('/bookings/my')
     await page.locator('a[href^="/bookings/my/bk-"], a[href*="/classrooms/bookings/crb-"]').click()
     await page.getByRole('button', { name: 'Cancel booking' }).click()
@@ -156,8 +156,8 @@ test.describe('desktop journeys', () => {
       .getByRole('button', { name: /^Offer Demo badminton court 1/ })
       .click()
     await audit(page, 'Sports simulator')
-    await page.getByRole('button', { name: /demo profile/i }).click()
-    await page.getByRole('menuitemradio', { name: /Demo Student B/ }).click()
+    await page.getByRole('button', { name: /persona/i }).click()
+    await page.getByRole('menuitemradio', { name: /Reference Student B/ }).click()
     await page.goto('/bookings/waitlist')
     await expect(page.getByText(/not yours until you accept/).first()).toBeVisible()
     await page.getByRole('button', { name: 'Accept offer' }).click()
@@ -170,7 +170,7 @@ test.describe('desktop journeys', () => {
     await enableOps(page)
     await page.goto('/bookings/badminton')
     await page.getByRole('button', { name: lateSlot }).first().click()
-    await page.getByRole('button', { name: 'Confirm demo reservation' }).click()
+    await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
     const ops = page.getByTestId('demo-ops')
     const row = ops.getByRole('listitem').filter({ hasText: 'Demo badminton court 1' })
@@ -180,7 +180,7 @@ test.describe('desktop journeys', () => {
     await expect(page.getByText(/Needs your attention \(1\)/)).toBeVisible()
     await page.locator('a[href^="/bookings/my/bk-"], a[href*="/classrooms/bookings/crb-"]').click()
     await expect(page.getByText(/Nothing was cancelled for you/)).toBeVisible()
-    await expect(page.getByText('Confirmed (demo)').first()).toBeVisible()
+    await expect(page.getByText('Confirmed (local)').first()).toBeVisible()
   })
 
   test('SP-T21 / SP-T22: gym check-in is a self-report with a labelled sample', async ({
@@ -192,7 +192,7 @@ test.describe('desktop journeys', () => {
     await expect(page.getByText(/not a live or verified headcount/)).toBeVisible()
     await audit(page, 'Gym with a self-report')
     await page.getByRole('button', { name: 'Check out' }).click()
-    await expect(page.getByText(/Self-reported demo count:/).locator('..')).toContainText(
+    await expect(page.getByText(/Self-reported self-reported count:/).locator('..')).toContainText(
       '0 people have',
     )
   })
@@ -207,7 +207,7 @@ test.describe('desktop journeys', () => {
     await expect(page.getByRole('link', { name: /Collect parcel details/ })).toBeVisible()
     await page.goto('/bookings/badminton')
     await page.getByRole('button', { name: lateSlot }).first().click()
-    await page.getByRole('button', { name: 'Confirm demo reservation' }).click()
+    await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
     await page.getByRole('button', { name: 'Reset Sports demo records…' }).click()
     await page.getByRole('dialog').getByRole('button', { name: 'Reset Sports records' }).click()

@@ -49,7 +49,7 @@ export function CommunityHubPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Community"
-        description="Lost & Found, clubs and sports teams in one demonstration. Everything here is a sample or your own record, and nobody is messaged."
+        description="Supplied club information and proposed events, with local Lost & Found reports and sports team planning; nobody is messaged."
         badge={<Pill tone="demo">Demo · fictional clubs and teams</Pill>}
       />
       <SubNav label="Community sections" items={communityTabs} current="hub" />

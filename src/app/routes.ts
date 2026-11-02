@@ -1,5 +1,6 @@
 import {
   Bell,
+  Database,
   CalendarCheck,
   CalendarDays,
   ClipboardCheck,
@@ -61,6 +62,17 @@ export interface RouteDef {
 
 export const routes: readonly RouteDef[] = [
   {
+    id: 'sources',
+    path: '/sources',
+    label: 'Data & Sources',
+    icon: Database,
+    status: 'live',
+    slot: 'utility',
+    mobile: 'more',
+    summary: 'Supplied campus documents, persona assumptions and data gaps.',
+    registryRefs: ['COS-DATA-001'],
+  },
+  {
     id: 'home',
     path: '/',
     label: 'Home',
@@ -105,7 +117,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'sidebar',
     mobile: 'more',
-    summary: 'Gym, badminton and other sports: facility information and demo reservations.',
+    summary: 'Gym, badminton and other sports: facility information and local reservations.',
     registryRefs: ['F04', 'F06', 'F07', 'COS-SPORTS-001'],
   },
   {
@@ -178,7 +190,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Track one demo order.',
+    summary: 'Track one local order.',
     registryRefs: ['F01', 'COS-CHILL-001'],
   },
   {
@@ -197,13 +209,14 @@ export const routes: readonly RouteDef[] = [
   },
   {
     id: 'laundry-ss',
+    quickAction: true,
     path: '/services/laundry/ss',
     label: 'SS Laundry',
     icon: Shirt,
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Register your loads and follow what the demo provider records.',
+    summary: 'Register your loads and follow what the local provider scenario records.',
     registryRefs: ['F05', 'COS-ESSENTIALS-001'],
   },
   {
@@ -219,6 +232,7 @@ export const routes: readonly RouteDef[] = [
   },
   {
     id: 'laundry-machines',
+    quickAction: true,
     path: '/services/laundry/machines',
     label: 'Washing machines',
     icon: WashingMachine,
@@ -262,7 +276,7 @@ export const routes: readonly RouteDef[] = [
     mobile: 'more',
     quickAction: true,
     hub: true,
-    summary: 'A private list of parcels the demo desk has logged for you.',
+    summary: 'A private list of parcels the local desk scenario has logged for you.',
     registryRefs: ['F13', 'COS-ESSENTIALS-001'],
   },
   {
@@ -278,6 +292,7 @@ export const routes: readonly RouteDef[] = [
   },
   {
     id: 'bookings-gym',
+    quickAction: true,
     path: '/bookings/gym',
     label: 'Gym',
     icon: Dumbbell,
@@ -295,7 +310,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Reserve a court slot, with an optional partner note and a demo waitlist.',
+    summary: 'Reserve a court slot, with an optional partner note and a local waitlist.',
     registryRefs: ['COS-SPORTS-001'],
   },
   {
@@ -322,13 +337,15 @@ export const routes: readonly RouteDef[] = [
   },
   {
     id: 'bookings-library',
+    quickAction: true,
     path: '/bookings/library',
     label: 'Library',
     icon: Library,
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Study-room reservations, self-reported occupancy and a labelled demo catalogue.',
+    summary:
+      'Study-room reservations, self-reported occupancy and a labelled illustrative catalogue.',
     registryRefs: ['COS-SPACES-001'],
   },
   {
@@ -350,7 +367,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'A fictional demo catalogue. No library system is connected.',
+    summary: 'A fictional illustrative catalogue. No library system is connected.',
     registryRefs: ['COS-SPACES-001'],
   },
   {
@@ -417,7 +434,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Every demo reservation you hold, in one place.',
+    summary: 'Every local reservation you hold, in one place.',
     registryRefs: ['COS-SPORTS-001'],
   },
   {
@@ -494,7 +511,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Report a facility issue in this demo.',
+    summary: 'Report a facility issue on this device.',
     registryRefs: ['COS-ADMIN-001'],
   },
   {
@@ -549,7 +566,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Every demo request you have made, with filters.',
+    summary: 'Every local request you have made, with filters.',
     registryRefs: ['COS-ADMIN-001'],
   },
   {
@@ -653,6 +670,7 @@ export const routes: readonly RouteDef[] = [
   },
   {
     id: 'community-clubs',
+    quickAction: true,
     path: '/community/clubs',
     label: 'Clubs & Committees',
     icon: Users,
@@ -730,6 +748,7 @@ export const routes: readonly RouteDef[] = [
   },
   {
     id: 'academics-courses',
+    quickAction: true,
     path: '/academics/courses',
     label: 'My courses',
     icon: GraduationCap,
@@ -791,7 +810,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Request a faculty meeting in the demo.',
+    summary: 'Request a faculty meeting on this device.',
     registryRefs: ['COS-ACADEMICS-001'],
   },
   {
@@ -857,7 +876,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'hidden',
     mobile: 'more',
-    summary: 'Request an office appointment in the demo.',
+    summary: 'Request an office appointment on this device.',
     registryRefs: ['COS-ACADEMICS-001'],
   },
   {
@@ -1023,8 +1042,7 @@ export const routes: readonly RouteDef[] = [
     status: 'live',
     slot: 'utility',
     mobile: 'more',
-    summary:
-      'Demo profile, data labels and storage status. Reminder and reset controls arrive later.',
+    summary: 'Persona, data labels and storage status. Reminder and reset controls arrive later.',
     registryRefs: ['S34 (IA)'],
   },
 ]

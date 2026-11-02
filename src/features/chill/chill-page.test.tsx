@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { makeServices, renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 beforeEach(() => setViewport(1600))
 afterEach(() => clearViewport())
 
@@ -24,8 +24,8 @@ async function addFirstItem(user: ReturnType<typeof userEvent.setup>) {
 async function placeOrder(user: ReturnType<typeof userEvent.setup>) {
   await addFirstItem(user)
   await user.click(await screen.findByRole('button', { name: 'Review checkout' }))
-  const sheet = await screen.findByRole('dialog', { name: /Review your demo order/ })
-  await user.click(within(sheet).getByRole('button', { name: 'Place demo order request' }))
+  const sheet = await screen.findByRole('dialog', { name: /Review your local order/ })
+  await user.click(within(sheet).getByRole('button', { name: 'Place local order request' }))
 }
 
 describe('Chill Spot entry points', () => {
@@ -46,7 +46,7 @@ describe('Chill Spot entry points', () => {
 
   it('labels the whole page as a demonstration with a sample menu and no invented hours', async () => {
     await open()
-    expect(screen.getByText('Demo · sample menu')).toBeInTheDocument()
+    expect(screen.getByText('Supplied Chill Spot menu')).toBeInTheDocument()
     expect(screen.getAllByText(/Hours not provided/).length).toBeGreaterThan(0)
     expect(screen.getAllByText('Demo · simulated data').length).toBeGreaterThan(0)
     expect(screen.getAllByText(/Counter line/).length).toBeGreaterThan(0)
@@ -71,12 +71,12 @@ describe('Checkout and tracking', () => {
     await open()
     await addFirstItem(user)
     await user.click(await screen.findByRole('button', { name: 'Review checkout' }))
-    const sheet = await screen.findByRole('dialog', { name: /Review your demo order/ })
+    const sheet = await screen.findByRole('dialog', { name: /Review your local order/ })
     expect(within(sheet).getByText(/Pay at Pickup\./)).toBeInTheDocument()
     expect(within(sheet).getByText('Listed item subtotal')).toBeInTheDocument()
     expect(within(sheet).getByText(/does not take or verify payment/)).toBeInTheDocument()
     expect(within(sheet).queryByText(/paid|payment (received|confirmed)/i)).not.toBeInTheDocument()
-    await user.click(within(sheet).getByRole('button', { name: 'Place demo order request' }))
+    await user.click(within(sheet).getByRole('button', { name: 'Place local order request' }))
 
     expect((await screen.findAllByText('Awaiting café acceptance')).length).toBeGreaterThan(0)
     expect(
@@ -137,8 +137,8 @@ describe('Checkout and tracking', () => {
     await screen.findAllByText('Awaiting café acceptance')
     const url = router.state.location.pathname
 
-    await user.click(screen.getByRole('button', { name: /demo profile/i }))
-    await user.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await user.click(screen.getByRole('button', { name: /^Persona:/i }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     await router.navigate(url)
     expect(await screen.findByRole('heading', { level: 1, name: 'Order not found' })).toBeVisible()
     expect(screen.queryByText(/CS-0006/)).not.toBeInTheDocument()
@@ -150,14 +150,14 @@ describe('Checkout and tracking', () => {
   })
 })
 
-describe('Demo Operations and Settings', () => {
+describe('Local Operations and Settings', () => {
   it('CH-AT-20: the simulator is hidden until Settings turns it on, then every step is an explicit click', async () => {
     const user = userEvent.setup()
     const { router } = await open()
     expect(screen.queryByTestId('demo-ops')).not.toBeInTheDocument()
 
     await router.navigate('/settings')
-    await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+    await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
     await router.navigate('/services/chill-spot')
     const ops = await screen.findByTestId('demo-ops')
     expect(within(ops).getAllByText(/simulat/i).length).toBeGreaterThan(0)
@@ -173,26 +173,28 @@ describe('Demo Operations and Settings', () => {
     )
   })
 
-  it('CH-AT-20: the Demo Operations switch is remembered across a reload and defaults to off', async () => {
+  it('CH-AT-20: the Local Operations switch is remembered across a reload and defaults to off', async () => {
     const user = userEvent.setup()
     const first = makeServices()
     const a = renderApp('/settings', { services: first.services })
-    const box = await screen.findByRole('checkbox', { name: /Show Demo Operations/ })
+    const box = await screen.findByRole('checkbox', { name: /Show Local Operations/ })
     expect(box).not.toBeChecked()
     await user.click(box)
     a.unmount()
     renderApp('/settings', { services: first.services })
-    expect(await screen.findByRole('checkbox', { name: /Show Demo Operations/ })).toBeChecked()
+    expect(await screen.findByRole('checkbox', { name: /Show Local Operations/ })).toBeChecked()
   })
 
-  it('CH-AT-26: Reset demo data also clears café orders and carts', async () => {
+  it('CH-AT-26: Reset reference data also clears café orders and carts', async () => {
     const user = userEvent.setup()
     const { router, services } = await open()
     await placeOrder(user)
     await screen.findAllByText('Awaiting café acceptance')
     await router.navigate('/settings')
-    await user.click(await screen.findByRole('button', { name: /Reset demo data/ }))
-    await user.click(await screen.findByRole('button', { name: 'Reset demo data', hidden: false }))
+    await user.click(await screen.findByRole('button', { name: /Reset reference data/ }))
+    await user.click(
+      await screen.findByRole('button', { name: 'Reset reference data', hidden: false }),
+    )
     await waitFor(async () => {
       const store = await services.chill.load()
       expect(store.orders.some((o) => o.ownerProfileId)).toBe(false)

@@ -8,7 +8,10 @@ import { fixedClock } from '@/lib/time'
 import { createMemoryStorage } from './memory-storage'
 
 export function makeServices(
-  overrides: Partial<Pick<Services, 'storage'>> & { demoExamples?: boolean } = {},
+  overrides: Partial<Pick<Services, 'storage'>> & {
+    demoExamples?: boolean
+    sourceData?: boolean
+  } = {},
 ) {
   const memory = createMemoryStorage()
   const storage = overrides.storage ?? createStorageAdapter({ backend: memory.storage })
@@ -17,6 +20,7 @@ export function makeServices(
       storage,
       clock: fixedClock('2026-11-02T04:30:00Z'),
       demoExamples: overrides.demoExamples ?? false,
+      sourceData: overrides.sourceData ?? false,
     }),
     data: memory.data,
   }

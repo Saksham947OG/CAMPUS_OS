@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 
 /**
  * Campus Essentials journeys (COS-ESSENTIALS-001 ESS-S05 and the end-to-end flows). All data is
- * labelled demo data; nothing reaches a provider, sensor, payment system or courier.
+ * labelled reference data; nothing reaches a provider, sensor, payment system or courier.
  */
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']
 
@@ -52,7 +52,7 @@ for (const width of [320, 375, 768, 1024, 1440]) {
 
 async function enableOps(page: Page) {
   await page.goto('/settings')
-  await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+  await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
 }
 
 test.describe('phone journey', () => {
@@ -75,7 +75,7 @@ test.describe('phone journey', () => {
       .getByRole('button', { name: /^(?:8:00 pm|7:00 pm|6:00 pm)(?! · past)/ })
       .first()
       .click()
-    await page.getByRole('button', { name: 'Confirm demo reservation' }).click()
+    await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await expect(
       page.getByRole('region', { name: 'My reservations' }).getByText('Reserved', { exact: true }),
     ).toBeVisible()
@@ -143,7 +143,7 @@ test.describe('desktop journeys', () => {
     await ops.getByLabel(/Backdate the simulated arrival/).check()
     await ops.getByRole('button', { name: 'Log parcel' }).click()
     await page.goto('/notifications')
-    await expect(page.getByText('Parcel still uncollected (demo)')).toHaveCount(1)
+    await expect(page.getByText('Parcel still uncollected (local)')).toHaveCount(1)
   })
 
   test('ESS-M06 / ESS-M07: fee details appear only when typed in, and the form link opens externally', async ({
@@ -180,8 +180,8 @@ test.describe('desktop journeys', () => {
     await page.getByRole('button', { name: /Add to cart/ }).click()
     await page.getByRole('button', { name: 'Review checkout' }).click()
     await page
-      .getByRole('dialog', { name: /Review your demo order/ })
-      .getByRole('button', { name: 'Place demo order request' })
+      .getByRole('dialog', { name: /Review your local order/ })
+      .getByRole('button', { name: 'Place local order request' })
       .click()
     await expect(page.getByRole('heading', { level: 1, name: /^Order CS-/ })).toBeVisible()
 

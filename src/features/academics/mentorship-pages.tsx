@@ -329,7 +329,7 @@ export function GroupPage() {
             e.preventDefault()
             const r = await act(
               () => repo.sendInvite(profileId, { groupId: g.id, facultyId, note }),
-              'Invitation recorded in the demo.',
+              'Invitation recorded on this device.',
             )
             if (r.ok) setNote('')
           }}
@@ -364,7 +364,7 @@ export function GroupPage() {
             )}
           </Field>
           <Button type="submit" className="min-h-11 self-start" disabled={!facultyId}>
-            Record invitation in demo
+            Record invitation locally
           </Button>
         </form>
       </SectionCard>

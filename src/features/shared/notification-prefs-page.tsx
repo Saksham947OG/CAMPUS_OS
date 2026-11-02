@@ -20,7 +20,7 @@ export function NotificationPrefsPage() {
     <article className="flex max-w-3xl flex-col gap-4">
       <PageHeader
         title="Notification preferences"
-        description="Choose which kinds of in-app message you see. These settings are saved for this demo profile on this device."
+        description="Choose which kinds of in-app message you see. These settings are saved for this persona on this device."
         badge={<Pill tone="demo">In-app only · no email, SMS or push</Pill>}
       />
       <SectionCard id="np-rules-h" title="How muting works">

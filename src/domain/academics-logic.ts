@@ -217,7 +217,7 @@ export function submitMeeting(
       id,
       e,
       'Demo meeting request recorded',
-      'It is stored in this demo only. Nobody has been told, and a request is not an appointment.',
+      'It is stored in this on this device only. Nobody has been told, and a request is not an appointment.',
       meetingPath(id),
     ),
   ])
@@ -289,7 +289,7 @@ export function meetingAct(
           'Only a request that has not been accepted can be withdrawn. Ask to cancel an accepted one instead.',
         )
       to = 'withdrawn'
-      title = 'Demo request withdrawn'
+      title = 'Local request withdrawn'
       body = 'You withdrew this request. It stays in your history.'
       break
     case 'acceptAlternative':
@@ -305,33 +305,33 @@ export function meetingAct(
       if (m.status !== 'alternativeProposed')
         return fail('There is no alternative time to decline.')
       to = 'withdrawn'
-      title = 'Demo request withdrawn'
+      title = 'Local request withdrawn'
       body = 'You declined the alternative and the request ended.'
       break
     case 'requestCancellation':
       if (m.status !== 'acceptedDemo')
-        return fail('Only a request accepted in the demo can be asked to cancel.')
+        return fail('Only a request accepted on this device can be asked to cancel.')
       to = 'cancellationRequested'
       title = 'Cancellation requested'
-      body = 'Recorded in the demo. It is cancelled only when the simulator confirms it.'
+      body = 'Recorded on this device. It is cancelled only when the simulator confirms it.'
       break
     case 'accept':
       if (m.status !== 'requested') return fail('Only a new request can be accepted.')
       if (m.slotId) {
         const cap = s.availability.find((a) => a.id === m.slotId)?.capacity ?? 1
         if (acceptedOn(s, m) >= cap)
-          return fail('That window is already accepted for someone else in this demo data.')
+          return fail('That window is already accepted for someone else in this reference data.')
       }
       to = 'acceptedDemo'
       title = 'Demo appointment accepted'
-      body = 'Accepted in the demo only. It is not an official appointment.'
+      body = 'Accepted in the on this device only. It is not an official appointment.'
       break
     case 'reject':
       if (m.status !== 'requested') return fail('Only a new request can be declined.')
       if (!reason) return fail('A reason is required when declining.')
       to = 'rejectedDemo'
-      title = 'Demo request declined'
-      body = `Declined in the demo: ${reason}`
+      title = 'Local request declined'
+      body = `Declined on this device: ${reason}`
       break
     case 'propose':
       if (m.status !== 'requested')
@@ -354,14 +354,15 @@ export function meetingAct(
         return fail('The student has not accepted an alternative.')
       to = 'acceptedDemo'
       title = 'Demo appointment accepted'
-      body = 'The alternative time is accepted in the demo only. It is not an official appointment.'
+      body =
+        'The alternative time is accepted in the on this device only. It is not an official appointment.'
       break
     case 'cancel':
       if (m.status !== 'acceptedDemo' && m.status !== 'cancellationRequested')
         return fail('Only an accepted request can be cancelled.')
       to = 'cancelledDemo'
       title = 'Demo appointment cancelled'
-      body = 'Cancelled in the demo. The history is kept.'
+      body = 'Cancelled on this device. The history is kept.'
       break
     case 'complete':
       if (m.status !== 'acceptedDemo')
@@ -514,7 +515,7 @@ export function sendInvite(
       id,
       e,
       'Demo mentorship invitation recorded',
-      'Stored in this demo only. Nothing was delivered to any professor.',
+      'Stored in this on this device only. Nothing was delivered to any professor.',
       groupPath(g.id),
     ),
   ])

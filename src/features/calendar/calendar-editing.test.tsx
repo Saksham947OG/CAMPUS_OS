@@ -20,6 +20,7 @@ function env(nowIso = '2026-11-02T04:30:00Z') {
   const clock = { now: () => Temporal.Instant.from(current) }
   let n = 0
   const services = createServices({
+    sourceData: false,
     storage: createStorageAdapter({ backend: memory.storage }),
     clock,
     newId: (p) => `${p}-t${++n}`,

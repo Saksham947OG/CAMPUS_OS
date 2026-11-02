@@ -140,7 +140,7 @@ export interface SportsRepositoryOptions {
   clock: Clock
   newId: (prefix: string) => string
   notifications: PreferencesRepository<NotificationsState>
-  /** Adds the labelled example bookings (a confirmed court and a cancelled study room) for the first demo profile. */
+  /** Adds the labelled example bookings (a confirmed court and a cancelled study room) for the first persona. */
   examples?: boolean
 }
 
@@ -175,7 +175,7 @@ export function createSportsRepository(o: SportsRepositoryOptions): SportsReposi
           return {
             id: r.id,
             ownerProfileId: r.ownerProfileId,
-            resource: `${res?.label ?? 'Resource'} (demo reservation${r.disrupted ? ', may be affected' : ''})`,
+            resource: `${res?.label ?? 'Resource'} (local reservation${r.disrupted ? ', may be affected' : ''})`,
             date: r.date,
             start: r.start,
             end: r.end,

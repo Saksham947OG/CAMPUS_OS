@@ -6,7 +6,7 @@ import { dateOnlySchema, localTimeSchema } from './records'
  * Group meetings and polls (COS-V3 §3, §4.3). One canonical record per meeting: Calendar, Home and
  * notifications only project it. An organizer's chosen time is not everyone's acceptance, and a
  * poll vote is a preference that never overrides a hard conflict. All of it is local demo state:
- * demo profiles simulate the other people, and nothing here reaches another device.
+ * personas simulate the other people, and nothing here reaches another device.
  */
 const id = z.string().min(1).max(80)
 const iso = z.iso.datetime({ offset: true })

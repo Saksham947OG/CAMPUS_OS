@@ -1,3 +1,5 @@
+import { useServices } from '@/app/services'
+import { ProcessTimeTax } from '../sources/process-time-tax'
 import { FlaskConical } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
@@ -128,6 +130,32 @@ export function OpsCard({
  * service; the starting numbers are examples.
  */
 export function TripScenario({ id, noun }: { id: string; noun: string }) {
+  const { sourceData } = useServices()
+  if (sourceData)
+    return (
+      <ProcessTimeTax
+        service={
+          id.startsWith('gym')
+            ? 'gym'
+            : id.startsWith('parcel')
+              ? 'parcels'
+              : id.startsWith('ss')
+                ? 'ss-laundry'
+                : id.startsWith('mach') || id.startsWith('wm')
+                  ? 'machines'
+                  : id.startsWith('mess')
+                    ? 'mess'
+                    : id.startsWith('lib')
+                      ? 'library'
+                      : id.startsWith('bad') || id.startsWith('sp')
+                        ? 'sports'
+                        : 'administration'
+        }
+      />
+    )
+  return <LegacyTripScenario id={id} noun={noun} />
+}
+function LegacyTripScenario({ id, noun }: { id: string; noun: string }) {
   const [now, setNow] = useState('4')
   const [after, setAfter] = useState('1')
   const [mins, setMins] = useState('12')
@@ -185,6 +213,25 @@ export function TripScenario({ id, noun }: { id: string; noun: string }) {
  * change; a confirmed reservation does not prove any time was saved.
  */
 export function PersonMinutesScenario({ id, noun }: { id: string; noun: string }) {
+  const { sourceData } = useServices()
+  if (sourceData)
+    return (
+      <ProcessTimeTax
+        service={
+          noun.includes('library')
+            ? 'library'
+            : id.startsWith('lv') ||
+                id.startsWith('tk') ||
+                noun.includes('office') ||
+                noun.includes('maintenance')
+              ? 'administration'
+              : 'classrooms'
+        }
+      />
+    )
+  return <LegacyPersonMinutesScenario id={id} noun={noun} />
+}
+function LegacyPersonMinutesScenario({ id, noun }: { id: string; noun: string }) {
   const [visits, setVisits] = useState('20')
   const [baseline, setBaseline] = useState('10')
   const [after, setAfter] = useState('2')

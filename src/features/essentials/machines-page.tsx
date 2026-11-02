@@ -91,7 +91,7 @@ function ReservationRow({ r }: { r: Reservation }) {
         <Pill>{reservationStateLabel[r.state]}</Pill>
       </div>
       <p className="text-xs text-ink-muted">
-        Reservation ID {r.id} · a demo reservation, not a campus booking.
+        Reservation ID {r.id} · a local reservation, not a campus booking.
       </p>
       {warn ? (
         <p
@@ -196,12 +196,12 @@ export function MachinesPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Washing machines"
-        description="Reserve a slot. A reservation is only a booking in this demo's local data: it does not show whether a machine is physically free."
-        badge={<Pill tone="demo">Demo · sample data</Pill>}
+        description="Reserve a slot. A reservation is only a booking on this device's local data: it does not show whether a machine is physically free."
+        badge={<Pill tone="demo">Campus data</Pill>}
       />
       <SubNav label="Laundry sections" items={laundryTabs} current="machines" />
 
-      <SectionCard id="rules-h" title="Demo rules (not campus policy)">
+      <SectionCard id="rules-h" title="Planning rules (not campus policy)">
         <p>
           {ess.rules.maxActivePerStudent} upcoming booking at a time · {ess.rules.graceMinutes}
           -minute grace period · up to {ess.rules.horizonDays} days ahead · {ess.rules.slotMinutes}
@@ -299,11 +299,11 @@ export function MachinesPage() {
                 {formatTime(chosen.end)}
               </p>
               <p className="text-xs text-ink-muted">
-                This is a demo reservation. It does not tell anyone the machine is free, and it is
+                This is a local reservation. It does not tell anyone the machine is free, and it is
                 released if you cancel.
               </p>
               <Button className="mt-2 min-h-11" onClick={() => void confirmReserve()}>
-                Confirm demo reservation
+                Confirm local reservation
               </Button>
             </div>
           ) : null}

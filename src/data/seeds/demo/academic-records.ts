@@ -2,7 +2,7 @@ import type { Course } from '@/domain/academic-tools'
 
 /**
  * FICTIONAL academic fixtures for the calculators. They are not anyone's record, they are keyed by
- * demo profile so one profile never sees another's, and the third profile has none, so the empty
+ * persona so one profile never sees another's, and the third profile has none, so the empty
  * state is real. Grades use the demo scale in `academic-tools`.
  */
 export interface Semester {
@@ -38,7 +38,7 @@ export const academicRecords: Record<string, AcademicRecord> = {
     past: [
       {
         id: 's1',
-        label: 'Semester 1 (demo)',
+        label: 'Semester 1 (local)',
         courses: [
           c('DEMO-001', 'Sample foundations', 4, 'A'),
           c('DEMO-002', 'Sample quantitative methods', 4, 'B+'),
@@ -47,7 +47,7 @@ export const academicRecords: Record<string, AcademicRecord> = {
       },
       {
         id: 's2',
-        label: 'Semester 2 (demo)',
+        label: 'Semester 2 (local)',
         courses: [
           c('DEMO-011', 'Sample economics', 4, 'B'),
           c('DEMO-012', 'Sample statistics', 4, 'A'),
@@ -69,7 +69,7 @@ export const academicRecords: Record<string, AcademicRecord> = {
     past: [
       {
         id: 's1',
-        label: 'Semester 1 (demo)',
+        label: 'Semester 1 (local)',
         courses: [
           c('DEMO-001', 'Sample foundations', 4, 'B'),
           c('DEMO-002', 'Sample quantitative methods', 4, 'B'),

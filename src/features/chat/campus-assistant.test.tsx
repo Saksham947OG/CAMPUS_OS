@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { renderApp } from '@/test/render-app'
 import { setViewport, clearViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 beforeEach(() => setViewport(1600))
 afterEach(() => clearViewport())
 

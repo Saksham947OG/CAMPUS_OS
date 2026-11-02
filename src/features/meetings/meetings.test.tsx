@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 beforeEach(() => setViewport(1600))
 afterEach(() => clearViewport())
 const heading = (name: string | RegExp) => screen.findByRole('heading', { level: 1, name })
@@ -31,7 +31,7 @@ describe('Find a time', () => {
       screen.getByText('Add at least one other person to see shared times.'),
     ).toBeInTheDocument()
     await user.type(screen.getByLabelText('Add people (search by name)'), 'Student B')
-    await user.click(await screen.findByRole('button', { name: 'Add Demo Student B' }))
+    await user.click(await screen.findByRole('button', { name: 'Add Reference Student B' }))
     const list = await screen.findByTestId('suggestions')
     const cards = within(list)
       .getAllByRole('listitem')
@@ -52,7 +52,7 @@ describe('Find a time', () => {
     await user.click(screen.getByRole('button', { name: 'Confirm meeting' }))
     await heading('Ops project sync')
     expect(await screen.findByTestId('room-state')).toHaveTextContent(
-      /Room reserved \(demo\) · CR3/,
+      /Room reserved \(local\) · CR3/,
     )
     expect(screen.getByText(/not everyone’s acceptance/)).toBeInTheDocument()
     const id = (await services.meetings.load()).meetings[0]!.id
@@ -60,8 +60,8 @@ describe('Find a time', () => {
       (await services.campus.load('demo-student-a')).bookings.filter((b) => b.id === id),
     ).toHaveLength(1)
     // The guest sees the invitation and replies.
-    await user.click(await screen.findByRole('button', { name: /demo profile/i }))
-    await user.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     await router.navigate(`/calendar/meetings/${id}`)
     await heading('Ops project sync')
     await user.click(await screen.findByRole('button', { name: 'Accept' }))
@@ -73,7 +73,7 @@ describe('Find a time', () => {
       ).toBe('ACCEPTED'),
     )
     // A person who was never invited cannot open it.
-    await user.click(await screen.findByRole('button', { name: /demo profile/i }))
+    await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
     await user.click(await screen.findByRole('menuitemradio', { name: /empty/i }))
     await router.navigate(`/calendar/meetings/${id}`)
     await heading('Meeting not found')

@@ -32,7 +32,7 @@ async function placeOrder(page: Page) {
   await viewCart.or(review).first().waitFor()
   if (await viewCart.isVisible()) await viewCart.click()
   await page.getByRole('button', { name: 'Review checkout' }).click()
-  await page.getByRole('button', { name: 'Place demo order request' }).click()
+  await page.getByRole('button', { name: 'Place local order request' }).click()
   await expect(page.getByRole('heading', { level: 1, name: /^Order CS-/ })).toBeVisible()
 }
 
@@ -64,7 +64,7 @@ test.describe('desktop', () => {
     await audit(page, 'Order tracker')
 
     await page.goto('/settings')
-    await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+    await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
     await page.goto('/services/chill-spot')
     const ops = page.getByTestId('demo-ops')
     await expect(ops).toBeVisible()

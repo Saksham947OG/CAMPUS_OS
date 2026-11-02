@@ -38,7 +38,7 @@ import { adminTabs } from './admin-nav'
 import { AdminOps } from './admin-ops'
 
 const PROOF_WARNING =
-  'Optional. Only the file’s name and size are kept, never its contents. Do not attach real medical or personal documents to this demo.'
+  'Optional. Only the file’s name and size are kept, never its contents. Do not attach real medical or personal documents to this app.'
 
 const STATUS_TABS: { id: string; label: string; match: (l: LeaveRequest) => boolean }[] = [
   { id: 'all', label: 'All', match: () => true },
@@ -50,7 +50,7 @@ const STATUS_TABS: { id: string; label: string; match: (l: LeaveRequest) => bool
   { id: 'changes', label: 'Changes requested', match: (l) => l.status === 'changesRequested' },
   {
     id: 'accepted',
-    label: 'Approved in demo',
+    label: 'Approved locally',
     match: (l) => ['approvedInDemo', 'gateDepartureLogged', 'gateReturnLogged'].includes(l.status),
   },
   { id: 'rejected', label: 'Rejected', match: (l) => l.status === 'rejected' },
@@ -74,7 +74,7 @@ export function LeavePage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Leave and out-time"
-        description="Ask for time away in this demonstration and follow a simulated review. A request here is a record in this app only."
+        description="Ask for time away on this devicenstration and follow a simulated review. A request here is a record in this app only."
         badge={<Pill tone="demo">Demo · not an official permission</Pill>}
       />
       <SubNav label="Administration sections" items={adminTabs} current="leave" />
@@ -359,7 +359,7 @@ function LeaveForm({
 
       {review ? (
         <div className="rounded-md border border-border bg-coffee-tint p-3 text-sm">
-          <p className="font-semibold">Review your demo request</p>
+          <p className="font-semibold">Review your local request</p>
           <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-4 gap-y-0.5">
             <dt className="text-ink-muted">Type</dt>
             <dd>{leaveTypeLabel[type]}</dd>
@@ -384,8 +384,8 @@ function LeaveForm({
             </dd>
           </dl>
           <p className="mt-2 text-xs">
-            Submitting saves this in the demo only. It is not received by the university and is not
-            a campus permission.
+            Submitting saves this in the on this device only. It is not received by the university
+            and is not a campus permission.
           </p>
         </div>
       ) : null}
@@ -430,17 +430,17 @@ export function LeaveNewPage() {
       </Link>
       <PageHeader
         title="New leave request"
-        description="Fill in the details, review them, then save the request in this demo."
+        description="Fill in the details, review them, then save the request on this device."
         badge={<Pill tone="demo">Demo only</Pill>}
       />
       <DemoBanner />
       <SectionCard id="lv-new-h" title="Request details">
         <LeaveForm
-          submitLabel="Submit demo request"
+          submitLabel="Submit local request"
           onSubmit={async (input) => {
             const r = await act(
               () => repo.submitLeave(profileId, input, key),
-              'Demo request saved.',
+              'Local request saved.',
             )
             if (!r.ok) return r.error.message
             navigate(`/administration/leave/${r.value.leave.id}?submitted=1`)
@@ -469,8 +469,8 @@ export function LeaveDetailPage() {
           Request not found
         </h1>
         <p className="mt-2 text-ink-muted">
-          We could not find that request for this demo profile. It may not exist, or it may belong
-          to another profile. Nothing was changed.
+          We could not find that request for this persona. It may not exist, or it may belong to
+          another profile. Nothing was changed.
         </p>
         <Button asChild className="mt-4 min-h-11">
           <Link to="/administration/requests">Back to My requests</Link>
@@ -521,7 +521,7 @@ export function LeaveDetailPage() {
       </div>
       {justSubmitted ? (
         <output className="block rounded-md border border-border-strong bg-coffee-tint p-3 text-sm font-medium">
-          Saved in the demo as {l.id} at {formatInstant(l.createdAt)}. Status:{' '}
+          Saved on this device as {l.id} at {formatInstant(l.createdAt)}. Status:{' '}
           {leaveStatusLabel[l.status]}. It has not been sent to anyone.
         </output>
       ) : null}
@@ -546,7 +546,7 @@ export function LeaveDetailPage() {
           role="alert"
           className="rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm"
         >
-          <strong>Rejected in demo:</strong> {l.decision.reason}. This is not an official decision.
+          <strong>Rejected locally:</strong> {l.decision.reason}. This is not an official decision.
         </p>
       ) : null}
 

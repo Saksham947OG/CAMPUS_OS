@@ -235,7 +235,11 @@ export function DeadlineWidget({ ctx }: { ctx: HomeCtx }) {
                     <ConfirmationBadge verification="tentative" />
                   ) : null}
                   <span className="text-xs text-ink-muted">
-                    {e.source === 'task' ? 'Your task' : 'Supplied deadline'}
+                    {e.source === 'task'
+                      ? 'Your task'
+                      : e.provenance.dataMode === 'demoSeed'
+                        ? 'Planning target'
+                        : 'Supplied deadline'}
                   </span>
                 </div>
                 {task ? (

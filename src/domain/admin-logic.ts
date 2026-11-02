@@ -29,7 +29,7 @@ import { instantMs } from '@/selectors/now'
  * Pure rules for Administration (COS-ADMIN-001). Leave and tickets keep separate state machines on
  * a shared request substrate. No clock, storage or React: callers pass timestamps and ids. Nothing
  * here advances by itself, a student can never perform a privileged step, and a "decision" is only
- * ever a simulated record in the demo: never a permission, a gate pass or a repair.
+ * ever a simulated record on this device: never a permission, a gate pass or a repair.
  */
 
 type Change<T> = CoreChange<AdminStore, T>
@@ -191,8 +191,8 @@ export function submitLeave(
       input.profileId,
       id,
       ev,
-      'Demo request saved',
-      'Your leave request is stored in this demo. It has not been sent to anyone and is not a campus permission.',
+      'Local request saved',
+      'Your leave request is stored on this device. It has not been sent to anyone and is not a campus permission.',
     ),
   ])
 }
@@ -210,7 +210,7 @@ export function reviseLeave(
   const afterApproval = l.status === 'approvedInDemo'
   if (l.status !== 'changesRequested' && !afterApproval)
     return fail(
-      'You can edit a request only after changes were requested, or before departure once it is approved in the demo (which sends it for review again).',
+      'You can edit a request only after changes were requested, or before departure once it is approved on this device (which sends it for review again).',
     )
   const bad = checkLeaveInput(input)
   if (bad) return fail(bad)
@@ -250,10 +250,10 @@ export function reviseLeave(
       profileId,
       id,
       ev,
-      'Demo request saved',
+      'Local request saved',
       afterApproval
         ? 'Your change needs a new demo review. The earlier demo approval no longer applies.'
-        : 'Your updated request is stored in this demo.',
+        : 'Your updated request is stored on this device.',
     ),
   ])
 }
@@ -271,7 +271,7 @@ export function withdrawLeave(
       l.status,
     )
   )
-    return fail('Only a request that has not been decided in the demo can be withdrawn.')
+    return fail('Only a request that has not been decided on this device can be withdrawn.')
   const ev = event(l.id, 'student', 'withdrawn', c, {
     from: l.status,
     to: 'withdrawn',
@@ -290,7 +290,7 @@ export function withdrawLeave(
       profileId,
       id,
       ev,
-      'Demo request withdrawn',
+      'Local request withdrawn',
       'You withdrew this request. It stays in your history.',
     ),
   ])
@@ -350,7 +350,7 @@ export function leaveAct(
       break
     case 'approve':
       if (l.status !== 'underReview')
-        return fail('Only a request under review can be approved in the demo.')
+        return fail('Only a request under review can be approved on this device.')
       to = 'approvedInDemo'
       decision = {
         revision: l.revision,
@@ -359,12 +359,12 @@ export function leaveAct(
         actorRole: 'demoApprover',
         ...(reason ? { reason } : {}),
       }
-      title = 'Decision recorded in demo'
-      body = 'Approved in demo. This is not an official permission and not a valid gate pass.'
+      title = 'Decision recorded locally'
+      body = 'Approved locally. This is not an official permission and not a valid gate pass.'
       break
     case 'reject':
       if (l.status !== 'underReview')
-        return fail('Only a request under review can be rejected in the demo.')
+        return fail('Only a request under review can be rejected on this device.')
       if (!reason) return fail('A reason is required when rejecting a request.')
       to = 'rejected'
       decision = {
@@ -374,30 +374,30 @@ export function leaveAct(
         actorRole: 'demoApprover',
         reason,
       }
-      title = 'Decision recorded in demo'
-      body = `Rejected in demo: ${reason}. This is not an official decision.`
+      title = 'Decision recorded locally'
+      body = `Rejected locally: ${reason}. This is not an official decision.`
       break
     case 'logDeparture':
       if (!s.config.gateEnabled)
-        return fail('Demo gate actions are switched off in the demo policy.')
+        return fail('Demo gate actions are switched off in the planning policy.')
       if (l.status !== 'approvedInDemo' || !l.decision || l.decision.revision !== l.revision)
         return fail(
-          'A departure can be logged only for a request approved in the demo for its current revision.',
+          'A departure can be logged only for a request approved on this device for its current revision.',
         )
       to = 'gateDepartureLogged'
       gate = { ...l.gate, departedAt: c.nowIso }
       title = 'Simulated gate status updated'
-      body = 'Departure logged in the demo. This is not a real guard event.'
+      body = 'Departure logged on this device. This is not a real guard event.'
       break
     case 'logReturn':
       if (!s.config.gateEnabled)
-        return fail('Demo gate actions are switched off in the demo policy.')
+        return fail('Demo gate actions are switched off in the planning policy.')
       if (l.status !== 'gateDepartureLogged' || !l.gate.departedAt)
-        return fail('A return can be logged only after a departure was logged in the demo.')
+        return fail('A return can be logged only after a departure was logged on this device.')
       to = 'gateReturnLogged'
       gate = { ...l.gate, returnedAt: c.nowIso }
       title = 'Simulated gate status updated'
-      body = 'Return logged in the demo. This is not a real guard event.'
+      body = 'Return logged on this device. This is not a real guard event.'
       break
   }
   const ev = event(l.id, actor, action, c, {
@@ -503,7 +503,7 @@ export function submitTicket(
       id,
       ev,
       'Ticket recorded in CampusOS demo',
-      'It is stored in this demo only. Nobody at the campus has received it, and no response time is promised.',
+      'It is stored in this on this device only. Nobody at the campus has received it, and no response time is promised.',
     ),
   ])
 }
@@ -572,12 +572,12 @@ export function ticketAct(
         )
       to = 'cancelledByReporter'
       title = 'Ticket cancelled'
-      body = 'You cancelled this demo ticket. It stays in your history.'
+      body = 'You cancelled this app ticket. It stays in your history.'
       break
     }
     case 'reopen':
       if (t.status !== 'resolvedInDemo')
-        return fail('Only a ticket marked resolved in the demo can be reopened.')
+        return fail('Only a ticket marked resolved on this device can be reopened.')
       if (!reason) return fail('Say what is still wrong so the history makes sense.')
       to = 'reopened'
       title = 'Issue reopened'
@@ -586,11 +586,11 @@ export function ticketAct(
     case 'acknowledge':
       if (t.status !== 'resolvedInDemo')
         return fail(
-          'There is nothing to acknowledge until the ticket is marked resolved in the demo.',
+          'There is nothing to acknowledge until the ticket is marked resolved on this device.',
         )
       to = 'closedInDemo'
-      title = 'Ticket closed (demo)'
-      body = 'You confirmed the issue is sorted. Closed in the demo only.'
+      title = 'Ticket closed (local)'
+      body = 'You confirmed the issue is sorted. Closed in the on this device only.'
       break
     case 'assign':
       if (t.status !== 'submitted' && t.status !== 'reopened')
@@ -607,7 +607,7 @@ export function ticketAct(
         return fail('Work can start only on an assigned or reopened ticket.')
       to = 'inProgress'
       title = 'Progress simulated'
-      body = 'Work was marked started in the demo.'
+      body = 'Work was marked started on this device.'
       break
     case 'awaitParts':
       if (t.status !== 'assigned' && t.status !== 'inProgress')
@@ -620,21 +620,21 @@ export function ticketAct(
       if (t.status !== 'awaitingParts') return fail('Only a ticket awaiting parts can resume.')
       to = 'inProgress'
       title = 'Progress simulated'
-      body = 'Work resumed in the demo.'
+      body = 'Work resumed on this device.'
       break
     case 'resolve':
       if (t.status !== 'inProgress')
         return fail('Only a ticket that is in progress can be marked resolved.')
       to = 'resolvedInDemo'
       patch.resolutionCount = t.resolutionCount + 1
-      title = 'Issue marked resolved in demo'
-      body = 'Marked resolved in the demo. Please confirm it is sorted, or reopen it.'
+      title = 'Issue marked resolved locally'
+      body = 'Marked resolved on this device. Please confirm it is sorted, or reopen it.'
       break
     case 'close':
       if (t.status !== 'resolvedInDemo') return fail('Only a ticket marked resolved can be closed.')
       to = 'closedInDemo'
-      title = 'Ticket closed (demo)'
-      body = 'Closed in the demo by the simulator.'
+      title = 'Ticket closed (local)'
+      body = 'Closed on this device by the simulator.'
       break
   }
   const ev = event(t.id, actor, action, c, { from: t.status, to, ...(reason ? { reason } : {}) })

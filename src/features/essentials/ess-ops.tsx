@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useConfirm } from '@/components/confirm-context'
 import { Field, inputClass } from '@/components/form-kit'
 import { Button } from '@/components/ui/button'
-import { demoProfiles } from '@/data/seeds/demo/profiles'
+import { campusProfiles as demoProfiles } from '@/data/campus/catalogue'
 import {
   LOAD_STAGES,
   loadStageChip,
@@ -31,7 +31,7 @@ function ResetEssentials() {
           const c = await confirm({
             title: 'Reset the Campus Essentials demo records?',
             description:
-              'This removes laundry loads, the demo visit, machine reservations, mess check-ins and feedback, the demo fee and parcels for every demo profile. Home, Calendar, Chill Spot and your other data are not touched.',
+              'This removes laundry loads, the demo visit, machine reservations, mess check-ins and feedback, the illustrative fee and parcels for every persona. Home, Calendar, Chill Spot and your other data are not touched.',
             confirmLabel: 'Reset Essentials records',
             danger: true,
           })
@@ -67,7 +67,7 @@ export function LaundryOps() {
   const confFor = (id: string) => conf[id] ?? 'tentative'
 
   return (
-    <OpsCard id="ops-laundry-h" title="Demo Operations: SS Laundry" message={message}>
+    <OpsCard id="ops-laundry-h" title="Local Operations: SS Laundry" message={message}>
       <fieldset className="flex flex-wrap items-end gap-2">
         <legend className="mb-1 text-sm font-semibold">
           Provider visit (simulated announcement)
@@ -158,7 +158,7 @@ export function LaundryOps() {
       </fieldset>
 
       <div>
-        <h3 className="mb-1 text-sm font-semibold">Loads (all demo profiles)</h3>
+        <h3 className="mb-1 text-sm font-semibold">Loads (all personas)</h3>
         {ess.loads.length === 0 ? (
           <p className="text-sm text-ink-muted">
             No loads registered yet. Register one as a student first.
@@ -379,7 +379,7 @@ export function MachineOps() {
     </Field>
   )
   return (
-    <OpsCard id="ops-machines-h" title="Demo Operations: machines" message={message}>
+    <OpsCard id="ops-machines-h" title="Local Operations: machines" message={message}>
       <div>
         <h3 className="mb-1 text-sm font-semibold">
           Machine status (operation and physical state are separate)
@@ -391,7 +391,7 @@ export function MachineOps() {
         </ul>
       </div>
       <div>
-        <h3 className="mb-1 text-sm font-semibold">Reservations (all demo profiles)</h3>
+        <h3 className="mb-1 text-sm font-semibold">Reservations (all personas)</h3>
         {ess.reservations.length === 0 ? <p className="text-sm text-ink-muted">None yet.</p> : null}
         <ul className="flex flex-col gap-2">
           {ess.reservations.map((r) => (
@@ -445,10 +445,10 @@ export function MachineOps() {
         onSubmit={(e) => {
           e.preventDefault()
           const patch = Object.fromEntries(Object.entries(rules).map(([k, v]) => [k, Number(v)]))
-          void act(() => repo.setRules(patch), 'Demo rules updated.')
+          void act(() => repo.setRules(patch), 'Planning rules updated.')
         }}
       >
-        <legend className="sr-only">Demo rules</legend>
+        <legend className="sr-only">Planning rules</legend>
         {field('maxActivePerStudent', 'Active bookings')}
         {field('graceMinutes', 'Grace (min)')}
         {field('horizonDays', 'Days ahead')}
@@ -457,7 +457,7 @@ export function MachineOps() {
         {field('parcelReminderHours', 'Parcel reminder (h)')}
         {field('messSessionStaleMinutes', 'Mess stale (min)')}
         <Button type="submit" className="min-h-11">
-          Apply demo rules
+          Apply planning rules
         </Button>
       </form>
       <ResetEssentials />
@@ -480,7 +480,7 @@ export function MessOps() {
   const badAmount = rupees !== '' && (!Number.isFinite(Number(rupees)) || Number(rupees) < 0)
   const badUrl = url !== '' && !/^https:\/\/[^\s]+$/.test(url)
   return (
-    <OpsCard id="ops-mess-h" title="Demo Operations: mess" message={message}>
+    <OpsCard id="ops-mess-h" title="Local Operations: mess" message={message}>
       <fieldset>
         <legend className="mb-1 text-sm font-semibold">
           Busy indicator (a manual demo report, not a count)
@@ -614,7 +614,7 @@ export function ParcelOps() {
   if (!ess) return null
   const hours = ess.rules.parcelReminderHours + 24
   return (
-    <OpsCard id="ops-parcel-h" title="Demo Operations: parcels" message={message}>
+    <OpsCard id="ops-parcel-h" title="Local Operations: parcels" message={message}>
       <form
         className="grid gap-2 sm:grid-cols-2"
         onSubmit={(e) => {
@@ -634,7 +634,7 @@ export function ParcelOps() {
         }}
       >
         <p className="text-sm sm:col-span-2">
-          Stands in for a gate or office log. Only the chosen demo profile will see it.
+          Stands in for a gate or office log. Only the chosen persona will see it.
         </p>
         <Field label="Recipient profile">
           {(a) => (
@@ -702,7 +702,7 @@ export function ParcelOps() {
         </div>
       </form>
       <div>
-        <h3 className="mb-1 text-sm font-semibold">Parcels (all demo profiles)</h3>
+        <h3 className="mb-1 text-sm font-semibold">Parcels (all personas)</h3>
         {ess.parcels.length === 0 ? <p className="text-sm text-ink-muted">None logged.</p> : null}
         <ul className="flex flex-col gap-2">
           {ess.parcels.map((p) => (

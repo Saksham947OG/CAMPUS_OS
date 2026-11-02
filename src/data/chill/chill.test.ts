@@ -262,7 +262,7 @@ describe('CH-AT-10 / CH-AT-11 state machine', () => {
     const refused = await env.repo.cancelPending('demo-student-a', o.id)
     expect(refused).toMatchObject({
       ok: false,
-      error: { message: "Cancellation isn't available for accepted orders in this demo." },
+      error: { message: "Cancellation isn't available for accepted orders on this device." },
     })
     expect((await env.repo.load()).orders.find((x) => x.id === o.id)!.status).toBe('queued')
 
@@ -543,19 +543,19 @@ describe('CH-AT-23 / CH-AT-24 / CH-AT-25 notifications, reload, isolation', () =
     const o = await placeOrder(env, 'demo-student-a', 'k')
     await env.repo.submitOrder('demo-student-a', 'k') // repeat: no second notification
     expect((await notes(env, 'demo-student-a')).map((n) => n.title)).toEqual([
-      'Demo order request submitted',
+      'Local order request submitted',
     ])
     await accept(env, o.id)
     await env.repo.operatorTransition(o.id, 'preparing')
     await env.repo.operatorTransition(o.id, 'ready')
     const list = await notes(env, 'demo-student-a')
     expect(list.map((n) => n.title).reverse()).toEqual([
-      'Demo order request submitted',
+      'Local order request submitted',
       'Demo café accepted your order',
-      'Demo order is being prepared',
-      'Demo order ready for pickup',
+      'Local order is being prepared',
+      'Local order ready for pickup',
     ])
-    expect(list.find((n) => n.title === 'Demo order ready for pickup')?.significance).toBe(
+    expect(list.find((n) => n.title === 'Local order ready for pickup')?.significance).toBe(
       'important',
     )
     expect(
@@ -572,11 +572,11 @@ describe('CH-AT-23 / CH-AT-24 / CH-AT-25 notifications, reload, isolation', () =
     const b = await placeOrder(env, 'demo-student-a', 'kb')
     await env.repo.cancelPending('demo-student-a', b.id)
     const list = await notes(env, 'demo-student-a')
-    expect(list.find((n) => n.title === 'Demo order declined')).toMatchObject({
+    expect(list.find((n) => n.title === 'Local order declined')).toMatchObject({
       significance: 'important',
       body: expect.stringContaining('Sample reason'),
     })
-    expect(list.filter((n) => n.title === 'Demo order request cancelled')).toHaveLength(1)
+    expect(list.filter((n) => n.title === 'Local order request cancelled')).toHaveLength(1)
   })
 
   it('CH-AT-24: reload preserves orders and carts and creates no duplicate alerts', async () => {
@@ -596,7 +596,7 @@ describe('CH-AT-23 / CH-AT-24 / CH-AT-25 notifications, reload, isolation', () =
     expect(await notes(env, 'demo-student-a')).toHaveLength(1)
   })
 
-  it("CH-AT-25: carts and orders are isolated between demo profiles, and no one can act on another profile's order", async () => {
+  it("CH-AT-25: carts and orders are isolated between personas, and no one can act on another profile's order", async () => {
     const env = setup()
     const o = await placeOrder(env, 'demo-student-a')
     await env.repo.saveCart('demo-student-b', cartOf('hot-a'))

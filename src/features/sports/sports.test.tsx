@@ -5,7 +5,7 @@ import { gymView, scheduleWarnings } from '@/selectors/sports'
 import { makeServices, renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 const TODAY = '2026-11-02' as DateOnly
 const A = 'demo-student-a'
 const t = (v: string) => v as LocalTime
@@ -21,7 +21,7 @@ async function enableOps(
   then: string,
 ) {
   await router.navigate('/settings')
-  await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+  await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
   await router.navigate(then)
 }
 
@@ -32,7 +32,7 @@ describe('hub and information (SP-T01 … SP-T04)', () => {
     const main = within(await screen.findByRole('main'))
     for (const name of [/Gym/, /Badminton/, /Table Tennis/, /Pool/, /Basketball/])
       expect((await main.findAllByRole('link', { name })).length).toBeGreaterThan(0)
-    expect(screen.getAllByText(/Demo · sample facilities/).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/Campus facilities/).length).toBeGreaterThan(0)
     expect(screen.getByText(/separate, later feature/)).toBeInTheDocument() // SP-T32
     expect(
       screen.queryByRole('link', { name: /fixture|team sign|tournament/i }),
@@ -55,7 +55,7 @@ describe('hub and information (SP-T01 … SP-T04)', () => {
     await heading('Other sports')
     expect(await screen.findByRole('button', { name: 'Booking not configured' })).toBeDisabled()
     expect(
-      screen.queryByRole('button', { name: /Confirm demo reservation/ }),
+      screen.queryByRole('button', { name: /Confirm local reservation/ }),
     ).not.toBeInTheDocument()
     expect(screen.queryByText(/Published slots/)).not.toBeInTheDocument()
   })
@@ -80,7 +80,7 @@ describe('badminton journey (SP-T05 … SP-T07, SP-T15, SP-T26 … SP-T28)', () 
     await user.click(await screen.findByRole('button', { name: '12:00 pm' }))
     expect(await screen.findByText(/Review: Demo badminton court 1/)).toBeInTheDocument()
     await user.type(screen.getByLabelText('Partner or group note (optional)'), 'Sample Friend')
-    const confirm = screen.getByRole('button', { name: 'Confirm demo reservation' })
+    const confirm = screen.getByRole('button', { name: 'Confirm local reservation' })
     await user.dblClick(confirm)
     await waitFor(async () => expect((await services.sports.load()).reservations).toHaveLength(1))
     const r = (await services.sports.load()).reservations[0]!
@@ -105,7 +105,7 @@ describe('badminton journey (SP-T05 … SP-T07, SP-T15, SP-T26 … SP-T28)', () 
     await heading('Badminton')
     const slot = await screen.findByRole('button', { name: '12:00 pm · reserved' })
     expect(slot).toBeDisabled()
-    await user.click(screen.getByRole('button', { name: 'Join demo waitlist for 12:00 pm' }))
+    await user.click(screen.getByRole('button', { name: 'Join local waitlist for 12:00 pm' }))
     expect((await screen.findAllByText(/This is not a reservation/)).length).toBeGreaterThan(0)
   })
 
@@ -117,7 +117,7 @@ describe('badminton journey (SP-T05 … SP-T07, SP-T15, SP-T26 … SP-T28)', () 
     })
     await heading('Badminton')
     await user.click(await screen.findByRole('button', { name: '2:00 pm' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm demo reservation' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm local reservation' }))
     const { reservation } = await waitFor(async () => {
       const s = await services.sports.load()
       expect(s.reservations).toHaveLength(1)
@@ -127,11 +127,11 @@ describe('badminton journey (SP-T05 … SP-T07, SP-T15, SP-T26 … SP-T28)', () 
     await router.navigate('/')
     const activity = await screen.findByRole('region', { name: 'My activity' })
     expect(
-      await within(activity).findAllByText(/Demo badminton court 1 \(demo reservation\)/),
+      await within(activity).findAllByText(/Demo badminton court 1 \(local reservation\)/),
     ).toHaveLength(1)
     await router.navigate('/calendar?view=day&date=2026-11-02')
     expect(
-      await screen.findAllByText(/Demo badminton court 1 \(demo reservation\)/),
+      await screen.findAllByText(/Demo badminton court 1 \(local reservation\)/),
     ).not.toHaveLength(0)
 
     await act(async () => {
@@ -140,10 +140,10 @@ describe('badminton journey (SP-T05 … SP-T07, SP-T15, SP-T26 … SP-T28)', () 
     await router.navigate('/')
     const again = await screen.findByRole('region', { name: 'My activity' })
     await waitFor(() =>
-      expect(within(again).queryAllByText(/Reserved \(demo reservation\)/)).toHaveLength(0),
+      expect(within(again).queryAllByText(/Reserved \(local reservation\)/)).toHaveLength(0),
     )
     expect(
-      within(again).queryAllByText(/Demo badminton court 1 \(demo reservation\)/).length,
+      within(again).queryAllByText(/Demo badminton court 1 \(local reservation\)/).length,
     ).toBeLessThanOrEqual(1) // history only
 
     unmount()
@@ -153,7 +153,7 @@ describe('badminton journey (SP-T05 … SP-T07, SP-T15, SP-T26 … SP-T28)', () 
       await screen.findAllByRole('link', { name: /Open: Reservation saved in CampusOS demo/ }),
     ).toHaveLength(1)
     expect(
-      screen.getAllByRole('link', { name: /Open: Your demo booking was cancelled/ }),
+      screen.getAllByRole('link', { name: /Open: Your local booking was cancelled/ }),
     ).toHaveLength(1)
   })
 
@@ -174,7 +174,7 @@ describe('badminton journey (SP-T05 … SP-T07, SP-T15, SP-T26 … SP-T28)', () 
     await user.click(screen.getByRole('link', { name: 'Open booking' }))
     await heading('Demo badminton court 1')
     expect(screen.getByText(/Nothing was cancelled for you/)).toBeInTheDocument()
-    expect(screen.getByText('Confirmed (demo)')).toBeInTheDocument()
+    expect(screen.getByText('Confirmed (local)')).toBeInTheDocument()
     await router.navigate('/')
     const activity = await screen.findByRole('region', { name: 'My activity' })
     expect(await within(activity).findByText(/may be affected/)).toBeInTheDocument()
@@ -242,7 +242,7 @@ describe('gym (SP-T21 … SP-T23, SP-T34)', () => {
     expect(within(slots).getAllByRole('button')).toHaveLength(32)
     expect(within(slots).getByRole('button', { name: /^6:00 am$/ })).toBeEnabled()
     await user.click(within(slots).getByRole('button', { name: /^9:30 pm$/ }))
-    await user.click(screen.getByRole('button', { name: 'Confirm demo reservation' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm local reservation' }))
     await waitFor(async () =>
       expect((await services.sports.load()).reservations).toEqual(
         expect.arrayContaining([
@@ -259,14 +259,12 @@ describe('gym (SP-T21 … SP-T23, SP-T34)', () => {
     await user.click(await screen.findByRole('button', { name: 'Check in (self-report)' }))
     await user.click(await screen.findByRole('button', { name: 'You are checked in' }))
     expect((await services.sports.load()).gymSessions).toHaveLength(1)
-    expect(screen.getByText(/Self-reported demo count:/).parentElement).toHaveTextContent(
-      '1 person has',
-    )
+    expect(screen.getByText(/Self-reported count:/).parentElement).toHaveTextContent('1 person has')
     await user.click(screen.getByRole('button', { name: /Correct: I did not check in/ }))
     await waitFor(async () => expect((await services.sports.load()).gymSessions).toHaveLength(0))
   })
 
-  it('SP-T23: a fault note is a demo note, leaves the equipment status alone and closes nothing', async () => {
+  it('SP-T23: a fault note is a local note, leaves the equipment status alone and closes nothing', async () => {
     const user = userEvent.setup()
     const { services } = renderApp('/bookings/gym')
     await heading('Gym')
@@ -338,7 +336,7 @@ describe('simulator and time (SP-T18, SP-T20, SP-T29, SP-T30)', () => {
     }
   })
 
-  it('SP-T30: Reset demo data clears Sports records and leaves academic data alone', async () => {
+  it('SP-T30: Reset reference data clears Sports records and leaves academic data alone', async () => {
     const user = userEvent.setup()
     const { router, services } = renderApp('/bookings/badminton')
     await services.sports.reserve(A, {
@@ -349,8 +347,10 @@ describe('simulator and time (SP-T18, SP-T20, SP-T29, SP-T30)', () => {
     })
     const before = await services.campus.load(A)
     await router.navigate('/settings')
-    await user.click(await screen.findByRole('button', { name: /Reset demo data/ }))
-    await user.click(await screen.findByRole('button', { name: 'Reset demo data', hidden: false }))
+    await user.click(await screen.findByRole('button', { name: /Reset reference data/ }))
+    await user.click(
+      await screen.findByRole('button', { name: 'Reset reference data', hidden: false }),
+    )
     await waitFor(async () => expect((await services.sports.load()).reservations).toHaveLength(0))
     const after = await services.campus.load(A)
     expect(after.courses).toEqual(before.courses)

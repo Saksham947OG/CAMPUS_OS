@@ -16,7 +16,7 @@ import { useMeetings } from './meeting-hooks'
 
 const roomText = {
   none: 'No room',
-  confirmed: 'Room reserved (demo)',
+  confirmed: 'Room reserved (local)',
   pending: 'Room requested, not reserved',
   notConfirmed: 'Room not confirmed',
 } as const
@@ -52,7 +52,7 @@ export function MeetingPage() {
   const room = roomStateOf(m, rooms)
   const open = m.status === 'CONFIRMED'
   const reply = (r: Exclude<Rsvp, 'INVITED'>) =>
-    void act(() => repo.respond(profileId, m.id, r), 'Reply recorded in the demo.')
+    void act(() => repo.respond(profileId, m.id, r), 'Reply recorded on this device.')
   return (
     <article className="flex max-w-3xl flex-col gap-4">
       <PageHeader title={m.title} badge={<Pill tone="demo">Demo · local meeting</Pill>} />
@@ -161,8 +161,8 @@ export function MeetingPage() {
           </div>
         ) : null}
         <p className="mt-2 text-xs text-ink-muted">
-          Other people are demo profiles. Switch profile to reply as them; nothing here reaches
-          another device.
+          Other people are personas. Switch profile to reply as them; nothing here reaches another
+          device.
         </p>
       </SectionCard>
       {organizer && open ? (

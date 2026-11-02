@@ -1,3 +1,5 @@
+import { ProcessTimeTax } from '../sources/process-time-tax'
+import { useServices } from '@/app/services'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import { useConfirm } from '@/components/confirm-context'
@@ -40,6 +42,7 @@ const tone: Record<SlotStatus['kind'], string> = {
 }
 
 export function ClassroomsPage() {
+  const { sourceData } = useServices()
   const { classrooms, status, profileId, now, repo, newId, showDemoOps } = useClassrooms()
   const [params] = useSearchParams()
   const nav = useNavigate()
@@ -98,8 +101,8 @@ export function ClassroomsPage() {
           key,
         ),
       picked.bookingMode === 'instant' && pickedStatus.kind === 'available'
-        ? 'Classroom reserved in the demo.'
-        : 'Request recorded in the demo.',
+        ? 'Classroom reserved on this device.'
+        : 'Request recorded on this device.',
     )
     if (r.ok) nav(`/bookings/classrooms/bookings/${r.value.reservation.id}`)
     else setError(r.error.message)
@@ -124,9 +127,9 @@ export function ClassroomsPage() {
         role="note"
         className="rounded-md border border-border-strong bg-mist p-3 text-sm text-ink"
       >
-        Booked, blocked and available mean “recorded in this demo”. A room can be reserved and still
-        empty, or free in the demo and occupied in real life. Capacity, equipment, hours and
-        approval rules have not been supplied.
+        Booked, blocked and available mean “recorded on this device”. A room can be reserved and
+        still empty, or free on this device and occupied in real life. Capacity, equipment, hours
+        and approval rules have not been supplied.
       </p>
       <form
         className="flex flex-wrap items-end gap-3"
@@ -219,7 +222,7 @@ export function ClassroomsPage() {
                 {r.features?.join(', ') ?? 'equipment not provided'} ·{' '}
                 {r.bookingMode === 'approval'
                   ? 'requests need a (simulated) review'
-                  : 'instant demo booking'}
+                  : 'instant local booking'}
               </p>
               <ol
                 aria-label={`${r.displayName} availability`}
@@ -389,7 +392,7 @@ export function ClassroomsPage() {
           </form>
           {freeElsewhere.length > 0 ? (
             <div className="mt-3 text-sm">
-              <p className="font-medium">Free for the same time in the demo schedule:</p>
+              <p className="font-medium">Free for the same time on this device schedule:</p>
               <ul className="mt-1 flex flex-wrap gap-2">
                 {freeElsewhere.map((r) => (
                   <li key={r.id}>
@@ -414,6 +417,7 @@ export function ClassroomsPage() {
         </Link>
       </p>
       {showDemoOps ? <ClassroomOps /> : null}
+      {sourceData ? <ProcessTimeTax service="classrooms" /> : null}
     </article>
   )
 }

@@ -5,7 +5,7 @@ import { useServices } from '@/app/services'
 import { emptyCart, type Cart } from '@/domain/chill'
 import { ownOrders } from '@/selectors/chill'
 
-/** The signed-in demo profile's view of Chill Spot. Other profiles' orders are never exposed here. */
+/** The signed-in persona's view of Chill Spot. Other profiles' orders are never exposed here. */
 export function useChill() {
   const café = useChillState((s) => s.café)
   const status = useChillState((s) => s.status)

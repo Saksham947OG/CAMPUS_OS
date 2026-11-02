@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { makeServices, renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 const A = 'demo-student-a'
 beforeEach(() => setViewport(1600))
 afterEach(() => clearViewport())
@@ -16,7 +16,7 @@ async function enableOps(
   then: string,
 ) {
   await router.navigate('/settings')
-  await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+  await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
   await router.navigate(then)
 }
 
@@ -40,7 +40,7 @@ describe('Chill Spot V2 pages', () => {
       within(await screen.findByRole('dialog')).getByRole('button', { name: /Add to cart/ }),
     )
     await user.click(await screen.findByRole('button', { name: 'Review checkout' }))
-    const sheet = await screen.findByRole('dialog', { name: /Review your demo order/ })
+    const sheet = await screen.findByRole('dialog', { name: /Review your local order/ })
     expect(within(sheet).getByText(/stays pending until the café accepts it/)).toBeInTheDocument()
     expect(within(sheet).getByText(/Pay at Pickup/)).toBeInTheDocument()
     expect(within(sheet).getByText(/no payment or refund is involved/)).toBeInTheDocument()
@@ -76,7 +76,7 @@ describe('Chill Spot V2 pages', () => {
     expect(await screen.findByText(/Ready for pickup/)).toBeInTheDocument()
     await router.navigate('/notifications')
     expect(
-      await screen.findByRole('link', { name: /Open: Demo order ready for pickup/ }),
+      await screen.findByRole('link', { name: /Open: Local order ready for pickup/ }),
     ).toBeInTheDocument()
     await router.navigate('/')
     const activity = await screen.findByRole('region', { name: /My activity/ })
@@ -88,10 +88,10 @@ describe('Chill Spot V2 pages', () => {
     const user = userEvent.setup()
     const { services, router } = renderApp('/settings')
     const o = await submitOrder(services)
-    await services.chill.operatorTransition(o.id, 'rejected', 'Out of stock (demo)')
+    await services.chill.operatorTransition(o.id, 'rejected', 'Out of stock (local)')
     await router.navigate(`/services/chill-spot/orders/${o.id}`)
     await heading(`Order ${o.displayNumber}`)
-    expect(screen.getByTestId('next-step')).toHaveTextContent(/Out of stock \(demo\)/)
+    expect(screen.getByTestId('next-step')).toHaveTextContent(/Out of stock \(local\)/)
     expect(screen.queryByRole('button', { name: 'Cancel request' })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Reorder' }))
     await heading('Chill Spot')
@@ -100,8 +100,8 @@ describe('Chill Spot V2 pages', () => {
       1,
     ) // nothing was resubmitted
     await router.navigate('/settings')
-    await user.click(await screen.findByRole('button', { name: /demo profile/i }))
-    await user.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     await router.navigate(`/services/chill-spot/orders/${o.id}`)
     await heading('Order not found')
     expect(screen.getByRole('main').textContent).not.toMatch(/Out of stock/)
@@ -156,7 +156,7 @@ describe('Chill Spot V2 pages', () => {
     const user = userEvent.setup()
     const { services, router } = renderApp('/settings')
     const o = await submitOrder(services)
-    await services.chill.setPause('Rush hour (demo)')
+    await services.chill.setPause('Rush hour (local)')
     await router.navigate('/services/chill-spot')
     await heading('Chill Spot')
     expect((await screen.findByTestId('condition')).textContent).toMatch(/Paused/)

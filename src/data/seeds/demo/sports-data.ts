@@ -126,8 +126,8 @@ export function demoCatalogue(nowIso: string): Book[] {
     author,
     status,
     asOf: nowIso,
-    sourceLabel: 'Fictional demo catalogue (not a real library)',
-    provenance: demo(nowIso, 'Fictional demo catalogue'),
+    sourceLabel: 'Fictional illustrative catalogue (not a real library)',
+    provenance: demo(nowIso, 'Fictional illustrative catalogue'),
   })
   return [
     book(
@@ -158,7 +158,7 @@ const EXAMPLE_LABEL = 'Illustrative example booking (not a real campus booking)'
 
 /**
  * Two persistent examples so "My bookings" shows real history from the first visit: an upcoming confirmed
- * badminton court and a cancelled study room. They are demo seeds for the first demo profile only, dated
+ * badminton court and a cancelled study room. They are demo seeds for the first persona only, dated
  * relative to when the store is created, and the "Book again" link on each goes to the live booking page.
  */
 export function exampleReservations(nowMs: number): SportsReservation[] {

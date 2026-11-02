@@ -3,7 +3,7 @@ import { provenanceSchema } from './provenance'
 
 /**
  * Campus Mail (COS-MASTER-V2 §D): a SIMULATED inbox. No mailbox is connected, no OAuth token exists,
- * and nothing here reads real email. A message "arriving" is a button in the demo lab. The result of
+ * and nothing here reads real email. A message "arriving" is a button on this device lab. The result of
  * each stage (received, classified, extracted, identity matched, seat updated, alerted) is recorded so
  * a reader can see where a message stopped.
  */
@@ -85,7 +85,7 @@ export const mailStoreSchema = z.object({
     /** A seat change this close to the start (or inside it) is urgent. */
     urgentWithinHours: z.number().int().min(1).max(168),
   }),
-  /** Fictional unique student keys per demo profile. A name is never used to match a seat. */
+  /** Fictional unique student keys per persona. A name is never used to match a seat. */
   studentKeys: z.record(z.string(), z.string()),
   /** Normalized exam label in a notice → the exam it names. Unknown labels need review. */
   examIndex: z.record(z.string(), z.string()),

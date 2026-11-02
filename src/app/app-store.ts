@@ -29,7 +29,7 @@ export interface AppStoreState {
   theme: ThemeChoice
   setTheme(theme: ThemeChoice): void
   init(): Promise<void>
-  /** Switches the active demo profile. Returns false if the id is unknown. */
+  /** Switches the active persona. Returns false if the id is unknown. */
   setActiveProfile(id: string): boolean
 }
 
@@ -74,7 +74,7 @@ export function createAppStore(services: Services): AppStore {
       try {
         const profiles = await services.profiles.list()
         if (profiles.length === 0) {
-          set({ status: 'error', error: 'No demo profiles are available.' })
+          set({ status: 'error', error: 'No personas are available.' })
           return
         }
         const saved = services.appState.load()

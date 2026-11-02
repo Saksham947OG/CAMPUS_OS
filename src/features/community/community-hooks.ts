@@ -3,7 +3,7 @@ import { useCommunityState } from '@/app/community-store'
 import { useServices } from '@/app/services'
 import { useNow } from '@/hooks/use-now'
 
-/** The signed-in demo profile's view of Community. Other profiles' private fields never come through here. */
+/** The signed-in persona's view of Community. Other profiles' private fields never come through here. */
 export function useCommunity() {
   const community = useCommunityState((s) => s.community)
   const status = useCommunityState((s) => s.status)

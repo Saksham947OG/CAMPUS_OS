@@ -15,10 +15,11 @@ export const dataModeInfo: Record<
       'Taken from a document the project owner supplied. Supplied does not mean official: it can still be tentative or out of date.',
   },
   demoSeed: {
-    label: 'Sample data',
+    label: 'Illustrative',
     icon: FlaskConical,
     tone: 'bg-terracotta-tint',
-    meaning: 'Fictional data made for demonstration. It is never an institutional record.',
+    meaning:
+      'An illustrative entry fills a missing detail or supports a planning scenario. It is not a verified campus fact.',
   },
   userCreated: {
     label: 'Personal',
@@ -27,7 +28,7 @@ export const dataModeInfo: Record<
     meaning: 'Created by you in this browser. It exists on this device only.',
   },
   simulated: {
-    label: 'Simulated',
+    label: 'Local activity',
     icon: TestTube,
     tone: 'bg-mist',
     meaning: 'The result of a visible demonstration action. Nothing outside this app acted on it.',

@@ -12,6 +12,7 @@ const clock = { now: () => Temporal.Instant.from('2026-11-02T04:30:00Z') }
 const make = (backend: Storage | null = createMemoryStorage().storage): Services => {
   let n = 0
   return createServices({
+    sourceData: false,
     storage: createStorageAdapter({ backend }),
     clock,
     newId: (p) => `${p}-i${++n}`,
@@ -91,13 +92,13 @@ describe('C-T28 reset separation and C-A25 Reset demo', () => {
 
     renderApp('/settings', { services })
     const user = userEvent.setup()
-    const card = (await screen.findByRole('heading', { name: 'Reset demo data' })).closest(
+    const card = (await screen.findByRole('heading', { name: 'Reset reference data' })).closest(
       'section',
     )!
     expect(within(card).getByText(/never delete anything you created/)).toBeInTheDocument()
 
     // Cancel: nothing happens.
-    await user.click(within(card).getByRole('button', { name: /Reset demo data/ }))
+    await user.click(within(card).getByRole('button', { name: /Reset reference data/ }))
     let confirm = await screen.findByRole('dialog')
     expect(within(confirm).getByText(/cannot be undone/)).toBeInTheDocument()
     expect(within(confirm).getByText(/every/)).toBeInTheDocument()
@@ -108,9 +109,9 @@ describe('C-T28 reset separation and C-A25 Reset demo', () => {
     ).toBe(true)
 
     // Confirm: user data is gone, seed restored.
-    await user.click(within(card).getByRole('button', { name: /Reset demo data/ }))
+    await user.click(within(card).getByRole('button', { name: /Reset reference data/ }))
     confirm = await screen.findByRole('dialog')
-    await user.click(within(confirm).getByRole('button', { name: 'Reset demo data' }))
+    await user.click(within(confirm).getByRole('button', { name: 'Reset reference data' }))
     await waitFor(async () => {
       const data = await services.campus.load('demo-student-a')
       expect(data.events.some((e) => e.id === 'ev-keep')).toBe(false)

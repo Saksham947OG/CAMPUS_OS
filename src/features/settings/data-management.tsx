@@ -5,7 +5,7 @@ import { useConfirm } from '@/components/confirm-context'
 import { useToast } from '@/components/toast-context'
 import { Button } from '@/components/ui/button'
 import { resetDemoData } from '@/data/reset'
-import { demoProfiles } from '@/data/seeds/demo/profiles'
+import { campusProfiles as demoProfiles } from '@/data/campus/catalogue'
 import { useCampusData } from '@/hooks/use-campus-data'
 
 /** Counts of the records this profile can see, by origin — a plain, factual "what is this data?" view. */
@@ -69,12 +69,12 @@ export function ResetDemo() {
 
   const reset = async () => {
     const choice = await confirm({
-      title: 'Reset all demo data on this device?',
+      title: 'Reset all reference data on this device?',
       description: (
         <>
           <p>
-            This restores the sample data and removes, for <strong>every</strong> demo profile on
-            this device:
+            This restores the sample data and removes, for <strong>every</strong> persona on this
+            device:
           </p>
           <ul className="mt-2 list-disc pl-5">
             <li>events, recurring events and occurrence changes you created</li>
@@ -96,14 +96,14 @@ export function ResetDemo() {
             <li>Demo exam seating and your saved Time Tax what-if scenarios</li>
             <li>
               Campus Essentials demo records: laundry loads, machine reservations, mess check-ins
-              and feedback, the demo fee and parcels
+              and feedback, the illustrative fee and parcels
             </li>
             <li>saved layouts, calendar views and filters</li>
           </ul>
           <p className="mt-2">It cannot be undone. Nothing outside this browser is affected.</p>
         </>
       ),
-      confirmLabel: 'Reset demo data',
+      confirmLabel: 'Reset reference data',
       danger: true,
     })
     if (choice !== 'confirm') return
@@ -123,21 +123,22 @@ export function ResetDemo() {
       services.meetings,
       services.reports,
     )
-    toast.notify('success', 'Demo data was reset on this device.')
+    demoProfiles.forEach((p) => services.observations.reset(p.id))
+    toast.notify('success', 'Reference data was reset on this device.')
   }
 
   return (
     <div className="flex flex-col gap-3">
       <p>
-        Use this to return the whole demo to its starting state. It is different from “Reset layout”
-        on Home or “Clear filters” in the Calendar, which never delete anything you created.
+        Use this to return the starting dataset to its starting state. It is different from “Reset
+        layout” on Home or “Clear filters” in the Calendar, which never delete anything you created.
       </p>
       <Button
         variant="outline"
         className="min-h-11 gap-2 self-start border-danger text-danger"
         onClick={() => void reset()}
       >
-        <RotateCcw aria-hidden="true" /> Reset demo data…
+        <RotateCcw aria-hidden="true" /> Reset reference data…
       </Button>
     </div>
   )

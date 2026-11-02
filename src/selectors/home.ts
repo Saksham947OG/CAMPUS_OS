@@ -220,7 +220,7 @@ export function activityEntries(
               : 'Past'
             : b.provenance.dataMode === 'demoSeed'
               ? 'Booked (sample record)'
-              : 'Reserved (demo reservation)',
+              : 'Reserved (local reservation)',
       when: b.endDate
         ? `${formatDateShort(b.date)}, ${formatTime(b.start)} → ${formatDateShort(b.endDate)}, ${formatTime(b.end)}`
         : `${formatDateShort(b.date)}, ${formatTimeRange(b.start, b.end)}`,

@@ -1,3 +1,5 @@
+import { useServices } from '@/app/services'
+import { SourceBestTimePage } from '../sources/source-best-time'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { PageHeader } from '@/components/page-header'
@@ -23,6 +25,10 @@ const SERVICES: ServiceId[] = ['mess', 'gym', 'laundry']
  * forecast and never a statement that a place is open or free right now.
  */
 export function BestTimePage() {
+  const { sourceData } = useServices()
+  return sourceData ? <SourceBestTimePage /> : <LegacyBestTimePage />
+}
+function LegacyBestTimePage() {
   const [service, setService] = useState<ServiceId>('mess')
   const [weekday, setWeekday] = useState(1)
   const obs = useMemo(() => illustrativeObservations(), [])

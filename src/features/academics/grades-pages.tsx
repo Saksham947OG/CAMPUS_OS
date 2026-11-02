@@ -1,3 +1,9 @@
+import { useServices } from '@/app/services'
+import {
+  BMS_SCALE,
+  campusAcademicRecords,
+  campusAttendanceRecords,
+} from '@/data/campus/academic-records'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { useAppStore } from '@/app/app-store'
@@ -20,11 +26,10 @@ import { Empty, Pill, SectionCard, SubNav } from '../essentials/ess-common'
 import { academicsTabs } from './academics-nav'
 
 const fmt = (n: number, d = 2) => n.toFixed(d)
-const letters = Object.keys(DEMO_SCALE.points)
 
-function priorOf(past: { courses: Course[] }[]) {
+function priorOf(past: { courses: Course[] }[], scale = DEMO_SCALE) {
   const all = past.flatMap((s) => s.courses)
-  const q = quality(all)
+  const q = quality(all, scale)
   return q.ok && q.value.credits > 0
     ? { cgpa: q.value.points / q.value.credits, credits: q.value.credits }
     : null
@@ -33,23 +38,41 @@ function priorOf(past: { courses: Course[] }[]) {
 /** Grades, a what-if calculator and a target planner. Hypothetical grades never overwrite a recorded one. */
 export function GradesPage() {
   const profileId = useAppStore((s) => s.activeProfileId)
-  const rec = academicRecords[profileId]
+  return <ProfileGradesPage key={profileId} />
+}
+function ProfileGradesPage() {
+  const profileId = useAppStore((s) => s.activeProfileId)
+  const { sourceData } = useServices()
+  const scale = sourceData ? BMS_SCALE : DEMO_SCALE
+  const letters = Object.keys(scale.points)
+  const rec = (sourceData ? campusAcademicRecords : academicRecords)[profileId]
   const [tab, setTab] = useState<'grades' | 'calc' | 'target'>('grades')
   const [sim, setSim] = useState<Record<string, string>>({})
   const [target, setTarget] = useState('8.0')
   const [planned, setPlanned] = useState('')
-  const prior = useMemo(() => (rec ? priorOf(rec.past) : null), [rec])
+  const prior = useMemo(() => (rec ? priorOf(rec.past, scale) : null), [rec, scale])
   if (!rec)
     return (
       <article className="flex max-w-4xl flex-col gap-4">
         <PageHeader
           title="Grades and GPA"
-          badge={<Pill tone="demo">Demo · fictional records</Pill>}
+          badge={
+            <Pill tone="demo">
+              {sourceData
+                ? 'Supplied curriculum · anonymous grade examples'
+                : 'Illustrative persona records'}
+            </Pill>
+          }
         />
         <SubNav label="Academics sections" items={academicsTabs} current="grades" />
-        <Empty>
-          No grades are recorded for this demo profile, so there is nothing to calculate.
-        </Empty>
+        {sourceData ? (
+          <p className="rounded-md bg-mist p-3 text-sm">
+            Course names, credits and grade scale come from the supplied manual. Earlier grades are
+            anonymized examples from supplied screenshots, not this persona’s transcript. Missing
+            grades remain pending.
+          </p>
+        ) : null}
+        <Empty>No grades are recorded for this persona, so there is nothing to calculate.</Empty>
       </article>
     )
   const simulated: Course[] = rec.current.courses.map((x) => ({
@@ -57,17 +80,22 @@ export function GradesPage() {
     grade: x.grade ?? (sim[x.code] || undefined),
   }))
   const currentCredits = rec.current.courses.reduce((a, x) => a + x.credits, 0)
-  const proj = prior ? projectedCgpa(prior.cgpa, prior.credits, simulated) : null
-  const req = prior
-    ? requiredSgpa(
-        Number(target),
-        prior.cgpa,
-        prior.credits,
-        Number(planned) > 0 ? Number(planned) : currentCredits,
-      )
-    : null
+  const proj =
+    prior || sourceData
+      ? projectedCgpa(prior?.cgpa ?? 0, prior?.credits ?? 0, simulated, scale)
+      : null
+  const req =
+    prior || sourceData
+      ? requiredSgpa(
+          Number(target),
+          prior?.cgpa ?? 0,
+          prior?.credits ?? 0,
+          Number(planned) > 0 ? Number(planned) : currentCredits,
+          scale,
+        )
+      : null
   const sem = (s: { id: string; label: string; courses: Course[] }) => {
-    const g = sgpa(s.courses)
+    const g = sgpa(s.courses, scale)
     return (
       <SectionCard key={s.id} id={`sem-${s.id}`} title={s.label}>
         <table className="w-full text-left text-sm">
@@ -93,8 +121,8 @@ export function GradesPage() {
           </tbody>
         </table>
         <p className="mt-1 text-sm">
-          SGPA so far: <strong>{g.ok ? fmt(g.value) : 'not available yet'}</strong> · source: demo
-          fixture
+          SGPA so far: <strong>{g.ok ? fmt(g.value) : 'not available yet'}</strong> ·{' '}
+          {sourceData ? 'supplied anonymous examples / pending grades' : 'illustrative fixture'}
         </p>
       </SectionCard>
     )
@@ -104,9 +132,22 @@ export function GradesPage() {
       <PageHeader
         title="Grades and GPA"
         description="Recorded results, a what-if calculator and a target planner. Hypothetical grades are kept apart from recorded ones."
-        badge={<Pill tone="demo">Demo · fictional records, demo grade scale</Pill>}
+        badge={
+          <Pill tone="demo">
+            {sourceData
+              ? 'Manual scale · anonymized grade examples'
+              : 'Illustrative persona records, demo grade scale'}
+          </Pill>
+        }
       />
       <SubNav label="Academics sections" items={academicsTabs} current="grades" />
+      {sourceData ? (
+        <p className="rounded-md bg-mist p-3 text-sm">
+          Course names, credits and grade scale come from the supplied manual. Earlier grades are
+          anonymized examples from supplied screenshots, not this persona’s transcript. Missing
+          grades remain pending.
+        </p>
+      ) : null}
       <div
         role="tablist"
         aria-label="Grade tools"
@@ -131,8 +172,8 @@ export function GradesPage() {
         ))}
       </div>
       <p className="text-xs text-ink-muted">
-        {DEMO_SCALE.label}. Failures, repeats, withdrawals and pass/fail rules are not configured,
-        so none is applied. Prior CGPA is computed from the recorded grades above.
+        {scale.label}. Failures, repeats, withdrawals and pass/fail rules are not configured, so
+        none is applied. Prior CGPA is computed from the recorded grades above.
       </p>
       {tab === 'grades' ? (
         <>
@@ -191,18 +232,19 @@ export function GradesPage() {
             aria-live="polite"
             data-testid="projection"
           >
-            {!prior ? (
+            {!prior && !sourceData ? (
               <p>No finalized credits to project from.</p>
             ) : proj?.ok ? (
               <>
                 <p>
-                  Previous CGPA {fmt(prior.cgpa)} over {prior.credits} credits
+                  Previous graded credits: {prior?.credits ?? 0}
+                  {prior ? ` · CGPA ${fmt(prior.cgpa)}` : ' · first-semester projection'}
                 </p>
                 <p>
                   Projected SGPA <strong>{fmt(proj.value.sgpa)}</strong> over {proj.value.credits}{' '}
                   graded credits · projected CGPA <strong>{fmt(proj.value.cgpa)}</strong> (
-                  {proj.value.cgpa - prior.cgpa >= 0 ? '+' : ''}
-                  {fmt(proj.value.cgpa - prior.cgpa)})
+                  {proj.value.cgpa - (prior?.cgpa ?? 0) >= 0 ? '+' : ''}
+                  {fmt(proj.value.cgpa - (prior?.cgpa ?? 0))})
                 </p>
                 <p className="text-xs text-ink-muted">
                   Projection, not a result. Pending courses are left out, not counted as zero.
@@ -251,7 +293,7 @@ export function GradesPage() {
             aria-live="polite"
             data-testid="required"
           >
-            {!prior ? (
+            {!prior && !sourceData ? (
               <p>No finalized credits to plan from.</p>
             ) : req?.ok ? (
               req.value.feasibility === 'notAchievable' ? (
@@ -287,17 +329,29 @@ export function GradesPage() {
 /** Attendance Planner: meets the configured target, or what it takes. Not "safe to skip". */
 export function AttendancePage() {
   const profileId = useAppStore((s) => s.activeProfileId)
-  const courses = attendanceRecords[profileId]
+  return <ProfileAttendancePage key={profileId} />
+}
+function ProfileAttendancePage() {
+  const profileId = useAppStore((s) => s.activeProfileId)
+  const { sourceData } = useServices()
+  const courses = (sourceData ? campusAttendanceRecords : attendanceRecords)[profileId]
   const [k, setK] = useState<Record<string, string>>({})
   if (!courses)
     return (
       <article className="flex max-w-4xl flex-col gap-4">
         <PageHeader
           title="Attendance planner"
-          badge={<Pill tone="demo">Demo · fictional counts</Pill>}
+          badge={<Pill tone="demo">Illustrative attendance counts</Pill>}
         />
         <SubNav label="Academics sections" items={academicsTabs} current="attendance" />
-        <Empty>No attendance sessions are recorded for this demo profile.</Empty>
+        {sourceData ? (
+          <p className="rounded-md bg-mist p-3 text-sm">
+            The target is 80% from the supplied manual. Held-session totals use the supplied summary
+            where available. Persona attendance counts are illustrative, not individual student
+            records.
+          </p>
+        ) : null}
+        <Empty>No attendance sessions are recorded for this persona.</Empty>
       </article>
     )
   return (
@@ -305,12 +359,25 @@ export function AttendancePage() {
       <PageHeader
         title="Attendance planner"
         description="See whether you meet a configured target, and what a few missed or attended sessions would change."
-        badge={<Pill tone="demo">Demo · targets are not a college rule</Pill>}
+        badge={
+          <Pill tone="demo">
+            {sourceData
+              ? '80% manual target · illustrative persona attendance'
+              : 'Demo · targets are not a college rule'}
+          </Pill>
+        }
       />
       <SubNav label="Academics sections" items={academicsTabs} current="attendance" />
+      {sourceData ? (
+        <p className="rounded-md bg-mist p-3 text-sm">
+          The target is 80% from the supplied manual. Held-session totals use the supplied summary
+          where available. Persona attendance counts are illustrative, not individual student
+          records.
+        </p>
+      ) : null}
       <p role="note" className="rounded-md border border-border-strong bg-mist p-3 text-sm">
         Attendance is one requirement, not a guarantee of exam eligibility. Approved leave counts
-        only as your college’s policy says, which is not configured here.
+        only as your college’s policy says, which must be checked with the programme office.
       </p>
       <ul className="grid gap-3 sm:grid-cols-2">
         {courses.map((c) => {
@@ -331,7 +398,7 @@ export function AttendancePage() {
                 {p.ok && p.value.current !== null
                   ? `${p.value.current.toFixed(1)}%`
                   : 'no sessions recorded'}{' '}
-                · target {Math.round(c.target * 100)}% (demo)
+                · target {Math.round(c.target * 100)}% (local)
               </p>
               {p.ok ? (
                 <p className="mt-1 text-sm font-medium" data-testid={`status-${c.code}`}>

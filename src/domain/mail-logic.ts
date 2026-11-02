@@ -247,7 +247,7 @@ export function ingest(
       stage(
         'extracted',
         'blocked',
-        'The sender is not trusted in this demo, so nothing was extracted or applied. A display name alone never authenticates a notice.',
+        'The sender is not trusted on this device, so nothing was extracted or applied. A display name alone never authenticates a notice.',
         c,
       ),
     )
@@ -563,7 +563,7 @@ export function confirmSeat(
     stage(
       'seat',
       'done',
-      `Seat applied to your exam record (revision ${effect.revision}, confirmed in the demo only).`,
+      `Seat applied to your exam record (revision ${effect.revision}, confirmed in the on this device only).`,
       c,
     ),
     stage('alert', 'done', 'One in-app alert was created. No push, email or SMS was sent.', c),

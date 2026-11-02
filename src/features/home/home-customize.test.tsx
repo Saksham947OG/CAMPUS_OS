@@ -73,19 +73,17 @@ describe('Home widgets (Phase 4 content)', () => {
   it('every sample record on Home carries a visible origin label', async () => {
     renderApp('/')
     const activity = await region('My activity')
-    expect(within(activity).getAllByText('Sample data').length).toBeGreaterThan(0)
-    expect(within(await region('Mess preview')).getAllByText('Sample data').length).toBeGreaterThan(
-      0,
-    )
+    expect(within(activity).getAllByText('Illustrative').length).toBeGreaterThan(0)
+    expect(
+      within(await region('Mess preview')).getAllByText('Illustrative').length,
+    ).toBeGreaterThan(0)
   })
 
-  it('H-T09 / DEC-023: My activity shows sample bookings only and says other modules do not exist yet', async () => {
+  it('H-T09: My activity labels its source and explains local activity', async () => {
     renderApp('/')
     const activity = await region('My activity')
     expect(within(activity).getByText(/Sample badminton court 1/)).toBeInTheDocument()
-    expect(
-      within(activity).getByText(/will appear here once those modules exist/),
-    ).toBeInTheDocument()
+    expect(within(activity).getByText(/Your activity combines bookings/)).toBeInTheDocument()
   })
 })
 
@@ -276,8 +274,8 @@ describe('preference resilience and isolation', () => {
       ).not.toBeInTheDocument(),
     )
     await user.keyboard('{Escape}')
-    await user.click(await screen.findByRole('button', { name: /demo profile/i }))
-    await user.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     expect(await region('Campus Pulse')).toBeInTheDocument() // B still has the default layout
   })
 })

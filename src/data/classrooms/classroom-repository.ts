@@ -89,7 +89,7 @@ export function createClassroomRepository(o: ClassroomRepositoryOptions): Classr
         .map((r) => ({
           id: r.id,
           ownerProfileId: r.ownerProfileId,
-          resource: `${s.rooms.find((x) => x.id === r.roomId)?.displayName ?? 'Classroom'} (demo reservation${r.state === 'disrupted' ? ', may be affected' : ''})`,
+          resource: `${s.rooms.find((x) => x.id === r.roomId)?.displayName ?? 'Classroom'} (local reservation${r.state === 'disrupted' ? ', may be affected' : ''})`,
           date: r.date,
           start: r.start,
           end: r.end,

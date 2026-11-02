@@ -142,7 +142,7 @@ describe('leave (AD-AT-03 … AD-AT-15)', () => {
       endDate: '2026-11-05',
     })
     expect(store.leaves[0]!.provenance.dataMode).toBe('userCreated')
-    expect((await env.notes(A)).filter((n) => n.title === 'Demo request saved')).toHaveLength(1)
+    expect((await env.notes(A)).filter((n) => n.title === 'Local request saved')).toHaveLength(1)
   })
 
   it('AD-AT-05: an invalid interval or reason is refused whole, and an overnight return needs its date', async () => {
@@ -208,9 +208,9 @@ describe('leave (AD-AT-03 … AD-AT-15)', () => {
     })
     expect((await gateAct(env, leave.id, 'logDeparture')).ok).toBe(false)
     expect((await gateAct(env, leave.id, 'logReturn')).ok).toBe(false)
-    const n = (await env.notes(A)).find((x) => x.title === 'Decision recorded in demo')!
+    const n = (await env.notes(A)).find((x) => x.title === 'Decision recorded locally')!
     expect(n.body).toMatch(
-      /Rejected in demo: Clashes with an exam\. This is not an official decision/,
+      /Rejected locally: Clashes with an exam\. This is not an official decision/,
     )
   })
 
@@ -270,14 +270,14 @@ describe('leave (AD-AT-03 … AD-AT-15)', () => {
     })
   })
 
-  it('AD-AT-11: an approval is only ever "in demo" and says it is not a permission', async () => {
+  it('AD-AT-11: an approval is only ever "locally" and says it is not a permission', async () => {
     const env = setup()
     const leave = await sendLeave(env)
     await env.ok(approverAct(env, leave.id, 'startReview'))
     await env.ok(approverAct(env, leave.id, 'approve'))
-    expect(leaveStatusLabel.approvedInDemo).toBe('Approved in demo — NOT A VALID GATE PASS')
+    expect(leaveStatusLabel.approvedInDemo).toBe('Approved locally — NOT A VALID GATE PASS')
     expect(Object.values(leaveStatusLabel).some((v) => /^Approved$/i.test(v))).toBe(false)
-    const n = (await env.notes(A)).find((x) => x.title === 'Decision recorded in demo')!
+    const n = (await env.notes(A)).find((x) => x.title === 'Decision recorded locally')!
     expect(n.body).toMatch(/not an official permission and not a valid gate pass/)
   })
 

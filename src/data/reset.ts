@@ -14,7 +14,7 @@ import type { SharedRepository } from './shared/shared-repository'
 import type { PrefsRepositories } from './prefs/prefs'
 
 /**
- * "Reset demo" (C-A25): restores seed data by removing everything the demo profiles created or
+ * "Reset demo" (C-A25): restores seed data by removing everything the personas created or
  * saved on this device — records, reminders, the inbox, layouts and filters, plus demo café orders and carts. It is a separate,
  * deliberately confirmed operation and is never triggered by "Reset filters" or "Reset layout".
  * The active-profile choice is kept.

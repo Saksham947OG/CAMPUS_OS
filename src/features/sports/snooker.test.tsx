@@ -76,15 +76,15 @@ describe('snooker: two distinguishable tables under one facility (V3 T5)', () =>
     await user.selectOptions(screen.getByLabelText('Date'), TOMORROW)
     await user.click(await screen.findByRole('button', { name: /11:00/ }))
     const panel = await screen.findByTestId('unit-status')
-    expect(within(panel).getByText(/1 of 2 tables reservable in demo schedule/)).toBeInTheDocument()
+    expect(within(panel).getByText(/1 of 2 tables reservable locally schedule/)).toBeInTheDocument()
     expect(within(panel).getByText(/Snooker table 1: Reserved$/)).toBeInTheDocument()
     expect(
-      within(panel).getByText(/Snooker table 2: Available in demo schedule/),
+      within(panel).getByText(/Snooker table 2: Available locally schedule/),
     ).toBeInTheDocument()
     expect(screen.getByText(/will reserve/)).toHaveTextContent('Snooker table 2')
-    await user.click(screen.getByRole('button', { name: 'Confirm demo reservation' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm local reservation' }))
     expect(
-      (await screen.findAllByText(/Reservation saved in the demo: Snooker table 2/)).length,
+      (await screen.findAllByText(/Reservation saved on this device: Snooker table 2/)).length,
     ).toBeGreaterThan(0)
     const s = await services.sports.load()
     expect(s.reservations.filter((r) => r.ownerProfileId === A).map((r) => r.resourceId)).toEqual([
@@ -95,6 +95,6 @@ describe('snooker: two distinguishable tables under one facility (V3 T5)', () =>
   it('capacity uses the right unit, or says it was not provided', async () => {
     renderApp('/bookings/resources/DEMO-SNOOKER-1')
     await screen.findByRole('heading', { level: 1, name: 'Snooker table 1' })
-    expect(screen.getByText(/2 tables listed in the demo fixtures/)).toBeInTheDocument()
+    expect(screen.getByText(/2 tables listed on this device fixtures/)).toBeInTheDocument()
   })
 })

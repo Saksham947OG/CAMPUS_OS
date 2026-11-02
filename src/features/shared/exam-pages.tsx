@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router'
 import { Field, inputClass } from '@/components/form-kit'
 import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import { demoProfiles } from '@/data/seeds/demo/profiles'
+import { campusProfiles as demoProfiles } from '@/data/campus/catalogue'
 import { useCampusData } from '@/hooks/use-campus-data'
 import {
   formatDateShort,
@@ -34,7 +34,7 @@ function ExamOps() {
   const [time, setTime] = useState('')
   if (!shared) return null
   return (
-    <OpsCard id="ops-exams-h" title="Demo Operations: exam seating" message={message}>
+    <OpsCard id="ops-exams-h" title="Local Operations: exam seating" message={message}>
       <p className="text-xs">
         Fictional seats only. A simulated change keeps every earlier version and sends one critical
         message that does not print the seat.
@@ -239,7 +239,7 @@ export function ExamsPage() {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-semibold">{e.name}</span>
                     <Pill tone={e.status === 'changed' ? 'warn' : 'plain'}>
-                      {e.status === 'changed' ? 'Changed (demo)' : 'Scheduled (demo)'}
+                      {e.status === 'changed' ? 'Changed (local)' : 'Scheduled (local)'}
                     </Pill>
                   </div>
                   <p className="text-sm text-ink-muted">
@@ -250,7 +250,7 @@ export function ExamsPage() {
                       ? 'Your seating is available.'
                       : v.kind === 'conflict'
                         ? 'Your seating needs verification.'
-                        : 'Seating not provided for this demo profile.'}
+                        : 'Seating not provided for this persona.'}
                   </p>
                   <Button asChild size="sm" variant="outline" className="mt-2 min-h-11">
                     <Link to={`/academics/exams/${e.id}`}>
@@ -324,7 +324,7 @@ export function ExamDetailPage() {
       </p>
       <SectionCard id="seat-h" title="My seating">
         {v.kind === 'none' ? (
-          <p>Seating not provided for this demo profile.</p>
+          <p>Seating not provided for this persona.</p>
         ) : v.kind === 'conflict' ? (
           <p role="alert" className="font-medium">
             Needs verification: more than one allocation exists for you for this exam, so none is

@@ -326,6 +326,8 @@ export { verificationSchema }
 /** Everything one profile can see, already audience-filtered. Selectors only read this. */
 export interface ProfileData {
   profileId: string
+  /** Explicit enrolment from a supplied persona/curriculum, independent of scheduled events. */
+  enrolledCourseIds?: readonly string[]
   courses: readonly Course[]
   events: readonly CalendarEvent[]
   series: readonly RecurrenceSeries[]

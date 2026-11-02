@@ -16,6 +16,7 @@ const T = (s: string) => s as LocalTime
 
 function setup() {
   const services = createServices({
+    sourceData: false,
     storage: createStorageAdapter({ backend: createMemoryStorage().storage }),
     clock: fixedClock(NOW),
   })

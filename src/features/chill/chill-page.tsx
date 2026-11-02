@@ -142,7 +142,7 @@ export function ChillSpotPage() {
     if (!r.ok) return r.error.message
     setCheckout(false)
     setNotes([])
-    toast.notify('success', 'Demo order request submitted. It is awaiting café acceptance.')
+    toast.notify('success', 'Local order request submitted. It is awaiting café acceptance.')
     navigate(orderPath(r.value.order.id))
     return undefined
   }
@@ -158,13 +158,13 @@ export function ChillSpotPage() {
             <Coffee className="size-7 text-coffee" aria-hidden="true" /> Chill Spot
           </h1>
           <span className="rounded-full border border-border-strong bg-terracotta-tint px-2.5 py-1 text-xs font-semibold text-ink">
-            Demo · sample menu
+            Supplied Chill Spot menu
           </span>
         </div>
         <p className="mt-1 max-w-2xl text-base text-ink-muted">
-          Order ahead and pay at the café counter. This is a demonstration: nothing here reaches a
-          real café, no payment is taken, and prices and queue figures are samples. Hours not
-          provided.
+          Order ahead and pay at the café counter. Menu names and prices come from the supplied café
+          photographs. Orders are saved on this device; café acceptance, live stock and opening
+          hours need confirmation. No payment is taken.
         </p>
       </div>
 
@@ -236,7 +236,7 @@ export function ChillSpotPage() {
           <div className="grid items-start gap-5 lg:grid-cols-[1fr_20rem]">
             <section aria-labelledby="menu-h" className="flex min-w-0 flex-col gap-3">
               <h2 id="menu-h" className="text-base font-semibold text-ink">
-                Menu <span className="font-normal text-ink-muted">(sample)</span>
+                Menu <span className="font-normal text-ink-muted">· supplied prices</span>
               </h2>
               <div className="flex flex-wrap gap-2">
                 <label className="relative min-w-48 flex-1">
@@ -353,7 +353,7 @@ export function ChillSpotPage() {
           </div>
           {myOrders.length === 0 ? (
             <p className="rounded-md border border-dashed border-border-strong bg-surface p-4 text-sm text-ink-muted">
-              You have no demo orders yet.{' '}
+              You have no local orders yet.{' '}
               <Link to="/services/chill-spot" className="font-medium text-coffee underline">
                 Browse the menu
               </Link>
@@ -401,7 +401,7 @@ export function ChillSpotPage() {
           <SheetContent side="bottom" className="max-h-[90dvh] overflow-y-auto rounded-t-lg p-4">
             <SheetHeader className="p-0 pb-2">
               <SheetTitle>Cart</SheetTitle>
-              <SheetDescription>Pay at pickup. Demo only.</SheetDescription>
+              <SheetDescription>Pay at pickup. Saved on this device.</SheetDescription>
             </SheetHeader>
             {cartPanel}
           </SheetContent>

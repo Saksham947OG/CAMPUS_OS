@@ -18,7 +18,7 @@ const demo = (
  * The starting Community scenario. Four fictional clubs (one with an open link, one open without a
  * link, one closed, one committee with nothing announced), three fictional events (one date-only),
  * teams including two with the SAME name, fixtures including one with no venue or time, and a few
- * found items reported by Demo Student B. Nobody in it is real, and no phone number, handle or
+ * found items reported by Reference Student B. Nobody in it is real, and no phone number, handle or
  * precise room appears.
  */
 export function initialCommunityStore(nowMs: number): CommunityStore {
@@ -172,7 +172,7 @@ export function initialCommunityStore(nowMs: number): CommunityStore {
         sport: 'Basketball',
         name: 'Demo Strikers',
         captainProfileId: 'demo-student-b',
-        captainLabel: 'Demo Student B (captain)',
+        captainLabel: 'Reference Student B (captain)',
         maxRoster: 6,
         members: ['demo-student-b'],
       }),

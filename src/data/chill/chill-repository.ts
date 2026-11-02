@@ -33,7 +33,7 @@ import { orderBlock, toSnapshot, validateCart, type MenuData } from '@/selectors
 
 /**
  * The single owner of Chill Spot state (COS-CHILL-001 §11). One GLOBAL café store holds every order,
- * the queue observations and the pause flag, because the queue is shared across demo profiles;
+ * the queue observations and the pause flag, because the queue is shared across personas;
  * students only ever read their own orders through `ownOrders`, and other profiles' orders reach
  * them only as anonymous counts (DEC-048). Carts are profile-scoped.
  *
@@ -88,7 +88,7 @@ export interface ChillRepository {
   setPause(reason: string | null): Promise<Result<void>>
   /** Resets ONLY the café scenario (all café orders and observations); never Home/Calendar data. */
   resetScenario(): Promise<Result<void>>
-  /** For "Reset demo data": café scenario plus every profile's cart. */
+  /** For "Reset reference data": café scenario plus every profile's cart. */
   resetAll(profiles: readonly Profile[]): Promise<void>
   subscribe(listener: () => void): Unsubscribe
 }
@@ -120,7 +120,7 @@ export function notificationFor(
   switch (t.to) {
     case 'pending':
       return {
-        title: 'Demo order request submitted',
+        title: 'Local order request submitted',
         body: `${n}: awaiting café acceptance.`,
         significance: 'standard',
       }
@@ -132,31 +132,31 @@ export function notificationFor(
       }
     case 'rejected':
       return {
-        title: 'Demo order declined',
+        title: 'Local order declined',
         body: t.reason ? `${n}: ${t.reason}` : `${n} was not accepted. No reason was recorded.`,
         significance: 'important',
       }
     case 'preparing':
       return {
-        title: 'Demo order is being prepared',
+        title: 'Local order is being prepared',
         body: `${n} is being prepared.`,
         significance: 'optional',
       }
     case 'ready':
       return {
-        title: 'Demo order ready for pickup',
+        title: 'Local order ready for pickup',
         body: `${n}: pay at the café counter.`,
         significance: 'important',
       }
     case 'collected':
       return {
-        title: 'Demo order collection recorded',
+        title: 'Local order collection recorded',
         body: `${n}: payment is handled outside CampusOS and is not verified here.`,
         significance: 'standard',
       }
     case 'cancelled':
       return {
-        title: 'Demo order request cancelled',
+        title: 'Local order request cancelled',
         body: `${n} was cancelled before acceptance.`,
         significance: 'standard',
       }

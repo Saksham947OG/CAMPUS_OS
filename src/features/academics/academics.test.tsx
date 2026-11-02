@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { makeServices, renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 const A = 'demo-student-a'
 beforeEach(() => setViewport(1600))
 afterEach(() => clearViewport())
@@ -16,7 +16,7 @@ async function enableOps(
   then: string,
 ) {
   await router.navigate('/settings')
-  await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+  await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
   await router.navigate(then)
 }
 
@@ -24,7 +24,7 @@ describe('course hub', () => {
   it('AC-AT-01: the overview shows source-labelled entry points to courses, faculty, mentorship and the office', async () => {
     renderApp('/academics')
     await heading('Academics')
-    expect(await screen.findByText(/Demo · sample data, not official records/)).toBeInTheDocument()
+    expect(await screen.findByText(/Campus data, not official records/)).toBeInTheDocument()
     for (const name of [/My courses/, /Faculty Connect/, /Mentorship/, /BMS Office/])
       expect(screen.getAllByRole('link', { name }).length).toBeGreaterThan(0)
   })
@@ -39,7 +39,7 @@ describe('course hub', () => {
     await user.clear(screen.getByLabelText('Search courses'))
     await user.click(await screen.findByRole('link', { name: /DEMO-101 · Sample Course A/ }))
     await heading(/DEMO-101 · Sample Course A/)
-    expect(screen.getByText('Not provided in this demo.')).toBeInTheDocument()
+    expect(screen.getByText('Not provided on this device.')).toBeInTheDocument()
   })
 
   it('AC-AT-04 / AC-AT-05: notices show source and audience, and read state is kept per profile', async () => {
@@ -64,7 +64,7 @@ describe('course hub', () => {
     renderApp('/academics/courses/course-a/materials')
     await heading(/Sample Course A/)
     expect(
-      await screen.findByText(/Sample slide deck \(no link in this demo\)/),
+      await screen.findByText(/Sample slide deck \(no link on this device\)/),
     ).toBeInTheDocument()
     expect(screen.getByText(/Resource not provided. There is no usable link./)).toBeInTheDocument()
     const link = screen.getByRole('link', { name: /Open link/ })
@@ -127,10 +127,10 @@ describe('faculty meetings', () => {
     const user = userEvent.setup()
     const { services } = renderApp('/academics/faculty/appointments/new?actor=fac-a')
     await heading('New faculty meeting request')
-    await user.click(screen.getByRole('button', { name: 'Record request in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Record request locally' }))
     expect(await screen.findByRole('alert')).toHaveTextContent(/Choose a published window/)
     await user.selectOptions(screen.getByLabelText('Published sample window'), 'av-a-1')
-    await user.click(screen.getByRole('button', { name: 'Record request in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Record request locally' }))
     await heading(/Meeting with Demo Faculty A/)
     expect(await screen.findByText('Awaiting demo response')).toBeInTheDocument()
     expect(screen.getByText(/No email, push or message was sent/)).toBeInTheDocument()
@@ -170,7 +170,7 @@ describe('faculty meetings', () => {
     const ops = await screen.findByTestId('demo-ops')
     await user.click(within(ops).getByRole('button', { name: 'Accept' }))
     expect(
-      (await screen.findAllByText(/Accepted in demo \(not an official appointment\)/)).length,
+      (await screen.findAllByText(/Accepted locally \(not an official appointment\)/)).length,
     ).toBeGreaterThan(0)
     await router.navigate('/calendar?view=agenda&date=2026-11-04')
     expect(
@@ -218,7 +218,7 @@ describe('faculty meetings', () => {
     await user.click(screen.getByRole('link', { name: 'Request an appointment' }))
     await heading('New BMS Office request')
     await user.selectOptions(screen.getByLabelText('Published sample window'), 'av-o-1')
-    await user.click(screen.getByRole('button', { name: 'Record request in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Record request locally' }))
     await heading(/Meeting with Demo BMS Office/)
   })
 
@@ -246,14 +246,14 @@ describe('mentorship', () => {
     await heading('Studio project')
     await user.selectOptions(screen.getByLabelText('Invite a (fictional) mentor'), 'fac-a')
     await user.type(screen.getByLabelText('What would you like help with?'), 'Please guide us')
-    await user.click(screen.getByRole('button', { name: 'Record invitation in demo' }))
+    await user.click(screen.getByRole('button', { name: 'Record invitation locally' }))
     expect(
-      (await screen.findAllByText(/Sent in demo \(nothing was delivered\)/)).length,
+      (await screen.findAllByText(/Sent locally \(nothing was delivered\)/)).length,
     ).toBeGreaterThan(0)
     const ops = await screen.findByTestId('demo-ops')
     await user.click(within(ops).getByRole('button', { name: 'Accept' }))
     expect(
-      (await screen.findAllByText(/Accepted in demo \(simulated mentor\)/)).length,
+      (await screen.findAllByText(/Accepted locally \(simulated mentor\)/)).length,
     ).toBeGreaterThan(0)
     expect(
       screen.getByRole('link', { name: 'Request a meeting with this mentor' }),

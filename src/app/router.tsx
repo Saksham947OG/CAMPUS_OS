@@ -6,6 +6,10 @@ import { RootErrorPage, RouteErrorPage } from './pages/route-error-page'
 import { routes, type RouteDef } from './routes'
 import { AppShell } from './shell/app-shell'
 
+const SourcesPage = lazy(() =>
+  import('@/features/sources/sources-page').then((m) => ({ default: m.SourcesPage })),
+)
+
 // Route-level code splitting keeps the first load small; each feature loads when first visited.
 const CalendarPage = lazy(() =>
   import('@/features/calendar/calendar-page').then((m) => ({ default: m.CalendarPage })),
@@ -380,6 +384,12 @@ function elementFor(route: RouteDef) {
     return (
       <Loading>
         <ServicesHubPage />
+      </Loading>
+    )
+  if (route.id === 'sources')
+    return (
+      <Loading>
+        <SourcesPage />
       </Loading>
     )
   if (route.id === 'settings')

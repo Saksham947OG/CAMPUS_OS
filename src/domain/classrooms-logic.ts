@@ -247,10 +247,10 @@ export function submitReservation(
         id,
         e,
         state === 'confirmedDemo'
-          ? 'Classroom reserved (demo)'
-          : 'Classroom request recorded (demo)',
+          ? 'Classroom reserved (local)'
+          : 'Classroom request recorded (local)',
         state === 'confirmedDemo'
-          ? `${where} is reserved in this demo only. It is not a campus booking and does not show whether the room is physically empty.`
+          ? `${where} is reserved in this on this device only. It is not a campus booking and does not show whether the room is physically empty.`
           : `${where}: requested, not reserved. Nobody has been told; a simulated reviewer must decide.`,
       ),
     ],
@@ -296,7 +296,7 @@ export function decide(
         r.ownerProfileId,
         r.id,
         e,
-        'Classroom request not approved (demo)',
+        'Classroom request not approved (local)',
         `${room.displayName}: ${reason.trim()}`,
         'important',
       ),
@@ -329,8 +329,8 @@ export function decide(
       r.ownerProfileId,
       r.id,
       e,
-      'Classroom request approved (demo)',
-      `${room.displayName} is reserved in this demo.`,
+      'Classroom request approved (local)',
+      `${room.displayName} is reserved on this device.`,
       'important',
     ),
   ])
@@ -362,7 +362,7 @@ export function cancel(
       profileId,
       r.id,
       e,
-      'Classroom reservation cancelled (demo)',
+      'Classroom reservation cancelled (local)',
       `${room?.displayName}: the recorded slot is free again. This does not mean anyone checked the room.`,
     ),
   ])
@@ -423,7 +423,7 @@ export function reschedule(
       profileId,
       r.id,
       e,
-      'Classroom reservation moved (demo)',
+      'Classroom reservation moved (local)',
       `${room.displayName} on ${to.date}, ${to.start}–${to.end}. The old slot is free again.`,
     ),
   ])
@@ -468,7 +468,7 @@ export function closeRoom(
         r.ownerProfileId,
         r.id,
         e,
-        'Your classroom may be unavailable (demo)',
+        'Your classroom may be unavailable (local)',
         `${s.rooms.find((x) => x.id === roomId)?.displayName} has a simulated closure at your time. Check the booking.`,
         'important',
       ),

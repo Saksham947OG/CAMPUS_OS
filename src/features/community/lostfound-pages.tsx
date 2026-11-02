@@ -275,7 +275,7 @@ export function ReportNewPage() {
           key,
           confirmDup,
         ),
-      publish ? 'Report published in the demo.' : 'Draft saved on this device.',
+      publish ? 'Report published on this device.' : 'Draft saved on this device.',
     )
     if (r.ok) nav(`/community/lost-found/${r.value.report.id}`)
     else setError(r.error.message)
@@ -467,7 +467,7 @@ export function ReportNewPage() {
         ) : null}
         <div className="flex flex-wrap gap-2">
           <Button type="submit" className="min-h-11">
-            Publish in demo
+            Publish locally
           </Button>
           <Button
             type="button"
@@ -562,15 +562,15 @@ export function ReportDetailPage() {
             {r.photo ? (
               <div className="sm:col-span-2">
                 <dt className="font-medium">Picture</dt>
-                <dd>{r.photo.name} was recorded; no picture is shown in this demo.</dd>
+                <dd>{r.photo.name} was recorded; no picture is shown on this device.</dd>
               </div>
             ) : null}
           </dl>
         </div>
         {r.status === 'returned' ? (
           <p className="mt-2 rounded-md bg-mist p-2">
-            Returned in the demo{raw.handoverAt ? ` on ${formatInstant(raw.handoverAt)}` : ''}. This
-            is not a legal record.
+            Returned on this device{raw.handoverAt ? ` on ${formatInstant(raw.handoverAt)}` : ''}.
+            This is not a legal record.
           </p>
         ) : null}
         {own ? (
@@ -588,11 +588,11 @@ export function ReportDetailPage() {
                   onClick={() =>
                     void act(
                       () => repo.publishReport(profileId, r.id),
-                      'Report published in the demo.',
+                      'Report published on this device.',
                     )
                   }
                 >
-                  Publish in demo
+                  Publish locally
                 </Button>
               ) : null}
               {raw.status === 'draft' || raw.status === 'published' ? (
@@ -729,7 +729,7 @@ export function ReportDetailPage() {
                 setClaimError('')
                 const res = await act(
                   () => repo.submitClaim(profileId, r.id, answer),
-                  'Claim recorded in the demo.',
+                  'Claim recorded on this device.',
                 )
                 if (res.ok) setAnswer('')
                 else setClaimError(res.error.message)
@@ -764,7 +764,7 @@ export function ReportDetailPage() {
       ) : null}
       {approvedClaim ? (
         <p className="text-sm">
-          Your claim was approved in the demo.{' '}
+          Your claim was approved on this device.{' '}
           <Link to={`/community/lost-found/claims/${approvedClaim.id}`} className="underline">
             Open it
           </Link>
@@ -836,10 +836,10 @@ export function ClaimPage() {
           </p>
         ) : null}
         {c.status === 'demoApproved' && report?.status === 'returned' ? (
-          <p className="mt-1">Handover recorded in the demo.</p>
+          <p className="mt-1">Handover recorded on this device.</p>
         ) : null}
         {c.status === 'demoApproved' && report?.status !== 'returned' ? (
-          <p className="mt-1">Approved in the demo. The handover step is still pending.</p>
+          <p className="mt-1">Approved on this device. The handover step is still pending.</p>
         ) : null}
         {CLAIM_ACTIVE.includes(c.status) ? (
           <Button

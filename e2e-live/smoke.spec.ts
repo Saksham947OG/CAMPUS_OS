@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 /**
  * Smoke test of the DEPLOYED site. It uses no real clock slots and changes only this browser's own
- * demo data, so it is safe to run at any time of day.
+ * reference data, so it is safe to run at any time of day.
  */
 const pages: [string, string][] = [
   ['/', 'Good'],
@@ -12,12 +12,13 @@ const pages: [string, string][] = [
   ['/bookings', 'Bookings'],
   ['/administration', 'Administration'],
   ['/academics', 'Academics'],
-  ['/academics/courses/course-a', 'DEMO-101'],
+  ['/academics/courses/bms-ibo', 'IBO'],
   ['/community', 'Community'],
   ['/community/clubs', 'Clubs & Committees'],
   ['/time-tax', 'Time Tax'],
   ['/notifications', 'Notifications'],
   ['/settings', 'Settings'],
+  ['/sources', 'Data & Sources'],
 ]
 
 for (const [path, text] of pages) {
@@ -35,7 +36,7 @@ test('an unknown address shows the in-app not-found page, not a server error', a
   await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible()
 })
 
-test('a visitor can place a demo order, which is saved and survives a refresh', async ({
+test('a visitor can place a local order, which is saved and survives a refresh', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 })
@@ -49,7 +50,7 @@ test('a visitor can place a demo order, which is saved and survives a refresh', 
     .getByRole('button', { name: /Add to cart/ })
     .click()
   await page.getByRole('button', { name: 'Review checkout' }).click()
-  await page.getByRole('button', { name: 'Place demo order request' }).click()
+  await page.getByRole('button', { name: 'Place local order request' }).click()
   await expect(page.getByRole('heading', { level: 1, name: /^Order CS-/ })).toBeVisible()
   await expect(page.getByTestId('next-step')).toContainText('not a confirmed order')
   await page.reload()
@@ -61,19 +62,19 @@ test('a visitor can create a Lost & Found report that is saved on this device', 
 }) => {
   await page.goto('/community/lost-found/new?type=lost')
   await page.getByLabel('Title (public)').fill('Live smoke umbrella')
-  await page.getByRole('button', { name: 'Publish in demo' }).click()
+  await page.getByRole('button', { name: 'Publish locally' }).click()
   await expect(page.getByRole('heading', { level: 1, name: 'Live smoke umbrella' })).toBeVisible()
   await page.reload()
   await expect(page.getByRole('heading', { level: 1, name: 'Live smoke umbrella' })).toBeVisible()
 })
 
-test('Demo Operations stay hidden until a visitor switches them on in Settings', async ({
+test('Local Operations stay hidden until a visitor switches them on in Settings', async ({
   page,
 }) => {
   await page.goto('/services/chill-spot')
   await expect(page.getByTestId('demo-ops')).toHaveCount(0)
   await page.goto('/settings')
-  await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+  await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
   await page.goto('/services/chill-spot')
   await expect(page.getByTestId('demo-ops')).toBeVisible()
   await expect(page.getByTestId('demo-ops')).toContainText('not the real café')

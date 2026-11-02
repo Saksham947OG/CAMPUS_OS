@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import { Database, Presentation, UserRound } from 'lucide-react'
 import { DataModeBadge } from '@/components/data-mode-badge'
 import { dataModeInfo } from '@/components/data-mode-info'
@@ -58,17 +59,17 @@ export function SettingsPage() {
 
       <div className="grid max-w-3xl gap-4">
         <Card
-          title="Demo profile"
+          title="Persona"
           icon={<UserRound className="size-4 text-teal-strong" aria-hidden="true" />}
         >
           <p className="flex flex-wrap items-center gap-2">
             <strong className="text-ink">{active?.displayName ?? '—'}</strong>
-            <DataModeBadge mode="demoSeed" />
+            <DataModeBadge mode={active?.dataMode ?? 'provided'} />
           </p>
           <p className="mt-2">{active?.description}</p>
           <p className="mt-2">
-            A demo profile only changes which sample and personal data you see. It is not an account
-            and there is no sign-in. Switch profiles from the profile menu in the top bar.
+            A persona changes which supplied and personal data you see. It is not an account and
+            there is no sign-in. Switch profiles from the profile menu in the top bar.
           </p>
         </Card>
 
@@ -102,7 +103,8 @@ export function SettingsPage() {
           </ul>
           <p className="mt-3">
             A fifth label, “connected”, is reserved for a future authorized integration. No data in
-            this prototype is live, official or connected to any campus system.
+            this app is connected to a campus system. Supplied documents are attributed to their
+            source; operational updates remain local.
           </p>
         </Card>
 
@@ -137,6 +139,9 @@ export function SettingsPage() {
 
         <Card id="data-sources" title="Data sources on this profile">
           <DataSources />
+          <Link to="/sources" className="mt-3 inline-block text-coffee underline">
+            Inspect all supplied sources and data gaps
+          </Link>
         </Card>
 
         <Card
@@ -153,7 +158,7 @@ export function SettingsPage() {
               onChange={(e) => setShowDemoOps(e.target.checked)}
             />
             <label htmlFor="show-demo-ops">
-              <strong>Show Demo Operations on service pages</strong>
+              <strong>Show Local Operations on service pages</strong>
               <span className="block font-normal text-ink-muted">
                 Adds a clearly labelled panel on Chill Spot, Laundry, Mess, Parcels, Bookings and
                 Administration where you act as the provider, café or desk, one visible click at a
@@ -164,7 +169,7 @@ export function SettingsPage() {
           </div>
         </Card>
 
-        <Card id="reset-demo" title="Reset demo data">
+        <Card id="reset-demo" title="Reset reference data">
           <ResetDemo />
         </Card>
       </div>

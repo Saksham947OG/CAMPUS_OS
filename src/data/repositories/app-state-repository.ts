@@ -12,7 +12,7 @@ export type AppState = z.infer<typeof appStateSchema>
 
 const KEY = storageKey({ area: 'app', version: 1 })
 
-/** App-global (not profile-scoped) state: currently only which demo profile is active. */
+/** App-global (not profile-scoped) state: currently only which persona is active. */
 export interface AppStateRepository {
   load(): AppState | undefined
   save(state: AppState): WriteResult

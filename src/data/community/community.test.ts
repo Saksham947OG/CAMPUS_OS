@@ -291,7 +291,7 @@ describe('Lost & Found', () => {
     // The losing claimant is told nothing about the winner.
     const lost = await notes(E)
     expect(lost.some((n) => /Another claim.*approved/.test(n.body))).toBe(true)
-    expect(JSON.stringify(lost)).not.toMatch(/Demo Student A|blue keychain/)
+    expect(JSON.stringify(lost)).not.toMatch(/Reference Student A|blue keychain/)
     expect(await bad(repo.markReturned('rep-2'))).toMatch(/No claim is approved/)
     await ok(repo.markReturned('rep-1'))
     s = await repo.load()
@@ -418,7 +418,7 @@ describe('teams and fixtures', () => {
 
   it('CO-AT-37: only the captain can decide, and the simulator cannot act for a real profile’s team', async () => {
     const { repo, ok, bad } = setup()
-    const r = await ok(repo.requestJoin(A, 'team-2')) // captained by Demo Student B
+    const r = await ok(repo.requestJoin(A, 'team-2')) // captained by Reference Student B
     expect(await bad(repo.decideJoin(captainA, 'team-2', r.id, 'accept'))).toMatch(
       /Only the team captain/,
     )

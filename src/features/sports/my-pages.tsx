@@ -75,7 +75,7 @@ export function MyBookingsPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="My bookings"
-        description="Every demo reservation you hold, in one place. These are not campus bookings and give no rights at a real facility."
+        description="Every local reservation you hold, in one place. These are not campus bookings and give no rights at a real facility."
         badge={<Pill tone="demo">Demo · your records only</Pill>}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="my" />
@@ -102,8 +102,8 @@ export function BookingDetailPage() {
           Booking not found
         </h1>
         <p className="mt-2 text-ink-muted">
-          We could not find that booking for this demo profile. It may not exist, or it may belong
-          to another profile. Nothing was changed.
+          We could not find that booking for this persona. It may not exist, or it may belong to
+          another profile. Nothing was changed.
         </p>
         <Button asChild className="mt-4 min-h-11">
           <Link to="/bookings/my">Back to My bookings</Link>
@@ -113,9 +113,9 @@ export function BookingDetailPage() {
   const res = sports.resources.find((x) => x.id === r.resourceId)
   const cancel = async () => {
     const c = await confirm({
-      title: 'Cancel this demo booking?',
+      title: 'Cancel this local booking?',
       description:
-        'The slot is released for others in this demo. This does not say anything about whether the facility is empty.',
+        'The slot is released for others on this device. This does not say anything about whether the facility is empty.',
       confirmLabel: 'Cancel booking',
       danger: true,
     })
@@ -226,7 +226,7 @@ export function BookingDetailPage() {
                   ? 'You'
                   : h.actorKind === 'system'
                     ? 'Automatic (when the app runs)'
-                    : 'Simulated (demo)'}
+                    : 'Simulated (local)'}
               </Pill>
               {h.note ? <span className="text-ink-muted">{h.note}</span> : null}
             </li>
@@ -295,7 +295,7 @@ export function WaitlistPage() {
       <SectionCard id="wl-h" title={`Entries (${mine.length})`}>
         {mine.length === 0 ? (
           <Empty>
-            You are not on any waitlist. A full badminton slot offers “Join demo waitlist”.
+            You are not on any waitlist. A full badminton slot offers “Join local waitlist”.
           </Empty>
         ) : (
           <ul className="flex flex-col gap-2">
@@ -333,7 +333,7 @@ export function WaitlistPage() {
                           onClick={() =>
                             void act(
                               () => repo.respondToOffer(profileId, w.id, true),
-                              'Offer accepted. A demo reservation was saved.',
+                              'Offer accepted. A local reservation was saved.',
                             )
                           }
                         >

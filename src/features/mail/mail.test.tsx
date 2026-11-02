@@ -15,6 +15,7 @@ const heading = (name: string | RegExp) => screen.findByRole('heading', { level:
 // 14:00 IST on Mon 2 Nov 2026: the demo quiz at 15:00 starts in one hour.
 const services14 = () =>
   createServices({
+    sourceData: false,
     storage: createStorageAdapter({ backend: createMemoryStorage().storage }),
     clock: fixedClock('2026-11-02T08:30:00Z'),
   })
@@ -25,7 +26,7 @@ async function enableOps(
   then: string,
 ) {
   await router.navigate('/settings')
-  await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+  await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
   await router.navigate(then)
   await heading('Campus Mail')
 }
@@ -35,9 +36,9 @@ describe('Campus Mail', () => {
     const user = userEvent.setup()
     renderApp('/notifications/mail')
     await heading('Campus Mail')
-    expect(screen.getByText(/Demo only · simulated mail/)).toBeInTheDocument()
+    expect(screen.getByText(/Saved on this device · simulated mail/)).toBeInTheDocument()
     expect(screen.getByTestId('mail-status')).toHaveTextContent(
-      /demo\.student\.a@bms-demo\.invalid.*Demo only.*not applicable/,
+      /demo\.student\.a@bms-demo\.invalid.*Saved on this device.*not applicable/,
     )
     expect(screen.getByText('BMS Weekly Update (Demo)')).toBeInTheDocument()
     await user.click(screen.getByRole('tab', { name: 'Student Life' }))
@@ -74,12 +75,12 @@ describe('Campus Mail', () => {
     // Home: the urgent signal sits above the dashboard
     await router.navigate('/')
     const signal = await screen.findByTestId('urgent-signal')
-    expect(signal).toHaveTextContent(/DEMO-OPS101 Quiz 1 \(demo\): CR5, Column 2, Row 3/)
+    expect(signal).toHaveTextContent(/DEMO-OPS101 Quiz 1 \(local\): CR5, Column 2, Row 3/)
     expect(signal).toHaveTextContent(/starts in 1 hour/)
     expect(within(signal).getByRole('link', { name: 'View original mail' })).toBeInTheDocument()
     // The exam page is the one owner of the seat, with a link back to the original message.
     await router.navigate('/academics/exams/exam-4')
-    await heading('DEMO-OPS101 Quiz 1 (demo)')
+    await heading('DEMO-OPS101 Quiz 1 (local)')
     expect(await screen.findByText('CR5, row 3, column 2')).toBeInTheDocument()
     expect(screen.getByText(/not an official allotment/)).toBeInTheDocument()
     await user.click(screen.getByRole('link', { name: 'View the original mail' }))
@@ -111,7 +112,7 @@ describe('Campus Mail', () => {
     ).toHaveLength(1)
   })
 
-  it('another demo profile sees none of it, and a seat for a different student is not shown', async () => {
+  it('another persona sees none of it, and a seat for a different student is not shown', async () => {
     const user = userEvent.setup()
     const services = services14()
     const { router } = renderApp('/settings', { services })
@@ -122,8 +123,8 @@ describe('Campus Mail', () => {
       }),
     )
     await screen.findByText('Quiz Seating — Revised (Demo)')
-    await user.click(await screen.findByRole('button', { name: /demo profile/i }))
-    await user.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     await router.navigate('/notifications/mail')
     await heading('Campus Mail')
     expect(await screen.findByText('BMS Weekly Update (Demo)')).toBeInTheDocument()
@@ -132,10 +133,8 @@ describe('Campus Mail', () => {
     await screen.findByRole('heading', { level: 1 })
     expect(screen.queryByTestId('urgent-signal')).not.toBeInTheDocument()
     await router.navigate('/academics/exams/exam-4')
-    await heading('DEMO-OPS101 Quiz 1 (demo)')
-    expect(
-      await screen.findByText('Seating not provided for this demo profile.'),
-    ).toBeInTheDocument()
+    await heading('DEMO-OPS101 Quiz 1 (local)')
+    expect(await screen.findByText('Seating not provided for this persona.')).toBeInTheDocument()
     expect(screen.getByRole('main').textContent).not.toMatch(/CR5|DEMO-BMS-001/)
     // A message that belongs to the first mailbox is not reachable by id from this one.
     const id = (await services.mail.load()).emails.find(

@@ -73,7 +73,7 @@ describe('classroom reservations', () => {
     expect(refs).toHaveLength(1)
     expect(refs[0]).toMatchObject({
       id: r.reservation.id,
-      resource: 'CR1 (demo reservation)',
+      resource: 'CR1 (local reservation)',
       manageRoute: `/bookings/classrooms/bookings/${r.reservation.id}`,
     })
     expect(e.repo.bookingRefs(B)).toHaveLength(0)
@@ -95,7 +95,7 @@ describe('classroom reservations', () => {
     const s = await e.repo.load()
     expect(slotStatus(s, 'CR1', { date: MON, start: T('09:00'), end: T('10:00') }, A)).toEqual({
       kind: 'blocked',
-      label: 'Scheduled class (demo)',
+      label: 'Scheduled class (local)',
       until: '11:00',
     })
     expect(slotStatus(s, 'CR3', { date: MON, start: T('10:00'), end: T('11:00') }, A).kind).toBe(

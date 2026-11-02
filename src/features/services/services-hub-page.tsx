@@ -36,8 +36,9 @@ export function ServicesHubPage() {
         })}
       </ul>
       <p className="mt-4 max-w-3xl text-sm text-ink-muted">
-        Every service above is a demonstration with sample data. Other campus services (bookings,
-        academics, administration and the rest) are not part of this prototype yet.
+        Services use supplied campus information and clearly labelled planning assumptions. Other
+        campus services (bookings, academics, administration and the rest) are not part of this
+        prototype yet.
       </p>
     </article>
   )

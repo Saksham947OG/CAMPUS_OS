@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Field, inputClass } from '@/components/form-kit'
 import { Button } from '@/components/ui/button'
 import { inviteStatusLabel, meetingStatusLabel } from '@/domain/academics'
-import { demoProfiles } from '@/data/seeds/demo/profiles'
+import { campusProfiles as demoProfiles } from '@/data/campus/catalogue'
 import { formatDateShort, isDateOnly, type DateOnly, type LocalTime } from '@/lib/time'
 import { meetingWith } from '@/selectors/academics'
 import { OpsCard, Pill } from '../essentials/ess-common'
@@ -31,7 +31,7 @@ export function AcademicsOps() {
   return (
     <OpsCard
       id="ops-academics-h"
-      title="Demo Operations: meetings and mentorship"
+      title="Local Operations: meetings and mentorship"
       message={message}
     >
       <div className="flex flex-wrap items-end gap-2">

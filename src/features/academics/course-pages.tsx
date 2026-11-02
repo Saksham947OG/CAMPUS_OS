@@ -57,8 +57,8 @@ export function AcademicsHubPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Academics"
-        description="Your courses, exams, faculty meetings, project groups and the BMS Office in one demonstration."
-        badge={<Pill tone="demo">Demo · sample data, not official records</Pill>}
+        description="Your courses, assessments, faculty, project groups and BMS office information."
+        badge={<Pill tone="demo">Campus data, not official records</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current="hub" />
       <DemoNotice>
@@ -130,8 +130,8 @@ export function CoursesPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="My courses"
-        description="Only courses that appear in this demo profile's own schedule or deadlines are listed. Nothing else is assumed."
-        badge={<Pill tone="demo">Demo · sample courses</Pill>}
+        description="Only courses that appear in this persona's own schedule or deadlines are listed. Nothing else is assumed."
+        badge={<Pill tone="demo">Supplied curriculum</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current="courses" />
       <Field label="Search courses">
@@ -225,8 +225,8 @@ export function CoursePage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title={`${course.code} · ${course.title}`}
-        description="Sample course. Notices and materials are labelled with their source and are not real."
-        badge={<Pill tone="demo">Demo · sample course</Pill>}
+        description="Course information and resources retain their source. Check the source register for dated documents, planning assumptions and missing material."
+        badge={<Pill tone="demo">Supplied course information</Pill>}
       />
       <SubNav label="Course sections" items={tabs} current={current} />
       {current === 'overview' ? (
@@ -262,7 +262,7 @@ export function CoursePage() {
               </div>
               <div>
                 <dt className="font-medium">Credits, syllabus</dt>
-                <dd>Not provided in this demo.</dd>
+                <dd>Not provided on this device.</dd>
               </div>
             </dl>
           </SectionCard>

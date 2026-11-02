@@ -65,8 +65,8 @@ export const RESERVATION_STATES = [
 export type ReservationState = (typeof RESERVATION_STATES)[number]
 export const reservationLabel: Record<ReservationState, string> = {
   pendingApproval: 'Requested, not reserved',
-  confirmedDemo: 'Confirmed (demo)',
-  rejected: 'Not approved (demo)',
+  confirmedDemo: 'Confirmed (local)',
+  rejected: 'Not approved (local)',
   cancelled: 'Cancelled',
   disrupted: 'Disrupted by a closure',
   completed: 'Finished',

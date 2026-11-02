@@ -103,7 +103,7 @@ export function initialAcademicsStore(nowMs: number): AcademicsStore {
       {
         id: 'res-1',
         courseId: 'course-a',
-        title: 'Sample slide deck (no link in this demo)',
+        title: 'Sample slide deck (no link on this device)',
         kind: 'slides',
         sourceLabel: label,
       },
@@ -119,7 +119,7 @@ export function initialAcademicsStore(nowMs: number): AcademicsStore {
     ],
     faculty: [
       fac('fac-a', 'Demo Faculty A', ['course-a'], {
-        officeHoursText: 'Published in this demo: see windows below',
+        officeHoursText: 'Published on this device: see windows below',
         locationText: 'Demo Block, office 1',
       }),
       fac('fac-b', 'Demo Faculty B', ['course-b']),

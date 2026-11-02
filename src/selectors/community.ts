@@ -167,7 +167,7 @@ export function communityActivity(s: CommunityStore, profileId: string): Activit
       id: r.id,
       type: 'Team request' as const,
       label: `Join ${s.teams.find((t) => t.id === r.teamId)?.name ?? 'team'}`,
-      status: 'Waiting for the captain (demo)',
+      status: 'Waiting for the captain (local)',
       when: `Requested ${formatInstant(r.createdAt)}`,
       mode: 'userCreated' as const,
       href: `/community/sports-events/teams/${r.teamId}`,

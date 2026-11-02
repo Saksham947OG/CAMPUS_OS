@@ -173,7 +173,7 @@ export function PickupTicket({ order }: { order: ChillOrder }) {
           {order.readyAt ? (
             <>
               Ready at <time dateTime={order.readyAt}>{formatInstant(order.readyAt)}</time>{' '}
-              (demo).{' '}
+              (local).{' '}
             </>
           ) : null}
           Collection point not provided. Opening this ticket does not mark the order collected.

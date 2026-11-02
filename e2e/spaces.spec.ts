@@ -47,7 +47,7 @@ for (const width of [320, 375, 768, 1024, 1440]) {
 
 async function enableOps(page: Page) {
   await page.goto('/settings')
-  await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+  await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
 }
 
 /** Tomorrow's evening, so the 11:45 pm slot is in the future whenever the suite runs. */
@@ -74,7 +74,7 @@ test.describe('phone', () => {
     expect(box.x + box.width).toBeLessThanOrEqual(375) // the interval is not clipped
     expect(await noOverflow(page)).toBe(false)
     await audit(page, 'Chill Zone review (phone)')
-    await page.getByRole('button', { name: 'Confirm demo reservation' }).click()
+    await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
     await page.goto('/bookings/my')
     await expect(page.getByText(/Demo Spot 1 · /)).toBeVisible()
@@ -91,7 +91,7 @@ test.describe('desktop', () => {
     const slot = page.getByRole('button', { name: '2:00 pm', exact: true })
     await slot.focus()
     await page.keyboard.press('Enter')
-    const confirm = page.getByRole('button', { name: 'Confirm demo reservation' })
+    const confirm = page.getByRole('button', { name: 'Confirm local reservation' })
     await confirm.focus()
     await page.keyboard.press('Enter')
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
@@ -103,18 +103,18 @@ test.describe('desktop', () => {
     await page.goto('/bookings/chill-zone')
     await pickTomorrow(page)
     await page.getByRole('button', { name: '11:45 pm', exact: true }).click()
-    await page.getByRole('button', { name: 'Confirm demo reservation' }).click()
+    await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
     await page.goto('/')
     await expect(
       page
         .getByRole('region', { name: 'My activity' })
-        .getByText(/Demo Spot 1 \(demo reservation\)/),
+        .getByText(/Demo Spot 1 \(local reservation\)/),
     ).toHaveCount(1)
     await page.goto('/bookings/my')
     await page.locator('a[href^="/bookings/my/bk-"], a[href*="/classrooms/bookings/crb-"]').click()
     await page.getByRole('link', { name: 'Open this day in Calendar' }).click()
-    await expect(page.getByText(/Demo Spot 1 \(demo reservation\)/).first()).toBeVisible()
+    await expect(page.getByText(/Demo Spot 1 \(local reservation\)/).first()).toBeVisible()
   })
 
   test('SR-AT-14 / SR-AT-15 / SR-AT-25: closing the music room blocks new bookings, flags the existing one and alerts once', async ({
@@ -124,7 +124,7 @@ test.describe('desktop', () => {
     await page.goto('/bookings/music-room')
     await pickTomorrow(page)
     await page.getByRole('button', { name: '11:30 am', exact: true }).click()
-    await page.getByRole('button', { name: 'Confirm demo reservation' }).click()
+    await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
     const row = page
       .getByTestId('demo-ops')
@@ -138,7 +138,7 @@ test.describe('desktop', () => {
     await expect(page.getByText(/Needs your attention \(1\)/)).toBeVisible()
     await page.goto('/notifications')
     await expect(
-      page.getByRole('link', { name: /Open: Your demo reservation may be affected/ }),
+      page.getByRole('link', { name: /Open: Your local reservation may be affected/ }),
     ).toHaveCount(1)
     await audit(page, 'Notifications with a disruption alert')
   })

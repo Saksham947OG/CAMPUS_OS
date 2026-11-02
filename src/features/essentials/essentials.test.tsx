@@ -7,7 +7,7 @@ import { itemsInRange } from '@/selectors/occurrences'
 import { diningWindows, messForDate } from '@/selectors/mess'
 import type { DateOnly } from '@/lib/time'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 const TODAY = '2026-11-02' as DateOnly
 const A = 'demo-student-a'
 
@@ -22,7 +22,7 @@ async function enableOps(
   then: string,
 ) {
   await router.navigate('/settings')
-  await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+  await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
   await router.navigate(then)
 }
 
@@ -36,7 +36,7 @@ describe('Services hub and Laundry hub', () => {
     await heading('Laundry')
     expect(screen.getByRole('link', { name: 'SS Laundry' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Washing machines' })).toBeInTheDocument()
-    expect(screen.getAllByText(/Demo · sample data/).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/Campus data/).length).toBeGreaterThan(0)
   })
 })
 
@@ -134,7 +134,7 @@ describe('Washing machines', () => {
     expect((await screen.findAllByText(/Reserved does not mean in use/i)).length).toBeGreaterThan(0)
     await user.click(await screen.findByRole('button', { name: 'Choose Sample washer 1' }))
     await user.click(await screen.findByRole('button', { name: /^2:00 pm/ }))
-    await user.click(screen.getByRole('button', { name: 'Confirm demo reservation' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm local reservation' }))
     const mine = await screen.findByRole('region', { name: 'My reservations' })
     expect(await within(mine).findByText(/Sample washer 1 · /)).toBeInTheDocument()
     expect(within(mine).getByText('Reserved')).toBeInTheDocument()
@@ -143,10 +143,10 @@ describe('Washing machines', () => {
     await router.navigate('/')
     const activity = await screen.findByRole('region', { name: 'My activity' })
     expect(
-      await within(activity).findAllByText(/Sample washer 1 \(demo reservation\)/),
+      await within(activity).findAllByText(/Sample washer 1 \(local reservation\)/),
     ).toHaveLength(1)
     await router.navigate('/calendar?view=day&date=2026-11-02')
-    expect(await screen.findAllByText(/Sample washer 1 \(demo reservation\)/)).not.toHaveLength(0)
+    expect(await screen.findAllByText(/Sample washer 1 \(local reservation\)/)).not.toHaveLength(0)
 
     const res = (await services.ess.load()).reservations[0]!
     await act(async () => {
@@ -156,7 +156,7 @@ describe('Washing machines', () => {
     const again = await screen.findByRole('region', { name: 'My activity' })
     await waitFor(() =>
       expect(
-        within(again).queryAllByText(/Sample washer 1 \(demo reservation\)/).length,
+        within(again).queryAllByText(/Sample washer 1 \(local reservation\)/).length,
       ).toBeLessThanOrEqual(1),
     )
     expect((await services.ess.load()).reservations).toHaveLength(1)
@@ -199,7 +199,7 @@ describe('Mess', () => {
     expect(screen.getByText('Serving time not provided')).toBeInTheDocument() // snacks have no window
     const windows = diningWindows(data, TODAY)
     expect(windows.length).toBe(today.filter((m) => m.start && m.end).length)
-    expect(screen.getAllByText(/Demo|Sample data/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/Illustrative|Supplied/i).length).toBeGreaterThan(0)
   })
 
   it('ESS-M01: a day or week with no supplied menu says so instead of filling it in', async () => {
@@ -223,7 +223,7 @@ describe('Mess', () => {
     const user = userEvent.setup()
     const { services } = renderApp('/services/mess')
     await heading('Mess')
-    await user.click(await screen.findByRole('button', { name: 'Join the self-report demo' }))
+    await user.click(await screen.findByRole('button', { name: 'Join self-reporting' }))
     await user.click(await screen.findByRole('button', { name: 'Check in (self-report)' }))
     await user.click(await screen.findByRole('button', { name: 'You are checked in' }))
     expect((await services.ess.load()).messSessions).toHaveLength(1)
@@ -273,14 +273,14 @@ describe('Mess', () => {
 })
 
 describe('Parcels', () => {
-  it('ESS-P01 / ESS-P02 / ESS-P03: the demo desk logs a parcel, only its recipient sees it, and the alert opens that parcel', async () => {
+  it('ESS-P01 / ESS-P02 / ESS-P03: the local desk scenario logs a parcel, only its recipient sees it, and the alert opens that parcel', async () => {
     const user = userEvent.setup()
     const { router, services } = renderApp('/services/parcels')
     await heading('Parcels')
     expect(await screen.findByText(/No parcels are logged for you/)).toBeInTheDocument()
     await enableOps(user, router, '/services/parcels')
     const ops = await screen.findByTestId('demo-ops')
-    await user.click(within(ops).getByRole('button', { name: 'Log parcel' })) // default recipient: Demo Student A
+    await user.click(within(ops).getByRole('button', { name: 'Log parcel' })) // default recipient: Reference Student A
     await waitFor(async () => expect((await services.ess.load()).parcels).toHaveLength(1))
     const parcel = (await services.ess.load()).parcels[0]!
     expect(parcel.recipientProfileId).toBe(A)
@@ -293,8 +293,8 @@ describe('Parcels', () => {
     expect(screen.getByText(/Collection point unknown/)).toBeInTheDocument()
 
     // Another profile gets nothing and cannot open it.
-    await user.click(screen.getByRole('button', { name: /demo profile/i }))
-    await user.click(await screen.findByRole('menuitemradio', { name: /Demo Student B/ }))
+    await user.click(screen.getByRole('button', { name: /^Persona:/i }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     await router.navigate(`/services/parcels/${parcel.id}`)
     expect(await heading('Parcel not found')).toBeVisible()
     await router.navigate('/services/parcels')
@@ -368,15 +368,17 @@ describe('Time Tax and honesty', () => {
 })
 
 describe('Reset and persistence', () => {
-  it('ESS-S04: Reset demo data clears Essentials records but not unrelated Calendar data', async () => {
+  it('ESS-S04: Reset reference data clears Essentials records but not unrelated Calendar data', async () => {
     const user = userEvent.setup()
     const { router, services } = renderApp('/services/laundry/ss')
     await heading('SS Laundry')
     await services.ess.registerLoad({ profileId: A, handedOverDate: TODAY, idempotencyKey: 'k' })
     await services.ess.logParcel({ recipientProfileId: A })
     await router.navigate('/settings')
-    await user.click(await screen.findByRole('button', { name: /Reset demo data/ }))
-    await user.click(await screen.findByRole('button', { name: 'Reset demo data', hidden: false }))
+    await user.click(await screen.findByRole('button', { name: /Reset reference data/ }))
+    await user.click(
+      await screen.findByRole('button', { name: 'Reset reference data', hidden: false }),
+    )
     await waitFor(async () => {
       const s = await services.ess.load()
       expect(s.loads).toHaveLength(0)

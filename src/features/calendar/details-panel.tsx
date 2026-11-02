@@ -61,8 +61,7 @@ export function DetailsPanel({
           <CalendarX2 className="size-4" aria-hidden="true" /> That record could not be found
         </p>
         <p className="mt-1 text-ink-muted">
-          It may have been deleted, or the link may belong to another demo profile. Nothing was
-          changed.
+          It may have been deleted, or the link may belong to another persona. Nothing was changed.
         </p>
       </output>
     )

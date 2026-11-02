@@ -28,8 +28,8 @@ function Missing() {
         Order not found
       </h1>
       <p className="mt-2 text-ink-muted">
-        We could not find that order for this demo profile. It may not exist, or it may belong to
-        another profile. Nothing was changed.
+        We could not find that order for this persona. It may not exist, or it may belong to another
+        profile. Nothing was changed.
       </p>
       <Button asChild className="mt-4 min-h-11">
         <Link to="/services/chill-spot?tab=orders">Back to your orders</Link>
@@ -62,7 +62,7 @@ export function ChillOrderPage() {
     })
     if (c !== 'confirm') return
     const r = await chill.cancelPending(profileId, order.id)
-    if (r.ok) toast.notify('success', 'Demo order request cancelled.')
+    if (r.ok) toast.notify('success', 'Local order request cancelled.')
     else toast.notify('error', r.error.message)
   }
 
@@ -203,7 +203,7 @@ export function ChillOrderPage() {
         </Button>
       ) : order.status === 'queued' || order.status === 'preparing' || order.status === 'ready' ? (
         <p className="text-sm text-ink-muted">
-          Cancellation isn't available for accepted orders in this demo.
+          Cancellation isn't available for accepted orders on this device.
         </p>
       ) : null}
 

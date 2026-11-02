@@ -282,7 +282,7 @@ export function MeetingNewPage({ kind }: { kind: MeetingActorKind }) {
                 },
                 key,
               ),
-            'Request recorded in the demo.',
+            'Request recorded on this device.',
           )
           if (r.ok) nav(`/academics/appointments/${r.value.meeting.id}`)
           else setError(r.error.message)
@@ -414,7 +414,7 @@ export function MeetingNewPage({ kind }: { kind: MeetingActorKind }) {
           {message}
         </output>
         <Button type="submit" className="min-h-11 self-start">
-          Record request in demo
+          Record request locally
         </Button>
       </form>
     </article>
@@ -453,7 +453,7 @@ export function OfficePage() {
           </div>
           <div>
             <dt className="font-medium">Contact</dt>
-            <dd>Not provided in this demo</dd>
+            <dd>Not provided on this device</dd>
           </div>
         </dl>
       </SectionCard>

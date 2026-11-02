@@ -169,7 +169,7 @@ export function initialChillStore(nowMs: number): ChillStore {
   step(ids[0]!, 'preparing', 24)
   step(ids[0]!, 'ready', 6)
   step(ids[1]!, 'preparing', 5)
-  // Seeded records are demo data, not "simulated this session".
+  // Seeded records are reference data, not "simulated this session".
   store = {
     ...store,
     orders: store.orders.map((o) => ({

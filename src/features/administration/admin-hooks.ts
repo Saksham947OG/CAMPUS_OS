@@ -3,7 +3,7 @@ import { useAdminState } from '@/app/admin-store'
 import { useServices } from '@/app/services'
 import { useNow } from '@/hooks/use-now'
 
-/** The signed-in demo profile's view of Administration. Other profiles' requests never come through here. */
+/** The signed-in persona's view of Administration. Other profiles' requests never come through here. */
 export function useAdmin() {
   const admin = useAdminState((s) => s.admin)
   const status = useAdminState((s) => s.status)

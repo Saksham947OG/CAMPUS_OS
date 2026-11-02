@@ -1,5 +1,8 @@
 # CampusOS
 
+**November 2026 source update:** CampusOS now uses the supplied campus documents and three consumer personas by default. Open **Data & Sources** (`/sources`) for all 28 files, original text, adapted dates and data gaps. The fixed reference week is November 2–8, 2026. Menus, curriculum, faculty associations, schedules and proposed events are source-labelled; operational assumptions remain illustrative. Time Tax supports source evidence and saved timed observations. Private identity scans require protected storage. See `docs/features/CampusOS_Source_Data_Personas_Spec_v1.0.md` for the current import contract; older sections below describe the prototype's history.
+
+
 **A working academic prototype for a more coordinated campus.**  
 **Project:** Introduction to Business Operations (IBO) — *The Time Tax*  
 **Product state:** Home, Unified Calendar, Chill Spot, Campus Essentials (Laundry, Mess, Parcels) and Sports & Fitness, Space Reservations (Bookings) Administration, Shared Experience (notifications, exam seating, Best Time to Go, Time Tax), Academics (Course Hub, faculty, mentorship, BMS Office) and Community (Lost & Found, clubs, sports teams) implemented with demonstration data only; evidence in [`docs/TEST_EVIDENCE.md`](docs/TEST_EVIDENCE.md); no real campus data, backend or other modules yet  

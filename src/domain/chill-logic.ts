@@ -35,7 +35,7 @@ export function canTransition(
   if (isTerminal(from))
     return { ok: false, reason: 'This order is finished and can no longer change.' }
   if (to === 'cancelled' && actor === 'student' && from !== 'pending') {
-    return { ok: false, reason: "Cancellation isn't available for accepted orders in this demo." }
+    return { ok: false, reason: "Cancellation isn't available for accepted orders on this device." }
   }
   if (ALLOWED.some((t) => t.from === from && t.to === to && t.actor === actor)) return { ok: true }
   if (ALLOWED.some((t) => t.from === from && t.to === to)) {

@@ -55,7 +55,7 @@ test.describe('mobile journey', () => {
     await page.goto('/services')
     await page.getByRole('link', { name: /Chill Spot/ }).click()
     await expect(page.getByRole('heading', { level: 1, name: 'Chill Spot' })).toBeVisible()
-    await expect(page.getByText('Demo · sample menu')).toBeVisible()
+    await expect(page.getByText('Supplied Chill Spot menu')).toBeVisible()
 
     await page
       .getByRole('button', { name: /^Choose/ })
@@ -72,12 +72,12 @@ test.describe('mobile journey', () => {
     await audit(page, 'Cart sheet (phone)')
     await page.getByRole('button', { name: 'Review checkout' }).click()
 
-    const checkout = page.getByRole('dialog', { name: /Review your demo order/ })
+    const checkout = page.getByRole('dialog', { name: /Review your local order/ })
     await expect(checkout).toBeVisible()
     await expect(checkout.getByText(/Pay at Pickup\./)).toBeVisible()
     await page.waitForTimeout(400)
     await audit(page, 'Checkout sheet (phone)')
-    await checkout.getByRole('button', { name: 'Place demo order request' }).click()
+    await checkout.getByRole('button', { name: 'Place local order request' }).click()
 
     await expect(page.getByRole('heading', { level: 1, name: /^Order CS-/ })).toBeVisible()
     await expect(page.getByText('Awaiting café acceptance').first()).toBeVisible()
@@ -105,9 +105,9 @@ test.describe('desktop journey', () => {
 
     await page.getByRole('button', { name: 'Review checkout' }).focus()
     await page.keyboard.press('Enter')
-    const checkout = page.getByRole('dialog', { name: /Review your demo order/ })
+    const checkout = page.getByRole('dialog', { name: /Review your local order/ })
     await expect(checkout).toBeVisible()
-    await checkout.getByRole('button', { name: 'Place demo order request' }).focus()
+    await checkout.getByRole('button', { name: 'Place local order request' }).focus()
     await page.keyboard.press('Enter')
     await expect(page.getByRole('heading', { level: 1, name: /^Order CS-/ })).toBeVisible()
   })
@@ -120,8 +120,8 @@ test.describe('desktop journey', () => {
     await addFirstItem(page)
     await page.getByRole('button', { name: 'Review checkout' }).click()
     await page
-      .getByRole('dialog', { name: /Review your demo order/ })
-      .getByRole('button', { name: 'Place demo order request' })
+      .getByRole('dialog', { name: /Review your local order/ })
+      .getByRole('button', { name: 'Place local order request' })
       .click()
     await expect(page.getByRole('heading', { level: 1, name: /^Order CS-/ })).toBeVisible()
     const orderUrl = page.url()
@@ -131,11 +131,11 @@ test.describe('desktop journey', () => {
     await expect(page.getByText('Awaiting café acceptance').first()).toBeVisible()
 
     await page.goto('/settings')
-    await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+    await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
     await page.goto('/services/chill-spot')
     const ops = page.getByTestId('demo-ops')
     await expect(ops).toBeVisible()
-    await audit(page, 'Demo Operations panel')
+    await audit(page, 'Local Operations panel')
 
     for (const step of [/^Accept/, /^Start preparing/, /^Mark ready/]) {
       await ops.getByRole('button', { name: step }).first().click()

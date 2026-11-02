@@ -4,7 +4,7 @@ import type { DateOnly, LocalTime } from '@/lib/time'
 import { renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 const A = 'demo-student-a'
 beforeEach(() => setViewport(1600))
 afterEach(() => clearViewport())
@@ -28,7 +28,7 @@ describe('Classrooms', () => {
     await user.selectOptions(screen.getByLabelText('Start'), String(10 * 60))
     expect(within(room('CR1')).getByText('Blocked')).toBeInTheDocument()
     expect(
-      within(room('CR1')).getByText(/Scheduled class \(demo\), until 11:00/),
+      within(room('CR1')).getByText(/Scheduled class \(local\), until 11:00/),
     ).toBeInTheDocument()
     expect(
       within(room('CR1')).getByRole('button', { name: 'Not available for this slot' }),
@@ -46,7 +46,7 @@ describe('Classrooms', () => {
     await user.type(screen.getByLabelText('Group name (optional)'), 'Ops project')
     await user.click(screen.getByRole('button', { name: 'Confirm booking' }))
     await heading('CR3 booking')
-    expect(screen.getByText('Confirmed (demo)')).toBeInTheDocument()
+    expect(screen.getByText('Confirmed (local)')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'View My bookings' })).toBeInTheDocument()
     const id = (await services.classrooms.load()).reservations[0]!.id
     expect((await services.campus.load(A)).bookings.filter((b) => b.id === id)).toHaveLength(1)
@@ -94,7 +94,7 @@ describe('Classrooms', () => {
   it('an approval room says "Request", shows "Requested, not reserved", and the simulator then approves it onto the Calendar', async () => {
     const user = userEvent.setup()
     const { router, services } = renderApp('/settings')
-    await user.click(await screen.findByRole('checkbox', { name: /Show Demo Operations/ }))
+    await user.click(await screen.findByRole('checkbox', { name: /Show Local Operations/ }))
     await router.navigate('/bookings/classrooms')
     await heading('Classrooms')
     await user.click(

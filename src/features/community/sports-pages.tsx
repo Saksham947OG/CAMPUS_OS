@@ -398,7 +398,7 @@ export function TeamPage() {
             onClick={() =>
               void act(
                 () => repo.requestJoin(profileId, t.id),
-                'Join request recorded in the demo.',
+                'Join request recorded on this device.',
               )
             }
           >
@@ -439,9 +439,9 @@ export function TeamPage() {
                 >
                   <span>
                     {r.profileId === 'demo-student-a'
-                      ? 'Demo Student A'
+                      ? 'Reference Student A'
                       : r.profileId === 'demo-student-b'
-                        ? 'Demo Student B'
+                        ? 'Reference Student B'
                         : r.profileId}
                   </span>
                   <Button

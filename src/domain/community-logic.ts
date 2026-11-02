@@ -331,7 +331,7 @@ export function submitClaim(
   )
     return fail('You already have an open claim for this item.')
   if (s.claims.some((x) => x.reportId === r.id && x.status === 'demoApproved'))
-    return fail('A claim for this item is already approved in the demo.')
+    return fail('A claim for this item is already approved on this device.')
   const id = c.newId('clm')
   const e = evt('student', 'requested', c, { to: 'requested' })
   const claim: Claim = {
@@ -423,14 +423,14 @@ export function reviewClaim(
     to = 'demoApproved'
     title = 'Demo claim approved (simulated)'
     body =
-      'Approved in the demo only. It is not a legal or security finding. A separate handover step is still needed.'
+      'Approved in the on this device only. It is not a legal or security finding. A separate handover step is still needed.'
   } else {
     if (cl.status !== 'requested' && cl.status !== 'reviewPending')
       return fail('This claim is already finished.')
     if (!reason) return fail('A reason is required when a claim is not approved.')
     to = 'demoRejected'
     title = 'Demo claim not approved'
-    body = `Not approved in the demo: ${reason}`
+    body = `Not approved on this device: ${reason}`
   }
   const e = evt('demoReviewer', action, c, { from: cl.status, to, ...(reason ? { reason } : {}) })
   const notes: Notice[] = [
@@ -470,7 +470,7 @@ export function reviewClaim(
           x.id,
           ev,
           'Demo claim not approved',
-          'Another claim for this item was approved in the demo. No details about it are shown.',
+          'Another claim for this item was approved on this device. No details about it are shown.',
           claimPath(x.id),
           'important',
         ),
@@ -479,7 +479,7 @@ export function reviewClaim(
         ...x,
         status: 'demoRejected' as ClaimStatus,
         statusVersion: x.statusVersion + 1,
-        decisionReason: 'Another claim for this item was approved in the demo.',
+        decisionReason: 'Another claim for this item was approved on this device.',
         updatedAt: c.nowIso,
         history: [...x.history, ev],
       }
@@ -513,7 +513,7 @@ export function markReturned(s: CommunityStore, reportId: string, c: Ctx): Chang
       r.id,
       e,
       'Demo handover recorded',
-      'The item was marked returned in the demo.',
+      'The item was marked returned on this device.',
       claimPath(approved.id),
       'important',
     ),
@@ -522,7 +522,7 @@ export function markReturned(s: CommunityStore, reportId: string, c: Ctx): Chang
       r.id,
       e,
       'Your reported item was marked returned',
-      'Marked returned in the demo. Your report stays in your history.',
+      'Marked returned on this device. Your report stays in your history.',
       reportPath(r.id),
     ),
   ])
@@ -607,8 +607,8 @@ export function changeClubEvent(
       ev.id,
       { id: `v${version}` },
       change.cancel
-        ? 'A club event you follow was cancelled (demo)'
-        : 'A club event you follow changed (demo)',
+        ? 'A club event you follow was cancelled (local)'
+        : 'A club event you follow changed (local)',
       `${club?.name ?? 'A club'}: ${ev.title}. This is a simulated change; no organizer sent it.`,
       clubEventPath(ev.clubId),
       'important',
@@ -703,7 +703,7 @@ export function requestJoin(
       profileId,
       r.id,
       e,
-      'Join request recorded (demo)',
+      'Join request recorded (local)',
       `Your request to join ${t.name} is recorded on this device. The captain has not been messaged.`,
       teamPath(t.id),
     ),
@@ -804,8 +804,8 @@ export function decideJoin(
       r.id,
       { id: next.status },
       decision === 'accept'
-        ? 'Join request accepted by the captain (demo)'
-        : 'Join request not accepted (demo)',
+        ? 'Join request accepted by the captain (local)'
+        : 'Join request not accepted (local)',
       decision === 'accept'
         ? `You are on ${t.name}'s roster. That is not committee approval for any event.`
         : `The captain did not accept your request for ${t.name}.`,
@@ -873,7 +873,7 @@ export function decideTeamApproval(
       p,
       t.id,
       { id: decision },
-      decision === 'approvedDemo' ? 'Team approved in the demo' : 'Team declined in the demo',
+      decision === 'approvedDemo' ? 'Team approved on this device' : 'Team declined on this device',
       `${t.name}: a simulated committee decided. No real committee has reviewed anything.`,
       teamPath(t.id),
       'important',
@@ -907,7 +907,7 @@ export function cancelTeam(
         p,
         t.id,
         { id: 'cancelled' },
-        'A team you joined was cancelled (demo)',
+        'A team you joined was cancelled (local)',
         `${t.name} was cancelled by its captain. Its history is kept.`,
         teamPath(t.id),
         'important',
@@ -1011,7 +1011,7 @@ export function changeFixture(
       version,
       revisions: [...f.revisions, { ...snap, ...(change.reason ? { reason: change.reason } : {}) }],
     }
-    title = 'A fixture you are in changed (demo)'
+    title = 'A fixture you are in changed (local)'
   } else if (change.kind === 'cancel') {
     next = {
       ...f,
@@ -1019,7 +1019,7 @@ export function changeFixture(
       version,
       revisions: [...f.revisions, { ...snap, ...(change.reason ? { reason: change.reason } : {}) }],
     }
-    title = 'A fixture you are in was cancelled (demo)'
+    title = 'A fixture you are in was cancelled (local)'
   } else {
     next = {
       ...f,

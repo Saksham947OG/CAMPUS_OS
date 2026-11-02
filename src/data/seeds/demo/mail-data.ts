@@ -5,7 +5,7 @@ const FROM = 'bulletin@bms-demo.invalid'
 
 /**
  * The starting Campus Mail scenario. Every address is on a reserved `.invalid` domain, so nothing
- * here can be a real person or reach one. Each demo profile has its own simulated mailbox; the
+ * here can be a real person or reach one. Each persona has its own simulated mailbox; the
  * broadcast feed stands for an authorized announcement mailbox and carries two sample notices.
  * Student keys are made up (DEMO-BMS-001/002); the third profile has none, so no seat can match it.
  */
@@ -93,7 +93,7 @@ export function initialMailStore(nowMs: number): MailStore {
       seed(
         'seed-clubs',
         'Club Applications Open (Demo)',
-        'A sample announcement that club applications are open. No link is provided in this demo.',
+        'A sample announcement that club applications are open. No link is provided on this device.',
         'CLUB',
         1500,
       ),

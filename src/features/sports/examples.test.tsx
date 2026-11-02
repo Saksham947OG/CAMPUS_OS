@@ -11,6 +11,7 @@ afterEach(() => clearViewport())
 
 const open = (memory: ReturnType<typeof createMemoryStorage>): Services =>
   createServices({
+    sourceData: false,
     storage: createStorageAdapter({ backend: memory.storage }),
     clock: fixedClock('2026-11-02T04:30:00Z'),
   })
@@ -22,7 +23,7 @@ describe('persistent example bookings (V3 §4.4, G06)', () => {
     await screen.findByRole('heading', { level: 1, name: 'My bookings' })
     const upcoming = within(await screen.findByRole('region', { name: /Upcoming \(1\)/ }))
     expect(upcoming.getByText(/Demo badminton court 2/)).toBeInTheDocument()
-    expect(upcoming.getByText('Confirmed (demo)')).toBeInTheDocument()
+    expect(upcoming.getByText('Confirmed (local)')).toBeInTheDocument()
     const cancelled = within(
       await screen.findByRole('region', { name: /Cancelled or released \(1\)/ }),
     )

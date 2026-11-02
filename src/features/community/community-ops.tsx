@@ -7,7 +7,7 @@ import {
   fixtureStatusLabel,
   teamStatusLabel,
 } from '@/domain/community'
-import { demoProfiles } from '@/data/seeds/demo/profiles'
+import { campusProfiles as demoProfiles } from '@/data/campus/catalogue'
 import { formatDateShort, isDateOnly, type DateOnly, type LocalTime } from '@/lib/time'
 import { OpsCard, Pill } from '../essentials/ess-common'
 import { useAction } from '../essentials/ess-hooks'
@@ -101,10 +101,10 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
       id={`ops-community-${section}-h`}
       title={
         section === 'lostfound'
-          ? 'Demo Operations: Lost & Found review'
+          ? 'Local Operations: Lost & Found review'
           : section === 'clubs'
-            ? 'Demo Operations: club events'
-            : 'Demo Operations: teams and fixtures'
+            ? 'Local Operations: club events'
+            : 'Local Operations: teams and fixtures'
       }
       message={message}
     >

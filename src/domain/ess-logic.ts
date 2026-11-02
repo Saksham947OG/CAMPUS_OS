@@ -173,13 +173,13 @@ export function studentReportCollected(
 }
 
 const STAGE_NOTICE: Partial<Record<LoadStage, [string, string, Notice['significance']]>> = {
-  received: ['Demo provider recorded your load', 'Receipt recorded in the demo.', 'standard'],
+  received: ['Demo provider recorded your load', 'Receipt recorded on this device.', 'standard'],
   readyForCollection: [
-    'Your laundry is ready (demo)',
-    'The demo provider marked it ready for collection.',
+    'Your laundry is ready (local)',
+    'The local provider scenario marked it ready for collection.',
     'important',
   ],
-  collected: ['Collection recorded (demo)', 'A simulated handover was recorded.', 'standard'],
+  collected: ['Collection recorded (local)', 'A simulated handover was recorded.', 'standard'],
 }
 
 /** One step forward only. The simulator performs it; a provider visit never does. */
@@ -257,7 +257,7 @@ export function setLoadDelay(
           l.ownerProfileId,
           l.id,
           ev,
-          'Your laundry is delayed (demo)',
+          'Your laundry is delayed (local)',
           expected
             ? `New date ${expected.confidence === 'confirmed' ? 'confirmed' : 'tentative'}.`
             : 'New date unknown. Awaiting confirmation.',
@@ -287,7 +287,7 @@ export function scheduleLoadReturn(
       l.ownerProfileId,
       l.id,
       ev,
-      'Return date updated (demo)',
+      'Return date updated (local)',
       `Expected ${date} (${confidence}). This is an expectation, not proof the laundry moved.`,
       loadPath(l.id),
     ),
@@ -331,7 +331,7 @@ export function setLoadDiscrepancy(
             l.ownerProfileId,
             l.id,
             ev,
-            'Laundry discrepancy flagged (demo)',
+            'Laundry discrepancy flagged (local)',
             'Part of your load may be outstanding. It is under review.',
             loadPath(l.id),
             'important',
@@ -382,7 +382,7 @@ export function announceVisit(
         p,
         'visit',
         ev,
-        'SS Laundry visit update (demo)',
+        'SS Laundry visit update (local)',
         input.status === 'cancelled'
           ? 'The demo visit was cancelled.'
           : `Visit ${input.status}${input.date ? ` for ${input.date}` : ''}. Individual loads are separate.`,
@@ -453,12 +453,12 @@ export function reserveMachine(
     return fail('That time range is not valid: it must end after it starts.')
   if (refusal === 'past') return fail('That slot has already finished.')
   if (refusal === 'beyondHorizon')
-    return fail(`Bookings open up to ${store.rules.horizonDays} days ahead in this demo.`)
+    return fail(`Bookings open up to ${store.rules.horizonDays} days ahead on this device.`)
   if (refusal === 'ownerLimit')
     return fail(
       `This demo allows ${store.rules.maxActivePerStudent} upcoming machine booking at a time. Cancel or finish your current one first.`,
     )
-  if (refusal === 'conflict') return fail('That slot is already reserved in this demo data.')
+  if (refusal === 'conflict') return fail('That slot is already reserved in this reference data.')
   const id = c.newId('res')
   const ev = audit(id, 'student', 'reserved', c)
   const reservation: Reservation = {
@@ -484,8 +484,8 @@ export function reserveMachine(
         input.profileId,
         id,
         ev,
-        'Machine reserved (demo)',
-        `${machine.label}, ${input.date} ${slot.start}. A demo reservation, not a campus booking.`,
+        'Machine reserved (local)',
+        `${machine.label}, ${input.date} ${slot.start}. A local reservation, not a campus booking.`,
         reservationPath(),
       ),
     ],
@@ -573,7 +573,7 @@ export function actOnReservation(
             r.ownerProfileId,
             r.id,
             ev,
-            'Machine reservation cancelled (demo)',
+            'Machine reservation cancelled (local)',
             `${machine?.label ?? 'Machine'} slot released.`,
             reservationPath(),
           ),
@@ -584,7 +584,7 @@ export function actOnReservation(
               r.ownerProfileId,
               r.id,
               ev,
-              'Reservation released (demo)',
+              'Reservation released (local)',
               'The slot was marked no-show. This does not say the machine is empty.',
               reservationPath(),
             ),
@@ -595,7 +595,7 @@ export function actOnReservation(
                 r.ownerProfileId,
                 r.id,
                 ev,
-                'Machine outage affects your slot (demo)',
+                'Machine outage affects your slot (local)',
                 'Your reservation was marked affected. Nothing was cancelled for you.',
                 reservationPath(),
                 'important',
@@ -632,7 +632,7 @@ export function setMachineStatus(
             profileIdsAffected(r),
             r.id,
             ev,
-            'Machine out of service (demo)',
+            'Machine out of service (local)',
             `${m.label} is reported out of service. Your reservation was not changed.`,
             reservationPath(),
             'important',
@@ -672,7 +672,7 @@ export function dueCycleNotices(store: EssStore, nowMs: number, c: Ctx): Change<
         r.ownerProfileId,
         r.id,
         ev,
-        'Estimated finish reached (demo)',
+        'Estimated finish reached (local)',
         'Your estimated wash time has passed. This is not confirmation the machine finished.',
         reservationPath(),
       ),
@@ -704,7 +704,7 @@ export function messCheckIn(
   profileId: string,
   c: Ctx,
 ): Change<{ created: boolean }> {
-  if (!store.messOptIn.includes(profileId)) return fail('Turn on the self-report demo first.')
+  if (!store.messOptIn.includes(profileId)) return fail('Turn on self-reporting first.')
   const open = store.messSessions.find((s) => s.profileId === profileId && !s.endedAt)
   if (open) return ok(store, { created: false })
   const session = {
@@ -789,7 +789,7 @@ export function supplyFee(
   const fee: MessFee = {
     ...input,
     currency: 'INR',
-    sourceLabel: 'Entered in the demo simulator (not a campus record)',
+    sourceLabel: 'Entered on this device simulator (not a campus record)',
     asOf: c.nowIso,
     provenance: simulatedProvenance(c.nowIso),
   }
@@ -851,7 +851,7 @@ export function logParcel(store: EssStore, input: LogParcelInput, c: Ctx): Chang
       input.recipientProfileId,
       id,
       ev,
-      'Parcel logged (demo)',
+      'Parcel logged (local)',
       input.collectionPoint
         ? `Collect from: ${input.collectionPoint}.`
         : 'Collection point unknown. Ask the collection desk.',
@@ -883,7 +883,7 @@ export function recordParcelCollected(store: EssStore, parcelId: string, c: Ctx)
       p.recipientProfileId,
       p.id,
       ev,
-      'Parcel collection recorded (demo)',
+      'Parcel collection recorded (local)',
       'A simulated handover was recorded.',
       parcelPath(p.id),
     ),
@@ -913,7 +913,7 @@ export function markParcelException(
       p.recipientProfileId,
       p.id,
       ev,
-      'Parcel needs attention (demo)',
+      'Parcel needs attention (local)',
       text,
       parcelPath(p.id),
       'important',
@@ -970,7 +970,7 @@ export function dueParcelNotices(store: EssStore, nowMs: number, c: Ctx): Change
         p.recipientProfileId,
         p.id,
         ev,
-        'Parcel still uncollected (demo)',
+        'Parcel still uncollected (local)',
         `Logged ${Math.floor(parcelAgeHours(p, nowMs) / 24)} days ago. A demo reminder, not a campus rule.`,
         parcelPath(p.id),
         'important',

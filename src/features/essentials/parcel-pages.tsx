@@ -48,7 +48,7 @@ export function ParcelsPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Parcels"
-        description="A private list of parcels the demo desk has logged for you. This is a demonstration log, not courier tracking, and it does not protect against theft."
+        description="A private list of parcels the local desk scenario has logged for you. This is a demonstration log, not courier tracking, and it does not protect against theft."
         badge={<Pill tone="demo">Demo · simulated log</Pill>}
       />
       <SectionCard id="wait-h" title="Awaiting collection">
@@ -99,7 +99,7 @@ export function ParcelDetailPage() {
           Parcel not found
         </h1>
         <p className="mt-2 text-ink-muted">
-          That parcel does not exist for this demo profile. Nothing was changed.
+          That parcel does not exist for this persona. Nothing was changed.
         </p>
         <Button asChild className="mt-4 min-h-11">
           <Link to="/services/parcels">Back to your parcels</Link>
@@ -173,7 +173,7 @@ export function ParcelDetailPage() {
               </time>
               <span className="font-medium">{h.action}</span>
               <Pill tone={h.actorKind === 'student' ? 'plain' : 'demo'}>
-                {h.actorKind === 'student' ? 'You' : 'Simulated (demo desk)'}
+                {h.actorKind === 'student' ? 'You' : 'Simulated (local desk scenario)'}
               </Pill>
               {h.note ? <span className="text-ink-muted">{h.note}</span> : null}
             </li>
@@ -183,8 +183,8 @@ export function ParcelDetailPage() {
       {p.state !== 'collected' ? (
         <SectionCard id="issue-h" title="Report a problem">
           <p className="text-ink-muted">
-            Missing, damaged or not yours? Tell the desk. Reporting adds a note; only the demo desk
-            can record a handover.
+            Missing, damaged or not yours? Tell the desk. Reporting adds a note; only the local desk
+            scenario can record a handover.
           </p>
           <form
             className="mt-2 flex flex-col gap-2"

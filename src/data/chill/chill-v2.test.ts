@@ -213,7 +213,7 @@ describe('queue truthfulness and fairness (CH2-AT-01 … CH2-AT-10)', () => {
   it('CH2-AT-10: paused blocks new requests but leaves existing ones processable', async () => {
     const e = setup()
     const a = await e.place(A, 'k1')
-    await e.ok(e.repo.setPause('Rush hour (demo)'))
+    await e.ok(e.repo.setPause('Rush hour (local)'))
     await e.repo.saveCart(B, e.cart('hot-a'))
     expect(await e.bad(e.repo.submitOrder(B, 'k2'))).toBeTruthy()
     expect(queueSnapshot(await e.repo.load(), Date.parse(NOW)).condition).toBe('paused')

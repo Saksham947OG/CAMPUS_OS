@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Field, inputClass } from '@/components/form-kit'
 import { useConfirm } from '@/components/confirm-context'
 import { Button } from '@/components/ui/button'
-import { demoProfiles } from '@/data/seeds/demo/profiles'
+import { campusProfiles as demoProfiles } from '@/data/campus/catalogue'
 import {
   assetLabel,
   categoryLabel,
@@ -53,7 +53,7 @@ export function AdminOps() {
   )
 
   return (
-    <OpsCard id="ops-admin-h" title="Demo Operations: Administration" message={message}>
+    <OpsCard id="ops-admin-h" title="Local Operations: Administration" message={message}>
       <fieldset className="flex flex-wrap gap-1.5">
         <legend className="sr-only">Simulated role</legend>
         {ROLES.map((r) => (
@@ -117,11 +117,11 @@ export function AdminOps() {
                                 ...seen,
                                 reason: why(l.id),
                               }),
-                            'Approved in demo (simulated). Not a valid gate pass.',
+                            'Approved locally (simulated). Not a valid gate pass.',
                           )
                         }
                       >
-                        Approve in demo
+                        Approve locally
                       </Button>
                       <Button
                         size="sm"
@@ -151,7 +151,7 @@ export function AdminOps() {
                                 ...seen,
                                 reason: why(l.id),
                               }),
-                            'Rejected in demo (simulated).',
+                            'Rejected locally (simulated).',
                           )
                         }
                       >
@@ -182,13 +182,13 @@ export function AdminOps() {
                 )
               }
             />
-            Demo gate verification is on (a demo policy, not a campus rule)
+            Demo gate verification is on (a planning policy, not a campus rule)
           </label>
           <ul className="flex flex-col gap-2">
             {admin.leaves.filter((l) =>
               ['approvedInDemo', 'gateDepartureLogged', 'gateReturnLogged'].includes(l.status),
             ).length === 0 ? (
-              <li className="text-sm text-ink-muted">No request is approved in the demo yet.</li>
+              <li className="text-sm text-ink-muted">No request is approved on this device yet.</li>
             ) : null}
             {admin.leaves
               .filter((l) =>
@@ -399,7 +399,7 @@ export function AdminOps() {
             const c = await confirm({
               title: 'Reset the Administration demo records?',
               description:
-                'This removes every demo leave request, ticket and teaching-aid report for every demo profile. Home, Calendar and the other services are not touched.',
+                'This removes every local leave request, ticket and teaching-aid report for every persona. Home, Calendar and the other services are not touched.',
               confirmLabel: 'Reset Administration records',
               danger: true,
             })

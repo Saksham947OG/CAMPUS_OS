@@ -1,3 +1,5 @@
+import { useServices } from '@/app/services'
+import { ProcessTimeTax } from '../sources/process-time-tax'
 import { FlaskConical } from 'lucide-react'
 import { useState } from 'react'
 import { Field, inputClass } from '@/components/form-kit'
@@ -79,6 +81,10 @@ const VIEWS: { id: View; label: string }[] = [
 
 /** Three kinds of figure, kept apart: assumed, recorded in this prototype, and observed in the field. */
 export function TimeTaxPanel() {
+  const { sourceData } = useServices()
+  return sourceData ? <ProcessTimeTax service="chill-spot" /> : <LegacyTimeTaxPanel />
+}
+function LegacyTimeTaxPanel() {
   const [view, setView] = useState<View>('scenario')
   return (
     <section aria-label="Time Tax views" className="flex flex-col gap-3">
@@ -124,11 +130,11 @@ function OperationsView() {
       <h2 className="flex items-center gap-2 text-base font-semibold text-ink">
         Operations view
         <span className="rounded-full border border-border-strong bg-mist px-2 py-0.5 text-xs font-semibold">
-          Recorded in prototype · demo data
+          Recorded in prototype · reference data
         </span>
       </h2>
       <p className="mt-1 text-sm text-ink-muted">
-        Counts of <strong>orders</strong> and the time between events this demo recorded. These are
+        Counts of <strong>orders</strong> and the time between events this app recorded. These are
         not minutes a student stood waiting, they do not show saved time, and they do not predict
         the real café.
       </p>

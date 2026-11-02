@@ -107,3 +107,7 @@
 3. Mark `DESIGN BASELINE`, then implement a small approved phase.
 4. Mark `IMPLEMENTED` only when actually present; `VERIFIED` only with logged test evidence.
 5. Keep deferred live demo backend **last**, regardless of how many front-end modules are added.
+
+## Source-backed campus data (2026-11-03)
+
+`COS-DATA-001`: IMPLEMENTED — supplied Drive snapshot, 28-file source register, three personalized personas, source-labelled campus records, fixed November reference week, existing-browser migration, functional Time Tax observations and evidence-based Best Time to Go. Contract: `docs/features/CampusOS_Source_Data_Personas_Spec_v1.0.md`; DEC-155–DEC-158. Raw private identity and individual roster records are flagged for authenticated storage. Live provider/Drive synchronization is not connected.

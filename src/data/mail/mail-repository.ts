@@ -11,7 +11,7 @@ import type { Clock, DateOnly, LocalTime } from '@/lib/time'
 import { instantMs } from '@/selectors/now'
 
 /**
- * The owner of the SIMULATED Campus Mail inbox. One GLOBAL store (a mailbox per demo profile plus a
+ * The owner of the SIMULATED Campus Mail inbox. One GLOBAL store (a mailbox per persona plus a
  * broadcast feed); a student reads only their own mailbox and the broadcast feed through the
  * selectors. A seat that a mail yields is written to the Shared store, the only owner of seats, and
  * the alert is sent only after that write really succeeded.

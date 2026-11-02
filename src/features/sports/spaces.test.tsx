@@ -4,7 +4,7 @@ import type { DateOnly, LocalTime } from '@/lib/time'
 import { makeServices, renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
-// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the demo profile is "Demo Student A".
+// The fixed test clock is Monday 2 Nov 2026, 10:00 IST; the persona is "Reference Student A".
 const TODAY = '2026-11-02' as DateOnly
 const A = 'demo-student-a'
 const B = 'demo-student-b'
@@ -54,9 +54,7 @@ describe('hub and library (SR-AT-01, SR-AT-03, SR-AT-05, SR-AT-09)', () => {
     expect(
       (await services.sports.load()).gymSessions.filter((g) => g.facilityId === 'DEMO-LIBRARY'),
     ).toHaveLength(1)
-    expect(screen.getByText(/Self-reported demo count:/).parentElement).toHaveTextContent(
-      '1 person has',
-    )
+    expect(screen.getByText(/Self-reported count:/).parentElement).toHaveTextContent('1 person has')
     expect(screen.getByText(/never checked out automatically/)).toBeInTheDocument()
   })
 
@@ -122,7 +120,7 @@ describe('music room (SR-AT-12, SR-AT-13)', () => {
     expect(screen.getByText(/No participant limit has been provided/)).toBeInTheDocument()
     await user.type(screen.getByLabelText('Private session label (optional)'), 'Jam')
     expect(screen.getByText(/Only you can see this/)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Confirm demo reservation' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm local reservation' }))
     await waitFor(async () => expect((await services.sports.load()).reservations).toHaveLength(1))
     expect((await services.sports.load()).reservations[0]).toMatchObject({
       start: '11:30',
@@ -157,7 +155,7 @@ describe('chill zone (SR-AT-17, SR-AT-18, SR-AT-21, SR-AT-22)', () => {
     expect(
       await screen.findByText(/Review: Demo Spot 1, Mon, 2 Nov 11:45 pm → Tue, 3 Nov 12:15 am/),
     ).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Confirm demo reservation' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm local reservation' }))
     await waitFor(async () => expect((await services.sports.load()).reservations).toHaveLength(1))
     expect((await services.sports.load()).reservations[0]).toMatchObject({
       date: '2026-11-02',
@@ -166,16 +164,16 @@ describe('chill zone (SR-AT-17, SR-AT-18, SR-AT-21, SR-AT-22)', () => {
     })
 
     await router.navigate('/calendar?view=day&date=2026-11-02')
-    expect((await screen.findAllByText(/Demo Spot 1 \(demo reservation\)/)).length).toBeGreaterThan(
-      0,
-    )
+    expect(
+      (await screen.findAllByText(/Demo Spot 1 \(local reservation\)/)).length,
+    ).toBeGreaterThan(0)
     await router.navigate('/calendar?view=day&date=2026-11-03')
     expect(
-      (await screen.findAllByText(/Demo Spot 1 \(demo reservation\) \(continued\)/)).length,
+      (await screen.findAllByText(/Demo Spot 1 \(local reservation\) \(continued\)/)).length,
     ).toBeGreaterThan(0)
     await router.navigate('/')
     const activity = await screen.findByRole('region', { name: 'My activity' })
-    const entries = await within(activity).findAllByText(/Demo Spot 1 \(demo reservation\)/)
+    const entries = await within(activity).findAllByText(/Demo Spot 1 \(local reservation\)/)
     expect(entries).toHaveLength(1)
     expect(
       within(activity).getByText(/Mon, 2 Nov, 11:45 pm → Tue, 3 Nov, 12:15 am/),
@@ -196,7 +194,7 @@ describe('chill zone (SR-AT-17, SR-AT-18, SR-AT-21, SR-AT-22)', () => {
     const slot = await screen.findByRole('button', { name: '11:45 pm · reserved' })
     expect(slot).toBeDisabled()
     const body = screen.getByRole('main').textContent ?? ''
-    expect(body).not.toContain('Demo Student B')
+    expect(body).not.toContain('Reference Student B')
     expect(body).not.toContain("Sam's birthday")
     await user.click(await screen.findByRole('button', { name: '11:15 pm' }))
     expect(await screen.findByText(/Review:/)).toBeInTheDocument()
@@ -209,7 +207,7 @@ describe('integration and honesty (SR-AT-23, SR-AT-24, SR-AT-27, SR-AT-31, SR-AT
     const { router, services } = renderApp('/bookings/library')
     await heading('Library')
     await user.click(await screen.findByRole('button', { name: '2:00 pm' }))
-    await user.click(screen.getByRole('button', { name: 'Confirm demo reservation' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm local reservation' }))
     const { reservation } = await waitFor(async () => {
       const s = await services.sports.load()
       expect(s.reservations).toHaveLength(1)
@@ -218,7 +216,7 @@ describe('integration and honesty (SR-AT-23, SR-AT-24, SR-AT-27, SR-AT-31, SR-AT
     await router.navigate('/')
     const activity = await screen.findByRole('region', { name: 'My activity' })
     expect(
-      await within(activity).findAllByText(/Demo group study room 1 \(demo reservation\)/),
+      await within(activity).findAllByText(/Demo group study room 1 \(local reservation\)/),
     ).toHaveLength(1)
     await act(async () => {
       await services.sports.act(A, reservation.id, 'cancel')
@@ -282,7 +280,7 @@ describe('integration and honesty (SR-AT-23, SR-AT-24, SR-AT-27, SR-AT-31, SR-AT
       screen.queryByRole('button', { name: /approve|verify|staff|confirm presence|official/i }),
     ).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Check in (self-report)' })).toBeInTheDocument()
-    expect(screen.getByText('Confirmed (demo)')).toBeInTheDocument()
+    expect(screen.getByText('Confirmed (local)')).toBeInTheDocument()
     expect(screen.getByRole('main').textContent).not.toMatch(
       /staff-verified|institution approved|officially/i,
     )

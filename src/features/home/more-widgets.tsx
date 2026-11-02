@@ -1,3 +1,5 @@
+import { useServices } from '@/app/services'
+import { ProcessTimeTax } from '../sources/process-time-tax'
 import {
   Activity,
   CalendarClock,
@@ -85,7 +87,7 @@ export function ActivityWidget({ ctx }: { ctx: HomeCtx }) {
           e.type === 'Complaint' ||
           e.type === 'Teaching-aid report' ? (
           <span className="mt-1 block text-xs font-medium text-teal-strong">
-            Open details · demo record, not a live provider
+            Open details · local record; source shown above
           </span>
         ) : null}
       </Link>
@@ -126,10 +128,8 @@ export function ActivityWidget({ ctx }: { ctx: HomeCtx }) {
         </div>
       ) : null}
       <p className="mt-2 text-xs text-ink-muted">
-        Records from modules that are not built yet will appear here once those modules exist.
-        Bookings are samples, and café orders, laundry loads, machine and sports reservations,
-        waitlist offers, parcels, leave requests and tickets are demo records; nothing here is a
-        live booking, order or courier or provider status.
+        Your activity combines bookings, orders, laundry, parcels and requests. Source labels
+        distinguish supplied records from illustrative entries and actions saved on this device.
       </p>
     </HomeCard>
   )
@@ -144,7 +144,7 @@ function FeeReminder() {
   if (f.status === 'studentReportedSubmitted') return null
   return (
     <p className="mt-2 rounded-md bg-terracotta-tint p-2 text-sm text-ink">
-      Mess fee details were supplied (demo): due {f.dueText}.{' '}
+      Mess fee details were supplied (local): due {f.dueText}.{' '}
       <Link to="/services/mess/fees" className="font-medium text-teal-strong underline">
         See fee details
       </Link>
@@ -195,7 +195,8 @@ export function MessPreviewWidget({ ctx }: { ctx: HomeCtx }) {
       )}
       <FeeReminder />
       <p className="mt-2 text-xs text-ink-muted">
-        Sample menu. No allergen or verified payment information is shown.
+        Menu source is shown above. Allergens, current availability and payment verification need
+        confirmation.
       </p>
       <Button asChild variant="outline" className="mt-2 min-h-11">
         <Link to="/services/mess">Open Mess</Link>
@@ -441,6 +442,10 @@ export function CampusPulseWidget({ ctx }: { ctx: HomeCtx }) {
 
 /** H-W10: an explicitly illustrative what-if. It is never a measured saving and never moves with clicks. */
 export function TimeTaxWidget({ ctx }: { ctx: HomeCtx }) {
+  const { sourceData } = useServices()
+  return sourceData ? <ProcessTimeTax compact /> : <LegacyTimeTaxWidget ctx={ctx} />
+}
+function LegacyTimeTaxWidget({ ctx }: { ctx: HomeCtx }) {
   const scenario = ctx.data.timeTax[0]
   const result = scenario ? timeTaxHours(scenario) : undefined
   return (

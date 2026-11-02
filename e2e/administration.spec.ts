@@ -49,7 +49,7 @@ for (const width of [320, 375, 768, 1024, 1440]) {
 
 async function enableOps(page: Page) {
   await page.goto('/settings')
-  await page.getByRole('checkbox', { name: /Show Demo Operations/ }).check()
+  await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
 }
 
 test.describe('phone', () => {
@@ -78,11 +78,11 @@ test.describe('phone', () => {
     await page.goto('/administration/leave/new')
     await page.getByLabel('Reason').fill('Family visit')
     await page.getByRole('button', { name: 'Review request' }).click()
-    await expect(page.getByText('Review your demo request')).toBeVisible()
+    await expect(page.getByText('Review your local request')).toBeVisible()
     expect(await noOverflow(page)).toBe(false)
     await audit(page, 'Leave review (phone)')
-    await page.getByRole('button', { name: 'Submit demo request' }).click()
-    await expect(page.getByText(/Saved in the demo as leave-/)).toBeVisible()
+    await page.getByRole('button', { name: 'Submit local request' }).click()
+    await expect(page.getByText(/Saved on this device as leave-/)).toBeVisible()
     expect(await noOverflow(page)).toBe(false)
   })
 })
@@ -113,8 +113,8 @@ test.describe('desktop', () => {
     await page.goto('/administration/leave/new')
     await page.getByLabel('Reason').fill('Family visit')
     await page.getByRole('button', { name: 'Review request' }).click()
-    await page.getByRole('button', { name: 'Submit demo request' }).click()
-    await expect(page.getByText(/Saved in the demo as leave-/)).toBeVisible()
+    await page.getByRole('button', { name: 'Submit local request' }).click()
+    await expect(page.getByText(/Saved on this device as leave-/)).toBeVisible()
     await expect(page.getByRole('button', { name: /approve|start review/i })).toHaveCount(0)
 
     await enableOps(page)
@@ -123,11 +123,11 @@ test.describe('desktop', () => {
     await expect(ops).toBeVisible()
     await audit(page, 'Administration simulator')
     await ops.getByRole('button', { name: 'Start review' }).click()
-    await ops.getByRole('button', { name: 'Approve in demo' }).click()
+    await ops.getByRole('button', { name: 'Approve locally' }).click()
     await ops.getByRole('button', { name: 'Demo Gate' }).click()
     await ops.getByRole('button', { name: 'Log departure' }).click()
     await page.getByRole('link', { name: 'Open request' }).click()
-    await expect(page.getByText('Departure logged in demo').first()).toBeVisible()
+    await expect(page.getByText('Departure logged locally').first()).toBeVisible()
     await expect(page.getByText(/NOT A VALID GATE PASS|not a valid campus/i).first()).toBeVisible()
     await audit(page, 'Leave detail after a simulated departure')
   })
