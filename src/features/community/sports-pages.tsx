@@ -59,7 +59,7 @@ export function SportsPage() {
       <PageHeader
         title="Sports & Teams"
         description="Fixtures, teams and player sign-ups. Registering a team does not book a court, and no real committee sees anything here."
-        badge={<Pill tone="demo">Demo · simulated committee</Pill>}
+        badge={<Pill tone="demo">Local · simulated committee</Pill>}
       />
       <SubNav label="Community sections" items={communityTabs} current="sports" />
       <p>
@@ -356,7 +356,7 @@ export function TeamPage() {
       <PageHeader
         title={t.name}
         description={`${t.sport} · ${t.description ?? 'No description'}`}
-        badge={<Pill tone="demo">Demo · sample team</Pill>}
+        badge={<Pill tone="demo">Illustrative team</Pill>}
       />
       <Link to="/community/sports-events" className="text-sm font-medium text-coffee underline">
         Back to Sports & Teams
@@ -641,7 +641,7 @@ export function FixturePage() {
   const known = !!(f.date && f.start && f.end)
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <PageHeader title={f.title} badge={<Pill tone="demo">Demo · sample fixture</Pill>} />
+      <PageHeader title={f.title} badge={<Pill tone="demo">Illustrative fixture</Pill>} />
       <Link to="/community/sports-events" className="text-sm font-medium text-coffee underline">
         Back to Sports & Teams
       </Link>
@@ -737,7 +737,7 @@ export function ParticipationPage() {
     <article className="flex max-w-3xl flex-col gap-4">
       <PageHeader
         title="My participation"
-        badge={<Pill tone="demo">Demo · your own teams and requests</Pill>}
+        badge={<Pill tone="demo">Local · your own teams and requests</Pill>}
       />
       <Link to="/community/sports-events" className="text-sm font-medium text-coffee underline">
         Back to Sports & Teams

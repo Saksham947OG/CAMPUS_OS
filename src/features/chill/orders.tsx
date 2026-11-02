@@ -158,7 +158,7 @@ export function PickupTicket({ order }: { order: ChillOrder }) {
         <p className="flex items-center justify-center gap-1.5 text-sm font-semibold text-ink">
           <Receipt className="size-4" aria-hidden="true" /> Ready for pickup · Pay at café counter
         </p>
-        <p className="mt-1 text-xs text-ink-muted">Demo pickup code</p>
+        <p className="mt-1 text-xs text-ink-muted">Pickup code</p>
         <p
           className="text-3xl font-bold tracking-widest text-ink"
           aria-label={`Pickup code ${pickupCodeFor(order).split('').join(' ')}`}

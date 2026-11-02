@@ -198,17 +198,17 @@ function ExamOps() {
           className="min-h-11"
           onClick={async () => {
             const c = await confirm({
-              title: 'Reset the Shared demo records?',
+              title: 'Reset the Shared local records?',
               description:
                 'This removes your saved Time Tax what-ifs and restores the sample exams and seats for every profile. Everything else is untouched.',
               confirmLabel: 'Reset Shared records',
               danger: true,
             })
             if (c === 'confirm')
-              await act(() => repo.resetScenarioAll(), 'Shared demo records were reset.')
+              await act(() => repo.resetScenarioAll(), 'Shared local records were reset.')
           }}
         >
-          Reset Shared demo records…
+          Reset Shared local records…
         </Button>
       </div>
     </OpsCard>
@@ -224,8 +224,8 @@ export function ExamsPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Exams"
-        description="Exams for the courses on your own schedule, and your private seating. All exams and seats here are fictional demo records, not an official allotment."
-        badge={<Pill tone="demo">Demo · private to your profile</Pill>}
+        description="Exams for the courses on your own schedule, and your private seating. Imported assessments retain their source and adapted-date notes. Individual seating appears only when supplied; this is not an official allotment."
+        badge={<Pill tone="demo">Local · private to your profile</Pill>}
       />
       <SectionCard id="ex-h" title={`Your exams (${exams.length})`}>
         {exams.length === 0 ? (
@@ -309,7 +309,7 @@ export function ExamDetailPage() {
           >
             {e.name}
           </h1>
-          <Pill tone="demo">Demo record</Pill>
+          <Pill tone="demo">Local record</Pill>
         </div>
         <p className="mt-1 text-sm text-ink-muted">
           {formatDateShort(e.date)} · {examTimeText(e)} · version {e.version}

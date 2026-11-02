@@ -182,7 +182,7 @@ test.describe('desktop', () => {
     await page.goto('/administration/requests')
     await page
       .getByTestId('demo-ops')
-      .getByRole('button', { name: 'Reset Administration demo records…' })
+      .getByRole('button', { name: 'Reset Administration local records…' })
       .click()
     await page
       .getByRole('dialog')

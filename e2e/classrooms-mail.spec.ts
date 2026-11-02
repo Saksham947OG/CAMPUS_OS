@@ -88,7 +88,7 @@ test.describe('desktop', () => {
     await page.goto('/settings')
     await page.getByRole('checkbox', { name: /Show Local Operations/ }).check()
     await page.goto('/notifications/mail')
-    await expect(page.getByText(/Demo only · simulated mail/)).toBeVisible()
+    await expect(page.getByText(/Saved on this device · simulated mail/)).toBeVisible()
     const lab = page.getByTestId('demo-ops')
     await audit(page, 'Campus Mail with the injection lab')
     await lab.getByRole('button', { name: 'Receive Revised Quiz Seating Email' }).click()

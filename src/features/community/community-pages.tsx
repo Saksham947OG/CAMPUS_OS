@@ -50,7 +50,7 @@ export function CommunityHubPage() {
       <PageHeader
         title="Community"
         description="Supplied club information and proposed events, with local Lost & Found reports and sports team planning; nobody is messaged."
-        badge={<Pill tone="demo">Demo · fictional clubs and teams</Pill>}
+        badge={<Pill tone="demo">Campus community</Pill>}
       />
       <SubNav label="Community sections" items={communityTabs} current="hub" />
       <ul className="grid gap-3 sm:grid-cols-3">

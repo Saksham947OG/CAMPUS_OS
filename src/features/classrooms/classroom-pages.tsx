@@ -120,7 +120,7 @@ export function ClassroomsPage() {
       <PageHeader
         title="Classrooms"
         description="Compare CR Conference Hall, CR1, CR3 and G12 for one time, then book straight from a free slot."
-        badge={<Pill tone="demo">Demo schedule · not a live college timetable</Pill>}
+        badge={<Pill tone="demo">Reference schedule · not a live college timetable</Pill>}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="classrooms" />
       <p
@@ -298,8 +298,8 @@ export function ClassroomsPage() {
           ) : null}
           {pickedStatus.kind === 'unknown' ? (
             <p className="mb-2 text-sm">
-              This time is outside the demo schedule. You can send a request for verification; it is
-              not a reservation.
+              This time is outside the reference schedule. You can send a request for verification;
+              it is not a reservation.
             </p>
           ) : null}
           <form
@@ -459,7 +459,7 @@ export function ClassroomBookingPage() {
     <article className="flex max-w-3xl flex-col gap-4">
       <PageHeader
         title={`${room.displayName} booking`}
-        badge={<Pill tone="demo">Demo · not a campus booking</Pill>}
+        badge={<Pill tone="demo">Local · not a campus booking</Pill>}
       />
       <div className="flex flex-wrap gap-3 text-sm font-medium text-coffee">
         <Link to="/bookings/my" className="underline">

@@ -29,7 +29,7 @@ import { useSports } from './sports-hooks'
 import { SportsOps } from './sports-ops'
 import { bookingTabs } from './sports-nav'
 
-const BADGE = <Pill tone="demo">Demo · sample spaces</Pill>
+const BADGE = <Pill tone="demo">Illustrative data spaces</Pill>
 
 const libraryTabs = [
   { id: 'overview', label: 'Overview and study spaces', to: '/bookings/library' },

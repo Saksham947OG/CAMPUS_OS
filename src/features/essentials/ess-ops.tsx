@@ -29,20 +29,20 @@ function ResetEssentials() {
         className="min-h-11"
         onClick={async () => {
           const c = await confirm({
-            title: 'Reset the Campus Essentials demo records?',
+            title: 'Reset the Campus Essentials local records?',
             description:
               'This removes laundry loads, the demo visit, machine reservations, mess check-ins and feedback, the illustrative fee and parcels for every persona. Home, Calendar, Chill Spot and your other data are not touched.',
             confirmLabel: 'Reset Essentials records',
             danger: true,
           })
           if (c === 'confirm')
-            await act(() => repo.resetScenario(), 'Campus Essentials demo records were reset.')
+            await act(() => repo.resetScenario(), 'Campus Essentials local records were reset.')
         }}
       >
-        Reset Essentials demo records…
+        Reset Essentials local records…
       </Button>
       <p className="mt-1 text-xs text-ink-muted">
-        Scoped: only laundry, machine, mess and parcel demo records.
+        Scoped: only laundry, machine, mess and parcel local records.
       </p>
     </div>
   )

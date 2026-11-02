@@ -50,7 +50,7 @@ export function LostFoundPage() {
       <PageHeader
         title="Lost & Found"
         description="Report something lost or found. Reports here are samples and your own; nothing is sent to anyone."
-        badge={<Pill tone="demo">Demo · not a campus lost-property office</Pill>}
+        badge={<Pill tone="demo">Local · not a campus lost-property office</Pill>}
       />
       <SubNav label="Community sections" items={communityTabs} current="lost-found" />
       <div className="flex flex-wrap gap-2">
@@ -284,7 +284,7 @@ export function ReportNewPage() {
     <article className="flex max-w-3xl flex-col gap-4">
       <PageHeader
         title={kind === 'lost' ? 'Report something lost' : 'Report something found'}
-        badge={<Pill tone="demo">Demo · nobody is notified</Pill>}
+        badge={<Pill tone="demo">Local · nobody is notified</Pill>}
       />
       <Link to="/community/lost-found" className="text-sm font-medium text-coffee underline">
         Back to Lost & Found
@@ -520,7 +520,7 @@ export function ReportDetailPage() {
   )
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <PageHeader title={r.title} badge={<Pill tone="demo">Demo · sample report</Pill>} />
+      <PageHeader title={r.title} badge={<Pill tone="demo">Illustrative report</Pill>} />
       <Link to="/community/lost-found" className="text-sm font-medium text-coffee underline">
         Back to Lost & Found
       </Link>
@@ -811,7 +811,7 @@ export function ClaimPage() {
     <article className="flex max-w-3xl flex-col gap-4">
       <PageHeader
         title="Your claim"
-        badge={<Pill tone="demo">Demo · not proof of ownership</Pill>}
+        badge={<Pill tone="demo">Local · not proof of ownership</Pill>}
       />
       <Link
         to="/community/lost-found?tab=mine"

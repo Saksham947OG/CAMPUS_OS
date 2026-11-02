@@ -175,7 +175,7 @@ export function ReportPage() {
       <PageHeader
         title="Report an issue"
         description="Tell us about a bug, wrong timetable or room data, a design problem or an idea. It is saved on this device with a status you can follow."
-        badge={<Pill tone="demo">Demo · not sent to developers</Pill>}
+        badge={<Pill tone="demo">Local · not sent to developers</Pill>}
       />
       <SectionCard id="rp-form-h" title="New report">
         <form

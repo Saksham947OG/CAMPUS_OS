@@ -75,7 +75,7 @@ export function LeavePage() {
       <PageHeader
         title="Leave and out-time"
         description="Ask for time away on this devicenstration and follow a simulated review. A request here is a record in this app only."
-        badge={<Pill tone="demo">Demo · not an official permission</Pill>}
+        badge={<Pill tone="demo">Local · not an official permission</Pill>}
       />
       <SubNav label="Administration sections" items={adminTabs} current="leave" />
       <DemoBanner>
@@ -431,7 +431,7 @@ export function LeaveNewPage() {
       <PageHeader
         title="New leave request"
         description="Fill in the details, review them, then save the request on this device."
-        badge={<Pill tone="demo">Demo only</Pill>}
+        badge={<Pill tone="demo">Saved on this device</Pill>}
       />
       <DemoBanner />
       <SectionCard id="lv-new-h" title="Request details">

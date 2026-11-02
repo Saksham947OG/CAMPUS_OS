@@ -40,7 +40,7 @@ const LEGEND = (
   </ul>
 )
 
-/** Event counts from this browser's demo records. Deliberately no minutes, savings or percentages. */
+/** Event counts from this browser's local records. Deliberately no minutes, savings or percentages. */
 function CoordinationActivity() {
   const { meetings, profileId } = useMeetings()
   const { sports } = useSports()

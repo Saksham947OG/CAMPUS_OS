@@ -330,7 +330,7 @@ export function SportsOps() {
             )
         }}
       >
-        <legend className="sr-only">Demo sports configuration</legend>
+        <legend className="sr-only">Local sports configuration</legend>
         <Field label={`Offer lifetime, minutes (now ${sports.config.offerLifetimeMinutes})`}>
           {(a) => (
             <input
@@ -393,7 +393,7 @@ export function SportsOps() {
 
       <div>
         <h3 className="mb-1 text-sm font-semibold">
-          Library loans (demo records, date-only due dates)
+          Library loans (local records, date-only due dates)
         </h3>
         <form
           className="flex flex-wrap items-end gap-2"
@@ -540,17 +540,17 @@ export function SportsOps() {
           className="min-h-11"
           onClick={async () => {
             const c = await confirm({
-              title: 'Reset the Sports demo records?',
+              title: 'Reset the Sports local records?',
               description:
                 'This removes every local sports booking, waitlist entry, gym self-report and fault note, and restores the sample facilities. Home, Calendar, Chill Spot and Essentials data are not touched.',
               confirmLabel: 'Reset Sports records',
               danger: true,
             })
             if (c === 'confirm')
-              await act(() => repo.resetScenario(), 'Sports demo records were reset.')
+              await act(() => repo.resetScenario(), 'Sports local records were reset.')
           }}
         >
-          Reset Sports demo records…
+          Reset Sports local records…
         </Button>
         <p className="mt-1 text-xs text-ink-muted">
           Scoped: only Sports. Your imported academic data and widget preferences are not affected.

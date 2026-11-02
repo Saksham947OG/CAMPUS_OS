@@ -258,8 +258,10 @@ export function buildCampusDataset(_today: DateOnly): DemoDataset {
           : 'Aanya Sharma Persona · supplied persona'
     for (let i = 0; i < 5; i++) {
       const day = addDays('2026-11-02' as DateOnly, i)
-      personaBlocks[profile.id]!.forEach((b, n) => add(profile.id, day, String(n), b, source))
-      if (profile.id === 'demo-student-empty') {
+      personaBlocks[profile.id]!.forEach((b, n) => {
+        if (day < '2026-11-06' || b[3] !== 'class') add(profile.id, day, String(n), b, source)
+      })
+      if (profile.id === 'demo-student-empty' && day < '2026-11-06') {
         // A supplied persona assumes two lectures daily. Use actual timetable rows where available.
         const actual = currentClasses.filter((row) => row[0] === day && row[4] === 'A')
         if (!actual.some((r) => r[1] === '10:00'))
@@ -443,6 +445,20 @@ export function buildCampusDataset(_today: DateOnly): DemoDataset {
       status: 'scheduled',
       description: `${description} Proposed date; time and venue not supplied.`,
       provenance: supplied(CLUB_CALENDAR),
+    })
+  for (let i = 0; i < 7; i++)
+    events.push({
+      id: `campus-diwali-day-${i}`,
+      title: 'Diwali break',
+      category: 'holiday',
+      date: addDays('2026-11-06' as DateOnly, i),
+      timing: { kind: 'allDay' },
+      blocksTime: false,
+      audience: { kind: 'all' },
+      status: 'scheduled',
+      description:
+        'Nov 6–12 break from the supplied programme manual. Adapted reference assessments are separately labelled.',
+      provenance: supplied(MANUAL),
     })
   const meals = ['breakfast', 'lunch', 'snacks', 'dinner'] as const
   const hours = [

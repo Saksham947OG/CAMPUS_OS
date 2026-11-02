@@ -57,7 +57,7 @@ function TicketList({ kind, current }: { kind: 'complaint' | 'teachingAid'; curr
             ? 'Report a faulty projector, microphone, air conditioner or smartboard and follow a simulated repair. It uses the same ticket engine as facility complaints.'
             : 'Report a facility issue and follow a simulated response. A ticket here is a record in this app only.'
         }
-        badge={<Pill tone="demo">Demo · not a real work order</Pill>}
+        badge={<Pill tone="demo">Local · not a real work order</Pill>}
       />
       <SubNav label="Administration sections" items={adminTabs} current={current} />
       <DemoBanner>
@@ -204,7 +204,7 @@ function NewTicketPage({ kind }: { kind: 'complaint' | 'teachingAid' }) {
       </Link>
       <PageHeader
         title={isTeaching ? 'Report teaching equipment' : 'Report a facility issue'}
-        badge={<Pill tone="demo">Demo only</Pill>}
+        badge={<Pill tone="demo">Saved on this device</Pill>}
       />
       <DemoBanner>
         <strong>Not for emergencies.</strong> {EMERGENCY_NOTE}
@@ -552,7 +552,7 @@ export function TicketDetailPage() {
           <dd>{t.description}</dd>
           <dt className="text-ink-muted">Student reported</dt>
           <dd>{t.reportedSeverity === 'urgent' ? 'Urgent (your view)' : 'Normal'}</dd>
-          <dt className="text-ink-muted">Demo assigned priority</dt>
+          <dt className="text-ink-muted">Assigned priority (local)</dt>
           <dd>{t.demoPriority ?? 'Not assigned'}</dd>
           <dt className="text-ink-muted">Team</dt>
           <dd>{t.teamLabel ?? 'Team not assigned'}</dd>

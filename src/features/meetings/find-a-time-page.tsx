@@ -166,7 +166,7 @@ export function FindATimePage() {
       <PageHeader
         title="Find a time"
         description="Pick people and a duration, see the best times from recorded schedules, choose a room and confirm, all in one place."
-        badge={<Pill tone="demo">Demo · based on recorded schedules</Pill>}
+        badge={<Pill tone="demo">Local · based on recorded schedules</Pill>}
       />
       <p>
         <Link to="/calendar" className="text-sm font-medium text-coffee underline">

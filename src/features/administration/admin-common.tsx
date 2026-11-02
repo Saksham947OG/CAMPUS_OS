@@ -12,7 +12,7 @@ export function DemoBanner({ children }: { children?: ReactNode }) {
       role="note"
       className="rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm text-ink"
     >
-      <strong>Demonstration only.</strong> Nothing here is sent to the campus, and no decision,
+      <strong>Saved on this device.</strong> Nothing here is sent to the campus, and no decision,
       permission, gate pass or repair is real. {children}
     </p>
   )

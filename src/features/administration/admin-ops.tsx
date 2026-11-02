@@ -397,17 +397,17 @@ export function AdminOps() {
           className="min-h-11"
           onClick={async () => {
             const c = await confirm({
-              title: 'Reset the Administration demo records?',
+              title: 'Reset the Administration local records?',
               description:
                 'This removes every local leave request, ticket and teaching-aid report for every persona. Home, Calendar and the other services are not touched.',
               confirmLabel: 'Reset Administration records',
               danger: true,
             })
             if (c === 'confirm')
-              await act(() => repo.resetScenario(), 'Administration demo records were reset.')
+              await act(() => repo.resetScenario(), 'Administration local records were reset.')
           }}
         >
-          Reset Administration demo records…
+          Reset Administration local records…
         </Button>
         <p className="mt-1 text-xs text-ink-muted">
           Scoped: only requests and tickets. Filters and views never delete anything; this does.

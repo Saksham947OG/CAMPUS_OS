@@ -49,7 +49,7 @@ export function ParcelsPage() {
       <PageHeader
         title="Parcels"
         description="A private list of parcels the local desk scenario has logged for you. This is a demonstration log, not courier tracking, and it does not protect against theft."
-        badge={<Pill tone="demo">Demo · simulated log</Pill>}
+        badge={<Pill tone="demo">Local · simulated log</Pill>}
       />
       <SectionCard id="wait-h" title="Awaiting collection">
         {waiting.length === 0 ? (

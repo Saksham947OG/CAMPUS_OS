@@ -371,7 +371,7 @@ export function MessFeesPage() {
       <PageHeader
         title="Mess fees"
         description="Fee details appear only if someone supplies them. CampusOS never invents an amount, a late charge or a payment link, and it cannot see whether you paid."
-        badge={<Pill tone="demo">Demo · no real fee data</Pill>}
+        badge={<Pill tone="demo">Local · no real fee data</Pill>}
       />
       <SubNav label="Mess sections" items={messTabs} current="fees" />
       {!f.supplied ? (
@@ -386,7 +386,7 @@ export function MessFeesPage() {
           <SectionCard
             id="fee-h"
             title="Supplied fee details"
-            action={<Pill tone="demo">Demo · entered in the simulator</Pill>}
+            action={<Pill tone="demo">Local · entered in the simulator</Pill>}
           >
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
               <dt className="text-ink-muted">Amount</dt>

@@ -53,7 +53,7 @@ export function QueuePanel({
           Café status
         </h2>
         <span className="rounded-full border border-border-strong bg-surface px-2.5 py-0.5 text-xs font-semibold text-ink">
-          Demo · simulated data
+          Local · simulated data
         </span>
       </div>
 

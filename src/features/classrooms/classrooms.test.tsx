@@ -17,7 +17,7 @@ describe('Classrooms', () => {
     renderApp('/bookings/classrooms')
     await heading('Classrooms')
     expect(
-      await screen.findByText(/Demo schedule · not a live college timetable/),
+      await screen.findByText(/Reference schedule · not a live college timetable/),
     ).toBeInTheDocument()
     for (const n of ['CR Conference Hall', 'CR1', 'CR3', 'G12'])
       expect(
@@ -120,7 +120,7 @@ describe('Classrooms', () => {
     await heading('Classrooms')
     expect(within(room('G12')).getByText('Unknown / not synced')).toBeInTheDocument()
     await user.click(within(room('G12')).getByRole('button', { name: /Request verification/ }))
-    expect(await screen.findByText(/outside the demo schedule/)).toBeInTheDocument()
+    expect(await screen.findByText(/outside the reference schedule/)).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: 'Send request for verification' }),
     ).toBeInTheDocument()

@@ -35,7 +35,7 @@ export function FacultyDirectoryPage() {
       <PageHeader
         title="Faculty Connect"
         description="Fictional faculty profiles with published sample windows. Presence is never shown: nothing here says someone is in their office."
-        badge={<Pill tone="demo">Demo · fictional people</Pill>}
+        badge={<Pill tone="demo">Local · fictional people</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current="faculty" />
       <div className="flex flex-wrap items-end gap-3">
@@ -98,7 +98,7 @@ export function FacultyProfilePage() {
   const windows = openWindows(academics, 'faculty', f.id, now.ms)
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <PageHeader title={f.displayName} badge={<Pill tone="demo">Demo · fictional person</Pill>} />
+      <PageHeader title={f.displayName} badge={<Pill tone="demo">Local · fictional person</Pill>} />
       <BackLink to="/academics/faculty">Back to Faculty Connect</BackLink>
       <SectionCard id="fp-info-h" title="Profile">
         <dl className="grid gap-2 sm:grid-cols-2">
@@ -167,7 +167,7 @@ function MeetingList({
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title={title}
-        badge={<Pill tone="demo">Demo · recorded on this device only</Pill>}
+        badge={<Pill tone="demo">Local · recorded on this device only</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current={current} />
       <div>
@@ -245,7 +245,7 @@ export function MeetingNewPage({ kind }: { kind: MeetingActorKind }) {
   const title = kind === 'office' ? 'New BMS Office request' : 'New faculty meeting request'
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <PageHeader title={title} badge={<Pill tone="demo">Demo · not delivered to anyone</Pill>} />
+      <PageHeader title={title} badge={<Pill tone="demo">Local · not delivered to anyone</Pill>} />
       <BackLink to={kind === 'office' ? '/academics/office' : '/academics/faculty'}>Back</BackLink>
       <DemoNotice>
         Submitting records a request on this device. It is not an appointment until the local
@@ -434,7 +434,7 @@ export function OfficePage() {
       <PageHeader
         title="BMS Office"
         description="A fictional office. This page does not change leave approvals or campus access."
-        badge={<Pill tone="demo">Demo · sample office</Pill>}
+        badge={<Pill tone="demo">Illustrative data office</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current="office" />
       <SectionCard id="of-info-h" title={o.name}>
@@ -529,7 +529,7 @@ export function MeetingDetailPage() {
     <article className="flex max-w-3xl flex-col gap-4">
       <PageHeader
         title={`Meeting with ${meetingWith(academics, m)}`}
-        badge={<Pill tone="demo">Demo · not an official appointment</Pill>}
+        badge={<Pill tone="demo">Local · not an official appointment</Pill>}
       />
       <BackLink
         to={

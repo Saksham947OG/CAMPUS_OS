@@ -76,7 +76,7 @@ export function MyBookingsPage() {
       <PageHeader
         title="My bookings"
         description="Every local reservation you hold, in one place. These are not campus bookings and give no rights at a real facility."
-        badge={<Pill tone="demo">Demo · your records only</Pill>}
+        badge={<Pill tone="demo">Local · your records only</Pill>}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="my" />
       <MyClassroomBookings />
@@ -289,7 +289,7 @@ export function WaitlistPage() {
       <PageHeader
         title="My waitlists"
         description="A waitlist entry is not a reservation. You only get a slot if an offer is made and you accept it in time."
-        badge={<Pill tone="demo">Demo · recorded entries only</Pill>}
+        badge={<Pill tone="demo">Local · recorded entries only</Pill>}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="waitlist" />
       <SectionCard id="wl-h" title={`Entries (${mine.length})`}>

@@ -363,7 +363,7 @@ function ProfileAttendancePage() {
           <Pill tone="demo">
             {sourceData
               ? '80% manual target · illustrative persona attendance'
-              : 'Demo · targets are not a college rule'}
+              : 'Local · targets are not a college rule'}
           </Pill>
         }
       />

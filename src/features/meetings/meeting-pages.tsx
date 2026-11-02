@@ -55,7 +55,7 @@ export function MeetingPage() {
     void act(() => repo.respond(profileId, m.id, r), 'Reply recorded on this device.')
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <PageHeader title={m.title} badge={<Pill tone="demo">Demo · local meeting</Pill>} />
+      <PageHeader title={m.title} badge={<Pill tone="demo">Local · local meeting</Pill>} />
       <p className="flex flex-wrap gap-3 text-sm font-medium text-coffee">
         <Link to={`/calendar?view=agenda&date=${m.date}`} className="underline">
           Open in Calendar
@@ -274,7 +274,7 @@ export function PollsPage() {
       <PageHeader
         title="Time polls"
         description="Polls you can vote in or run. A vote is a preference; it never overrides a clash with a timetable."
-        badge={<Pill tone="demo">Demo · local polls</Pill>}
+        badge={<Pill tone="demo">Local · local polls</Pill>}
       />
       <p className="flex gap-3 text-sm font-medium text-coffee">
         <Link to="/calendar/find-a-time" className="underline">

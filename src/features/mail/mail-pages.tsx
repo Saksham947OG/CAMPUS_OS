@@ -76,7 +76,7 @@ export function MailPage() {
                 <span className="flex flex-wrap items-center gap-2 text-sm">
                   <strong>{e.subject}</strong>
                   {e.readAt ? null : <Pill>Unread</Pill>}
-                  <Pill tone="demo">Demo</Pill>
+                  <Pill tone="demo">Local</Pill>
                   {e.syncState === 'NEEDS_REVIEW' ? <Pill tone="warn">Needs review</Pill> : null}
                   {e.attachments.length ? (
                     <span className="inline-flex items-center gap-1 text-xs">
@@ -132,7 +132,7 @@ export function MailDetailPage() {
   const seatApplied = e.stages.some((s) => s.stage === 'seat' && s.status === 'done')
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <PageHeader title={e.subject} badge={<Pill tone="demo">Demo · simulated message</Pill>} />
+      <PageHeader title={e.subject} badge={<Pill tone="demo">Local · simulated message</Pill>} />
       <Link to="/notifications/mail" className="text-sm font-medium text-coffee underline">
         Back to Campus Mail
       </Link>

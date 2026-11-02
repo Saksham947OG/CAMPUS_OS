@@ -41,7 +41,7 @@ export function AdminHubPage() {
       <PageHeader
         title="Administration"
         description="Leave and out-time, facility complaints and classroom equipment reports in one demonstration. Everything here is a record in this app only."
-        badge={<Pill tone="demo">Demo · not an official system</Pill>}
+        badge={<Pill tone="demo">Local · not an official system</Pill>}
       />
       <SubNav label="Administration sections" items={adminTabs} current="hub" />
       <DemoBanner>
@@ -135,7 +135,7 @@ export function MyRequestsPage() {
       <PageHeader
         title="My requests"
         description="Every request you have made on this device, in one place. Filters only change what is shown."
-        badge={<Pill tone="demo">Demo · your records only</Pill>}
+        badge={<Pill tone="demo">Local · your records only</Pill>}
       />
       <SubNav label="Administration sections" items={adminTabs} current="requests" />
       <DemoBanner>

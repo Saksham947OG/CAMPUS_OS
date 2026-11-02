@@ -39,7 +39,7 @@ export function ClubsPage() {
       <PageHeader
         title="Clubs & Committees"
         description="Fictional clubs and one committee. No phone number, handle or private contact is shown anywhere."
-        badge={<Pill tone="demo">Demo · fictional clubs</Pill>}
+        badge={<Pill tone="demo">Source-labelled club directory</Pill>}
       />
       <SubNav label="Community sections" items={communityTabs} current="clubs" />
       <div className="flex flex-wrap items-end gap-3">
@@ -155,7 +155,7 @@ export function ClubPage() {
       <PageHeader
         title={club.name}
         description={club.purpose}
-        badge={<Pill tone="demo">Demo · fictional {club.type}</Pill>}
+        badge={<Pill tone="demo">Source-labelled {club.type}</Pill>}
       />
       <Link to="/community/clubs" className="text-sm font-medium text-coffee underline">
         Back to Clubs & Committees
@@ -426,7 +426,7 @@ export function ClubRequestsPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="My club requests"
-        badge={<Pill tone="demo">Demo · recorded on this device only</Pill>}
+        badge={<Pill tone="demo">Local · recorded on this device only</Pill>}
       />
       <Link to="/community/clubs" className="text-sm font-medium text-coffee underline">
         Back to Clubs & Committees

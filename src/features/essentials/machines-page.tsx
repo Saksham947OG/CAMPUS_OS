@@ -35,7 +35,7 @@ function MachineCard({
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="font-semibold text-ink">{m.label}</span>
-        <Pill tone="demo">Demo · sample</Pill>
+        <Pill tone="demo">Illustrative data</Pill>
       </div>
       <p className="text-sm text-ink-muted">{m.location}</p>
       <p className="mt-1 text-sm">
@@ -269,7 +269,7 @@ export function MachinesPage() {
             )}
           </Field>
           <fieldset className="mt-3">
-            <legend className="mb-1 text-sm font-medium">Demo time slots</legend>
+            <legend className="mb-1 text-sm font-medium">Reservation time slots</legend>
             <div className="flex flex-wrap gap-2">
               {slots.map((s) => (
                 <Button

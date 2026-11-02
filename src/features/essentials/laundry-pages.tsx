@@ -34,7 +34,7 @@ function VisitBanner() {
     <SectionCard
       id="visit-h"
       title="Provider visit"
-      action={ess?.visit ? <Pill tone="demo">Demo · simulated</Pill> : undefined}
+      action={ess?.visit ? <Pill tone="demo">Local · simulated</Pill> : undefined}
     >
       <p className="font-medium">{v.headline}</p>
       {v.detail.map((d) => (

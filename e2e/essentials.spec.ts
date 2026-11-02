@@ -188,7 +188,7 @@ test.describe('desktop journeys', () => {
     await enableOps(page)
     await page.goto('/services/parcels')
     await page.getByTestId('demo-ops').getByRole('button', { name: 'Log parcel' }).click()
-    await page.getByRole('button', { name: 'Reset Essentials demo records…' }).click()
+    await page.getByRole('button', { name: 'Reset Essentials local records…' }).click()
     await page.getByRole('dialog').getByRole('button', { name: 'Reset Essentials records' }).click()
     await expect(page.getByText(/No parcels are logged for you/)).toBeVisible()
     await page.goto('/services/chill-spot?tab=orders')

@@ -209,7 +209,7 @@ test.describe('desktop journeys', () => {
     await page.getByRole('button', { name: lateSlot }).first().click()
     await page.getByRole('button', { name: 'Confirm local reservation' }).click()
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
-    await page.getByRole('button', { name: 'Reset Sports demo records…' }).click()
+    await page.getByRole('button', { name: 'Reset Sports local records…' }).click()
     await page.getByRole('dialog').getByRole('button', { name: 'Reset Sports records' }).click()
     await page.goto('/bookings/my')
     // Only the labelled example bookings remain: the court this test booked was cleared by the reset.

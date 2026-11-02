@@ -30,7 +30,7 @@ export function MentorshipPage() {
       <PageHeader
         title="Mentorship"
         description="Create a project group and invite a simulated mentor. An invitation is never an agreement to mentor."
-        badge={<Pill tone="demo">Demo · nothing delivered to any professor</Pill>}
+        badge={<Pill tone="demo">Local · nothing delivered to any professor</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current="mentorship" />
       <SectionCard id="mp-groups-h" title={`Your project groups (${groups.length})`}>
@@ -168,7 +168,10 @@ export function GroupPage() {
     academics.faculty.find((f) => f.id === id)?.displayName ?? 'Faculty'
   return (
     <article className="flex max-w-4xl flex-col gap-4">
-      <PageHeader title={g.title} badge={<Pill tone="demo">Demo · private to this profile</Pill>} />
+      <PageHeader
+        title={g.title}
+        badge={<Pill tone="demo">Local · private to this profile</Pill>}
+      />
       <BackLink to="/academics/mentorship">Back to Mentorship</BackLink>
       <output aria-live="polite" className="block min-h-5 text-sm font-medium">
         {message}

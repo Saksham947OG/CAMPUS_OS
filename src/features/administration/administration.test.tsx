@@ -74,7 +74,7 @@ describe('hub (AD-AT-01, AD-AT-02, AD-AT-36)', () => {
     ]) {
       const { unmount } = renderApp(path)
       await screen.findByRole('heading', { level: 1 })
-      await many(/Demonstration only/)
+      await many(/Saved on this device/)
       const body = screen.getByRole('main').textContent ?? ''
       expect(body).not.toMatch(
         /email sent|sms sent|push notification sent|sent to the university|officially approved|verified by guard|technician fixed/i,
@@ -292,7 +292,7 @@ describe('complaints and teaching aids (AD-AT-15 … AD-AT-26)', () => {
       screen.getByText('No response target has been provided. CampusOS shows no SLA.'),
     ).toBeInTheDocument()
     expect(screen.getByText('Urgent (your view)')).toBeInTheDocument()
-    expect(screen.getByText('Demo assigned priority').nextElementSibling).toHaveTextContent(
+    expect(screen.getByText('Assigned priority (local)').nextElementSibling).toHaveTextContent(
       'Not assigned',
     )
     expect(screen.getByText('Team').nextElementSibling).toHaveTextContent('Team not assigned')

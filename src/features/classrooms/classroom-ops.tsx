@@ -72,7 +72,7 @@ export function ClassroomOps() {
           </li>
         ))}
       </ul>
-      <h3 className="text-sm font-semibold text-ink">Change the demo schedule</h3>
+      <h3 className="text-sm font-semibold text-ink">Change the reference schedule</h3>
       <div className="flex flex-wrap items-end gap-2">
         <Field label="Room">
           {(a) => (

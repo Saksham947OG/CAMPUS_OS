@@ -93,9 +93,9 @@ export function ResetDemo() {
             <li>
               Faculty, office and club meeting requests, project groups and mentorship invitations
             </li>
-            <li>Demo exam seating and your saved Time Tax what-if scenarios</li>
+            <li>Local exam seating and your saved Time Tax what-if scenarios</li>
             <li>
-              Campus Essentials demo records: laundry loads, machine reservations, mess check-ins
+              Campus Essentials local records: laundry loads, machine reservations, mess check-ins
               and feedback, the illustrative fee and parcels
             </li>
             <li>saved layouts, calendar views and filters</li>
