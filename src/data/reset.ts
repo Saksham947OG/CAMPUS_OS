@@ -5,6 +5,10 @@ import type { EssRepository } from './ess/ess-repository'
 import type { SportsRepository } from './sports/sports-repository'
 import type { AdminRepository } from './admin/admin-repository'
 import type { AcademicsRepository } from './academics/academics-repository'
+import type { ReportRepository } from './reports/report-repository'
+import type { MeetingRepository } from './meetings/meeting-repository'
+import type { MailRepository } from './mail/mail-repository'
+import type { ClassroomRepository } from './classrooms/classroom-repository'
 import type { CommunityRepository } from './community/community-repository'
 import type { SharedRepository } from './shared/shared-repository'
 import type { PrefsRepositories } from './prefs/prefs'
@@ -26,6 +30,10 @@ export async function resetDemoData(
   shared?: SharedRepository,
   academics?: AcademicsRepository,
   community?: CommunityRepository,
+  classrooms?: ClassroomRepository,
+  mail?: MailRepository,
+  meetings?: MeetingRepository,
+  reports?: ReportRepository,
 ): Promise<void> {
   for (const p of profiles) {
     await campus.resetUserData(p.id)
@@ -45,4 +53,12 @@ export async function resetDemoData(
   await academics?.resetAll()
   // Lost & Found reports and claims, club follows and sports teams are the Community store, cleared on its own.
   await community?.resetAll()
+  // Classroom reservations and simulated closures are their own store, cleared on their own.
+  await classrooms?.resetAll()
+  // The simulated Campus Mail inbox is its own store. Seats it produced live in the Shared store and go with it.
+  await mail?.resetAll()
+  // Group meetings and polls are their own store; the room holds they made live in the Classrooms store above.
+  await meetings?.resetAll()
+  // App issue reports are their own store. Evidence files saved on this device are removed from the reports, not from other apps.
+  await reports?.resetAll()
 }

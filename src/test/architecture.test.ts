@@ -38,7 +38,9 @@ describe('architecture guardrails', () => {
 
   it('browser storage is only touched by the StorageAdapter', () => {
     const banned = /\blocalStorage\b|\bsessionStorage\b|\bindexedDB\b/
-    const allowed = new Set(['data/storage/storage-adapter.ts'])
+    // The evidence store is the one documented exception (DEC-141): video and photo blobs do not fit in
+    // localStorage, so they go to IndexedDB. Only small metadata is kept with the report.
+    const allowed = new Set(['data/storage/storage-adapter.ts', 'data/evidence/evidence-store.ts'])
     const offenders = files.filter(
       (f) => !allowed.has(f) && !isTest(f) && banned.test(readFileSync(join(SRC, f), 'utf8')),
     )

@@ -97,6 +97,13 @@ const pages: [string, string][] = [
   ['Team', '/community/sports-events/teams/team-1'],
   ['Fixture', '/community/sports-events/fixtures/fx-1'],
   ['My participation', '/community/sports-events/my-participation'],
+  ['Find a time', '/calendar/find-a-time'],
+  ['Time polls', '/calendar/polls'],
+  ['Grades and GPA', '/academics/grades'],
+  ['Attendance planner', '/academics/attendance'],
+  ['Report an issue', '/help/report'],
+  ['Classrooms', '/bookings/classrooms'],
+  ['Campus Mail', '/notifications/mail'],
   ['Coming-later page', '/search'],
   ['Not found', '/nope'],
 ]

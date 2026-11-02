@@ -439,6 +439,7 @@ export interface TicketInput {
   locationSource?: Ticket['locationSource']
   reportedSeverity: Ticket['reportedSeverity']
   attachments?: Attachment[]
+  evidence?: Ticket['evidence']
   teaching?: Ticket['teaching']
 }
 
@@ -489,6 +490,7 @@ export function submitTicket(
       : {}),
     reportedSeverity: input.reportedSeverity,
     attachments: input.attachments ?? [],
+    ...(input.evidence?.length ? { evidence: input.evidence } : {}),
     ...(input.teaching ? { teaching: input.teaching } : {}),
     resolutionCount: 0,
     idempotencyKey: input.idempotencyKey,

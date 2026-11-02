@@ -8,6 +8,7 @@ import type { BookingRef } from '@/domain/records'
 import {
   sportsStoreSchema,
   type Equipment,
+  type FaultReport,
   type Loan,
   type Occupancy,
   type Policy,
@@ -27,6 +28,7 @@ import {
   setLoanNote,
   updateLoanDue,
   gymCheckOut,
+  gymRenew,
   gymCorrectCheckIn,
   issueOffer,
   joinWaitlist,
@@ -90,9 +92,16 @@ export interface SportsRepository {
 
   gymCheckIn(profileId: string, facilityId?: string): Out<{ created: boolean }>
   gymCheckOut(profileId: string, facilityId?: string): Out<void>
+  /** "Still here": renews an open check-in for one more lease. */
+  gymRenew(profileId: string, facilityId?: string): Out<void>
   gymCorrect(profileId: string, facilityId?: string): Out<void>
   setLoanNote(profileId: string, loanId: string, note: string): Out<Loan>
-  reportFault(profileId: string, equipmentId: string, text: string): Out<void>
+  reportFault(
+    profileId: string,
+    equipmentId: string,
+    text: string,
+    evidence?: FaultReport['evidence'],
+  ): Out<void>
 
   // Local simulator only
   processNoShow(id: string): Out<SportsReservation>
@@ -131,6 +140,8 @@ export interface SportsRepositoryOptions {
   clock: Clock
   newId: (prefix: string) => string
   notifications: PreferencesRepository<NotificationsState>
+  /** Adds the labelled example bookings (a confirmed court and a cancelled study room) for the first demo profile. */
+  examples?: boolean
 }
 
 export function createSportsRepository(o: SportsRepositoryOptions): SportsRepository {
@@ -141,8 +152,8 @@ export function createSportsRepository(o: SportsRepositoryOptions): SportsReposi
     storage: o.storage,
     key: SPORTS_STORE_KEY,
     schema: sportsStoreSchema,
-    starting: () => initialSportsStore(nowMs()),
-    normalize: (s) => normalizeSportsStore(s, nowMs()),
+    starting: () => initialSportsStore(nowMs(), o.examples),
+    normalize: (s) => normalizeSportsStore(s, nowMs(), o.examples),
     notifications: o.notifications,
     nowMs,
     newId: o.newId,
@@ -196,9 +207,10 @@ export function createSportsRepository(o: SportsRepositoryOptions): SportsReposi
 
     gymCheckIn: (p, f) => run((s, c) => gymCheckIn(s, p, c, f)),
     gymCheckOut: (p, f) => run((s, c) => gymCheckOut(s, p, c, f)),
+    gymRenew: (p, f) => run((s, c) => gymRenew(s, p, c, nowMs(), f)),
     gymCorrect: (p, f) => run((s) => gymCorrectCheckIn(s, p, f)),
     setLoanNote: (p, id, note) => run((s, c) => setLoanNote(s, p, id, note, c)),
-    reportFault: (p, id, text) => run((s, c) => reportFault(s, p, id, text, c)),
+    reportFault: (p, id, text, evidence) => run((s, c) => reportFault(s, p, id, text, c, evidence)),
 
     processNoShow: (id) => run((s, c) => processNoShow(s, id, c, nowMs())),
     closeResource: (id, note) => run((s, c) => closeResource(s, id, note, c, nowMs())),

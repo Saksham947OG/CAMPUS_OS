@@ -7,6 +7,9 @@ import { ChillStateContext, createChillStateStore } from './chill-store'
 import { EssStateContext, createEssStateStore } from './ess-store'
 import { AdminStateContext, createAdminStateStore } from './admin-store'
 import { AcademicsStateContext, createAcademicsStateStore } from './academics-store'
+import { MeetingStateContext, createMeetingStateStore } from './meetings-store'
+import { MailStateContext, createMailStateStore } from './mail-store'
+import { ClassroomStateContext, createClassroomStateStore } from './classrooms-store'
 import { CommunityStateContext, createCommunityStateStore } from './community-store'
 import { SharedStateContext, createSharedStateStore } from './shared-store'
 import { SportsStateContext, createSportsStateStore } from './sports-store'
@@ -25,6 +28,9 @@ export function AppProviders({ children, services }: { children: ReactNode; serv
   const [sharedStore] = useState(() => createSharedStateStore(resolved))
   const [academicsStore] = useState(() => createAcademicsStateStore(resolved))
   const [communityStore] = useState(() => createCommunityStateStore(resolved))
+  const [classroomStore] = useState(() => createClassroomStateStore(resolved))
+  const [mailStore] = useState(() => createMailStateStore(resolved))
+  const [meetingStore] = useState(() => createMeetingStateStore(resolved))
 
   useEffect(() => {
     void store.getState().init()
@@ -35,6 +41,9 @@ export function AppProviders({ children, services }: { children: ReactNode; serv
     void sharedStore.getState().refresh()
     void academicsStore.getState().refresh()
     void communityStore.getState().refresh()
+    void classroomStore.getState().refresh()
+    void mailStore.getState().refresh()
+    void meetingStore.getState().refresh()
   }, [
     store,
     chillStore,
@@ -44,6 +53,9 @@ export function AppProviders({ children, services }: { children: ReactNode; serv
     sharedStore,
     academicsStore,
     communityStore,
+    classroomStore,
+    mailStore,
+    meetingStore,
   ])
 
   // Keep the data store in step with the active demo profile.
@@ -69,14 +81,20 @@ export function AppProviders({ children, services }: { children: ReactNode; serv
                   <SharedStateContext.Provider value={sharedStore}>
                     <AcademicsStateContext.Provider value={academicsStore}>
                       <CommunityStateContext.Provider value={communityStore}>
-                        <TooltipProvider delayDuration={300}>
-                          <Toaster>
-                            <ConfirmProvider>
-                              <EssWatcher />
-                              {children}
-                            </ConfirmProvider>
-                          </Toaster>
-                        </TooltipProvider>
+                        <ClassroomStateContext.Provider value={classroomStore}>
+                          <MailStateContext.Provider value={mailStore}>
+                            <MeetingStateContext.Provider value={meetingStore}>
+                              <TooltipProvider delayDuration={300}>
+                                <Toaster>
+                                  <ConfirmProvider>
+                                    <EssWatcher />
+                                    {children}
+                                  </ConfirmProvider>
+                                </Toaster>
+                              </TooltipProvider>
+                            </MeetingStateContext.Provider>
+                          </MailStateContext.Provider>
+                        </ClassroomStateContext.Provider>
                       </CommunityStateContext.Provider>
                     </AcademicsStateContext.Provider>
                   </SharedStateContext.Provider>

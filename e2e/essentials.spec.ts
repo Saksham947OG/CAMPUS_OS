@@ -1,6 +1,12 @@
 import { AxeBuilder } from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 
+// These journeys pick evening slots, so they run at a fixed 2 Nov 2026, 14:00 IST instead of the real clock
+// (otherwise they fail after 6 pm).
+test.beforeEach(async ({ page }) => {
+  await page.clock.setFixedTime('2026-11-02T08:30:00Z')
+})
+
 /**
  * Campus Essentials journeys (COS-ESSENTIALS-001 ESS-S05 and the end-to-end flows). All data is
  * labelled demo data; nothing reaches a provider, sensor, payment system or courier.

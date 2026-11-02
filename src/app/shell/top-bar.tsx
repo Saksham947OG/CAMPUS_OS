@@ -3,6 +3,7 @@ import { usePrefs } from '@/hooks/use-prefs'
 import { unreadCount } from '@/selectors/notifications'
 import { Button } from '@/components/ui/button'
 import { matchRoute, routeById } from '../routes'
+import { CampusAi } from './campus-ai'
 import { DemoBadge } from './demo-badge'
 import { ProfileMenu } from './profile-menu'
 import { Wordmark } from './wordmark'
@@ -52,7 +53,11 @@ export function TopBar() {
       </p>
 
       <div className="ml-auto flex items-center gap-1 md:gap-2">
-        <UtilityLink id="search" />
+        {/* Search is still a "coming later" page, so on the narrowest phones its icon makes room for Campus AI. */}
+        <div className="max-[359px]:hidden">
+          <UtilityLink id="search" />
+        </div>
+        <CampusAi />
         <UtilityLink id="notifications" badge={unread} />
         <DemoBadge />
         <ProfileMenu />

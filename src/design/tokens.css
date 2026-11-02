@@ -102,6 +102,89 @@
   --radius: var(--radius-md);
 }
 
+/*
+ * Dark theme (V3 design foundation). Same token names, different values, so no component changes.
+ * It applies when the person chooses Dark in Settings (data-theme="dark"), or when they chose System
+ * and their device prefers dark. The second block repeats the first; `npm run check:contrast` verifies
+ * they are identical and validates every pair for dark too.
+ */
+/* DARK:START */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --canvas: #0f1a1e;
+  --ink: #e9efef;
+  --accent-teal: #4fb3a5;
+  --accent-terracotta: #8a4b30;
+  --mist: #1d2b31;
+  --surface: #162227;
+  --border: #2a3a40;
+  --ink-muted: #aebec2;
+  --border-strong: #82959b;
+  --teal-strong: #86d3c7;
+  --terracotta-text: #f2a98a;
+  --terracotta-tint: #3b2b23;
+  --teal-tint: #1d3a37;
+  --focus-ring: #86d3c7;
+  --coffee: #dcb99f;
+  --coffee-tint: #2f241d;
+  --status-success: #62d493;
+  --status-warning: #f1bb52;
+  --status-danger: #ff8f82;
+  --status-info: #86b8f4;
+  --cat-class: #6fb0e0;
+  --cat-exam: #e66f9c;
+  --cat-assignment: #e0a04a;
+  --cat-project: #a592e0;
+  --cat-birthday: #e87fae;
+  --cat-campus: #5fc093;
+  --cat-sports: #e58a54;
+  --cat-personal: #5fc0b3;
+  --cat-booking: #93a5cc;
+  --cat-admin: #aaa597;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 1px 1px rgb(0 0 0 / 0.3);
+  --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.55), 0 2px 6px rgb(0 0 0 / 0.4);
+}
+/* DARK:END */
+@media (prefers-color-scheme: dark) {
+  /* DARK-MEDIA:START */
+  :root:not([data-theme='light']):not([data-theme='dark']) {
+    color-scheme: dark;
+    --canvas: #0f1a1e;
+    --ink: #e9efef;
+    --accent-teal: #4fb3a5;
+    --accent-terracotta: #8a4b30;
+    --mist: #1d2b31;
+    --surface: #162227;
+    --border: #2a3a40;
+    --ink-muted: #aebec2;
+    --border-strong: #82959b;
+    --teal-strong: #86d3c7;
+    --terracotta-text: #f2a98a;
+    --terracotta-tint: #3b2b23;
+    --teal-tint: #1d3a37;
+    --focus-ring: #86d3c7;
+    --coffee: #dcb99f;
+    --coffee-tint: #2f241d;
+    --status-success: #62d493;
+    --status-warning: #f1bb52;
+    --status-danger: #ff8f82;
+    --status-info: #86b8f4;
+    --cat-class: #6fb0e0;
+    --cat-exam: #e66f9c;
+    --cat-assignment: #e0a04a;
+    --cat-project: #a592e0;
+    --cat-birthday: #e87fae;
+    --cat-campus: #5fc093;
+    --cat-sports: #e58a54;
+    --cat-personal: #5fc0b3;
+    --cat-booking: #93a5cc;
+    --cat-admin: #aaa597;
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 1px 1px rgb(0 0 0 / 0.3);
+    --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.55), 0 2px 6px rgb(0 0 0 / 0.4);
+  }
+  /* DARK-MEDIA:END */
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --duration-fast: 0.01ms;

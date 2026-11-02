@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { auditEventSchema } from './ess'
+import { evidenceMetaSchema } from './evidence'
 import { provenanceSchema } from './provenance'
 import { dateOnlySchema, localTimeSchema } from './records'
 
@@ -18,6 +19,7 @@ export const ACTIVITIES = [
   'badminton',
   'tableTennis',
   'pool',
+  'snooker',
   'basketball',
   'library',
   'musicRoom',
@@ -31,6 +33,7 @@ export const activityLabel: Record<Activity, string> = {
   badminton: 'Badminton',
   tableTennis: 'Table Tennis',
   pool: 'Pool',
+  snooker: 'Snooker',
   basketball: 'Basketball',
   library: 'Library',
   musicRoom: 'Music Room',
@@ -41,12 +44,13 @@ export const resourceNoun: Record<Activity, string> = {
   badminton: 'court',
   tableTennis: 'table',
   pool: 'table',
+  snooker: 'table',
   basketball: 'court',
   library: 'room',
   musicRoom: 'room',
   chillZone: 'spot',
 }
-export const OTHER_SPORTS: readonly Activity[] = ['tableTennis', 'pool', 'basketball']
+export const OTHER_SPORTS: readonly Activity[] = ['tableTennis', 'pool', 'snooker', 'basketball']
 /** Space reservations (COS-SPACES-001) use the same engine, store and lifecycle as sports. */
 export const SPACE_ACTIVITIES: readonly Activity[] = ['library', 'musicRoom', 'chillZone']
 
@@ -74,6 +78,8 @@ export const sportsConfigSchema = z.object({
     badminton: policySchema,
     tableTennis: policySchema,
     pool: policySchema,
+    // Added with the two-table snooker facility. `default` lets a store saved before it loads unchanged.
+    snooker: policySchema.default(() => defaultSnookerPolicy()),
     basketball: policySchema,
     // Added with COS-SPACES-001. `default` lets a store saved before this existed load unchanged.
     library: policySchema.default(() => defaultSpacePolicies().library),
@@ -84,6 +90,8 @@ export const sportsConfigSchema = z.object({
   reminderMinutes: z.number().int().min(0).max(1440),
   occupancyStaleMinutes: z.number().int().min(5).max(600),
   gymSessionStaleMinutes: z.number().int().min(10).max(600),
+  /** The longest a self-reported check-in stays open (a demo default, not a campus rule). */
+  checkInMaxMinutes: z.number().int().min(5).max(480).default(60),
 })
 export type SportsConfig = z.infer<typeof sportsConfigSchema>
 
@@ -111,6 +119,7 @@ export const RESERVATION_STATES = [
   'completed',
   'cancelled',
   'noShow',
+  'checkInExpired',
 ] as const
 export const reservationStateSchema = z.enum(RESERVATION_STATES)
 export type ReservationState = z.infer<typeof reservationStateSchema>
@@ -122,6 +131,7 @@ export const reservationStateLabel: Record<ReservationState, string> = {
   completed: 'Finished (self-reported)',
   cancelled: 'Cancelled',
   noShow: 'Released after no-show (demo)',
+  checkInExpired: 'Check-in expired; physical use unconfirmed',
 }
 
 /** These hold a claim on the slot. `inUse` exists for activities that need it; courts skip it. */
@@ -178,6 +188,10 @@ export const gymSessionSchema = z.object({
   facilityId: id.optional(),
   startedAt: iso,
   endedAt: iso.optional(),
+  /** When the self-reported check-in stops counting. Not proof the person left. */
+  expiresAt: iso.optional(),
+  lastConfirmedAt: iso.optional(),
+  closeReason: z.enum(['MANUAL', 'AUTO_EXPIRED']).optional(),
   provenance: provenanceSchema,
 })
 export type GymSession = z.infer<typeof gymSessionSchema>
@@ -224,6 +238,7 @@ export const faultReportSchema = z.object({
   profileId: id,
   note,
   at: iso,
+  evidence: z.array(evidenceMetaSchema).max(3).optional(),
 })
 export type FaultReport = z.infer<typeof faultReportSchema>
 
@@ -302,5 +317,19 @@ export function defaultSpacePolicies(): Record<'library' | 'musicRoom' | 'chillZ
     library: { ...base, slotMinutes: 60 },
     musicRoom: { ...base, slotMinutes: 90, allowPartner: true },
     chillZone: { ...base, slotMinutes: 30, allowPartner: true },
+  }
+}
+
+/** Illustrative policy for the two supplied snooker tables. The table count is supplied; slot rules are not. */
+export function defaultSnookerPolicy(): Policy {
+  return {
+    bookable: true,
+    slotMinutes: 60,
+    horizonDays: 7,
+    maxActive: 1,
+    graceMinutes: 10,
+    bufferMinutes: 0,
+    allowPartner: true,
+    allowWaitlist: false,
   }
 }

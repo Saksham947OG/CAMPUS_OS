@@ -1,3 +1,10 @@
+import { createReportRepository, type ReportRepository } from '@/data/reports/report-repository'
+import { createMeetingRepository, type MeetingRepository } from '@/data/meetings/meeting-repository'
+import { createMailRepository, type MailRepository } from '@/data/mail/mail-repository'
+import {
+  createClassroomRepository,
+  type ClassroomRepository,
+} from '@/data/classrooms/classroom-repository'
 import {
   createCommunityRepository,
   type CommunityRepository,
@@ -44,6 +51,10 @@ export interface Services {
   shared: SharedRepository
   academics: AcademicsRepository
   community: CommunityRepository
+  classrooms: ClassroomRepository
+  mail: MailRepository
+  meetings: MeetingRepository
+  reports: ReportRepository
   /** Id factory for user-created records (injected so tests are deterministic). */
   newId: (prefix: string) => string
 }
@@ -51,7 +62,10 @@ export interface Services {
 const randomId = (prefix: string) => `${prefix}-${crypto.randomUUID().slice(0, 8)}`
 
 export function createServices(
-  overrides: Partial<Pick<Services, 'clock' | 'storage' | 'newId'>> = {},
+  overrides: Partial<Pick<Services, 'clock' | 'storage' | 'newId'>> & {
+    /** Presentation fixtures such as the example bookings. Tests that need a clean engine baseline turn this off. */
+    demoExamples?: boolean
+  } = {},
 ): Services {
   const storage = overrides.storage ?? createStorageAdapter()
   const clock = overrides.clock ?? systemClock
@@ -69,6 +83,7 @@ export function createServices(
     clock,
     newId,
     notifications: prefs.notifications,
+    examples: overrides.demoExamples ?? true,
   })
   const admin = createAdminRepository({ storage, clock, newId, notifications: prefs.notifications })
   const shared = createSharedRepository({
@@ -84,6 +99,35 @@ export function createServices(
     newId,
     notifications: prefs.notifications,
   })
+  const reports = createReportRepository({
+    storage,
+    clock,
+    newId,
+    notifications: prefs.notifications,
+  })
+  const mail = createMailRepository({
+    storage,
+    clock,
+    newId,
+    notifications: prefs.notifications,
+    shared,
+  })
+  const classrooms = createClassroomRepository({
+    storage,
+    clock,
+    newId,
+    notifications: prefs.notifications,
+  })
+  // The campus repository is created last (it reads these projections), so meetings take it lazily.
+  let campusRepo: CampusDataRepository | null = null
+  const meetings = createMeetingRepository({
+    storage,
+    clock,
+    newId,
+    notifications: prefs.notifications,
+    campus: () => campusRepo!,
+    classrooms,
+  })
   const academics = createAcademicsRepository({
     storage,
     clock,
@@ -91,10 +135,29 @@ export function createServices(
     notifications: prefs.notifications,
     clubIds: () => community.clubIds(),
   })
+  const campus = createCampusRepository({
+    storage,
+    clock,
+    profiles: demoProfiles,
+    newId,
+    extraBookings: (profileId) => [
+      ...ess.bookingRefs(profileId),
+      ...sports.bookingRefs(profileId),
+      ...academics.bookingRefs(profileId),
+      ...community.bookingRefs(profileId),
+      ...classrooms.bookingRefs(profileId),
+      ...meetings.bookingRefs(profileId),
+    ],
+  })
+  campusRepo = campus
   return {
     ess,
     academics,
     community,
+    classrooms,
+    mail,
+    meetings,
+    reports,
     sports,
     admin,
     shared,
@@ -105,18 +168,7 @@ export function createServices(
     profiles: createSeedProfileRepository(demoProfiles),
     appState: createAppStateRepository(storage),
     prefs,
-    campus: createCampusRepository({
-      storage,
-      clock,
-      profiles: demoProfiles,
-      newId,
-      extraBookings: (profileId) => [
-        ...ess.bookingRefs(profileId),
-        ...sports.bookingRefs(profileId),
-        ...academics.bookingRefs(profileId),
-        ...community.bookingRefs(profileId),
-      ],
-    }),
+    campus,
   }
 }
 

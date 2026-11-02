@@ -1,3 +1,5 @@
+import type { EvidenceMeta } from '@/domain/evidence'
+import { EvidencePicker } from '../help/report-page'
 import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { Field, inputClass } from '@/components/form-kit'
@@ -16,6 +18,7 @@ export function GymPage() {
   const { act, message } = useAction()
   const [faultFor, setFaultFor] = useState('')
   const [fault, setFault] = useState('')
+  const [faultEvidence, setFaultEvidence] = useState<EvidenceMeta[]>([])
   if (status === 'loading' || !sports) return <Loading />
   const v = gymView(sports, profileId, now.ms)
   const gym = v.gym
@@ -104,8 +107,27 @@ export function GymPage() {
           ) : null}
         </div>
         {v.mySession ? (
-          <p className="mt-1 text-sm text-ink-muted">
-            Checked in at {formatInstant(v.mySession.startedAt)}.
+          <div className="mt-1 text-sm text-ink-muted">
+            <p>
+              Checked in at {formatInstant(v.mySession.startedAt)}
+              {v.mySession.expiresAt
+                ? `; this check-in counts until ${formatInstant(v.mySession.expiresAt)}`
+                : ''}
+              .
+            </p>
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-1 min-h-11"
+              onClick={() => void act(() => repo.gymRenew(profileId), 'Check-in renewed.')}
+            >
+              Still here
+            </Button>
+          </div>
+        ) : v.myExpired ? (
+          <p className="mt-1 text-sm text-ink" data-testid="expired-note">
+            Your check-in expired at {formatInstant(v.myExpired.endedAt!)}. Physical use is
+            unconfirmed: it does not mean you left, and it does not mean the facility is empty.
           </p>
         ) : null}
         <output className="mt-2 block min-h-5 text-sm font-medium" aria-live="polite">
@@ -143,11 +165,12 @@ export function GymPage() {
                     onSubmit={async (ev) => {
                       ev.preventDefault()
                       const r = await act(
-                        () => repo.reportFault(profileId, e.id, fault),
+                        () => repo.reportFault(profileId, e.id, fault, faultEvidence),
                         'Your note was saved on this device. It is not a complaint ticket and no repair was requested.',
                       )
                       if (r.ok) {
                         setFault('')
+                        setFaultEvidence([])
                         setFaultFor('')
                       }
                     }}
@@ -163,6 +186,7 @@ export function GymPage() {
                         />
                       )}
                     </Field>
+                    <EvidencePicker value={faultEvidence} onChange={setFaultEvidence} />
                     <Button type="submit" className="min-h-11 self-start">
                       Save note
                     </Button>

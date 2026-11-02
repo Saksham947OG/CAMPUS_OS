@@ -44,6 +44,8 @@ export function SettingsPage() {
   const storageMode = useAppStore((s) => s.storageMode)
   const showDemoOps = useAppStore((s) => s.showDemoOps)
   const setShowDemoOps = useAppStore((s) => s.setShowDemoOps)
+  const theme = useAppStore((s) => s.theme)
+  const setTheme = useAppStore((s) => s.setTheme)
   const active = profiles.find((p) => p.id === activeId)
 
   return (
@@ -101,6 +103,31 @@ export function SettingsPage() {
           <p className="mt-3">
             A fifth label, “connected”, is reserved for a future authorized integration. No data in
             this prototype is live, official or connected to any campus system.
+          </p>
+        </Card>
+
+        <Card id="appearance" title="Appearance">
+          <fieldset className="flex flex-wrap gap-2">
+            <legend className="mb-1 text-sm font-medium text-ink">Theme</legend>
+            {(['system', 'light', 'dark'] as const).map((choice) => (
+              <label
+                key={choice}
+                className="flex min-h-11 items-center gap-2 rounded-md border border-border-strong px-3 text-sm text-ink has-[:checked]:border-teal has-[:checked]:bg-teal-tint"
+              >
+                <input
+                  type="radio"
+                  name="theme"
+                  value={choice}
+                  checked={theme === choice}
+                  onChange={() => setTheme(choice)}
+                />
+                {choice === 'system' ? 'Match my device' : choice === 'light' ? 'Light' : 'Dark'}
+              </label>
+            ))}
+          </fieldset>
+          <p className="mt-2 text-xs text-ink-muted">
+            Appearance only. It changes colours on this device and never your data. Animation also
+            follows your device’s reduce-motion setting.
           </p>
         </Card>
 

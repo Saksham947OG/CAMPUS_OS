@@ -64,6 +64,8 @@ export function initialSharedStore(nowMs: number): SharedStore {
       exam('exam-1', 'course-a', 'Sample Course A: mid-term (demo)', 10),
       exam('exam-2', 'course-b', 'Sample Course B: quiz (demo)', 12, '10:00'),
       exam('exam-3', 'course-c', 'Sample Course C: mid-term (demo)', 14),
+      // The quiz the Campus Mail demo sends seating for. Fictional, and dated today at 15:00.
+      exam('exam-4', 'course-a', 'DEMO-OPS101 Quiz 1 (demo)', 0, '15:00'),
     ],
     seats: [
       seat('seat-a-1', 'exam-1', 'demo-student-a', 'Demo Hall 1', '3', '5'),

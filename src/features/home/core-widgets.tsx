@@ -7,15 +7,17 @@ import {
   Hourglass,
   Zap,
 } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router'
 import { CategoryIcon } from '@/components/category-icon'
 import { ConfirmationBadge } from '@/components/confirmation-badge'
 import { Button } from '@/components/ui/button'
 import { statusLabel } from '@/app/routes'
-import { formatDateShort, formatTime } from '@/lib/time'
+import { addDays, formatDateShort, formatTime } from '@/lib/time'
 import { cn } from '@/lib/utils'
 import { contextSuggestion } from '@/selectors/home'
 import { deadlineFocus, type DeadlineEntry, type DeadlineStanding } from '@/selectors/deadlines'
+import { isCancelled, isTimed } from '@/selectors/items'
 import { itemsOnDate } from '@/selectors/occurrences'
 import { upNext } from '@/selectors/up-next'
 import { calendarLink } from '../calendar/calendar-url'
@@ -28,8 +30,18 @@ import { resolveQuickActions } from './quick-actions'
 /** H-W02 Up Next: today's timed, not-cancelled items; "Happening now" only with explicit start and end. */
 export function UpNextWidget({ ctx }: { ctx: HomeCtx }) {
   const { data, now } = ctx
+  const [day, setDay] = useState<'today' | 'tomorrow'>('today')
+  const tomorrow = addDays(now.today, 1)
   const list = upNext(itemsOnDate(data, now.today), now)
   const first = list[0]
+  // Tomorrow is every timed, not-cancelled item on the date, in time order. Nothing is ever "happening now".
+  const tomorrowItems = itemsOnDate(data, tomorrow)
+    .filter((i) => isTimed(i) && !isCancelled(i) && i.time.kind === 'timed')
+    .sort((a, b) =>
+      a.time.kind === 'timed' && b.time.kind === 'timed'
+        ? a.time.start.localeCompare(b.time.start)
+        : 0,
+    )
   const suggestion = contextSuggestion(data, now)
   return (
     <HomeCard
@@ -37,7 +49,58 @@ export function UpNextWidget({ ctx }: { ctx: HomeCtx }) {
       title="Up next"
       icon={<Clock className="size-4 text-teal-strong" aria-hidden="true" />}
     >
-      {!first ? (
+      <fieldset className="mb-2 inline-flex rounded-md border border-border-strong bg-surface p-0.5">
+        <legend className="sr-only">Day</legend>
+        {(['today', 'tomorrow'] as const).map((d) => (
+          <button
+            key={d}
+            type="button"
+            aria-pressed={day === d}
+            onClick={() => setDay(d)}
+            className={cn(
+              'min-h-10 rounded-sm px-3 text-sm font-medium',
+              day === d ? 'bg-teal text-surface' : 'text-ink hover:bg-mist',
+            )}
+          >
+            {d === 'today' ? 'Today' : 'Tomorrow'}
+          </button>
+        ))}
+      </fieldset>
+      {day === 'tomorrow' ? (
+        tomorrowItems.length === 0 ? (
+          <EmptyNote>No timed items are recorded for tomorrow.</EmptyNote>
+        ) : (
+          <ul className="flex flex-col gap-1.5" aria-label="Tomorrow's timed items">
+            {tomorrowItems.slice(0, 5).map((item) => (
+              <li key={item.key}>
+                <Link
+                  to={calendarLink({
+                    view: 'day',
+                    date: tomorrow,
+                    event: item.key,
+                    panel: 'details',
+                  })}
+                  className="block rounded-md border border-border bg-canvas p-2.5 hover:bg-mist"
+                >
+                  <span className="flex items-center gap-1.5 font-semibold text-ink">
+                    <CategoryIcon category={item.category} />
+                    {item.title}
+                  </span>
+                  <span className="block text-sm text-ink">{itemTimeText(item)}</span>
+                  {item.location ? (
+                    <span className="block text-sm text-ink-muted">{item.location}</span>
+                  ) : null}
+                </Link>
+              </li>
+            ))}
+            {tomorrowItems.length > 5 ? (
+              <li className="text-xs text-ink-muted">
+                {tomorrowItems.length - 5} more on tomorrow's Calendar day.
+              </li>
+            ) : null}
+          </ul>
+        )
+      ) : !first ? (
         <EmptyNote>No more scheduled timed events today.</EmptyNote>
       ) : (
         <>

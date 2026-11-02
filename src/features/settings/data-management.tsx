@@ -83,6 +83,10 @@ export function ResetDemo() {
             <li>demo café orders, carts and the simulated café state</li>
             <li>Sports bookings, waitlists, gym check-ins and equipment reports</li>
             <li>Leave requests, complaints and teaching-aid reports, with their histories</li>
+            <li>Simulated Campus Mail messages and the seats they produced</li>
+            <li>App issue reports you filed</li>
+            <li>Group meetings, invitations and time polls</li>
+            <li>Classroom reservations, requests and simulated closures</li>
             <li>
               Lost &amp; Found reports and claims, followed clubs, sports teams and join requests
             </li>
@@ -114,6 +118,10 @@ export function ResetDemo() {
       services.shared,
       services.academics,
       services.community,
+      services.classrooms,
+      services.mail,
+      services.meetings,
+      services.reports,
     )
     toast.notify('success', 'Demo data was reset on this device.')
   }

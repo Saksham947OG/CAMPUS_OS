@@ -4,6 +4,7 @@ import { Outlet, useLocation } from 'react-router'
 import { useReminderEngine } from '@/features/notifications/use-reminder-engine'
 import { useAppStore } from '../app-store'
 import { matchRoute } from '../routes'
+import { CampusAssistant } from '@/features/chat/campus-assistant'
 import { MobileNav } from './mobile-nav'
 import { Sidebar } from './sidebar'
 import { TopBar } from './top-bar'
@@ -83,6 +84,7 @@ export function AppShell() {
         </main>
       </div>
       <MobileNav />
+      <CampusAssistant />
     </div>
   )
 }

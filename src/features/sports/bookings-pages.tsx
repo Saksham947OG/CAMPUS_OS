@@ -11,6 +11,7 @@ import {
   cancelledReservations,
   ownReservations,
   slotViews,
+  capacityText,
   upcomingReservations,
 } from '@/selectors/sports'
 import { Empty, Loading, Pill, SectionCard, SubNav, TripScenario } from '../essentials/ess-common'
@@ -70,6 +71,11 @@ export function BookingsHubPage() {
           'Information only: no booking rules are configured.',
         )}
         {card(
+          '/bookings/sports?activity=snooker',
+          'Snooker',
+          'Two tables: reserve a specific one, or let the demo pick an available table.',
+        )}
+        {card(
           '/bookings/sports?activity=basketball',
           'Basketball',
           'Reserve the court for a group.',
@@ -85,6 +91,11 @@ export function BookingsHubPage() {
           'Music Room',
           'Reserve a jam session. Equipment is shown only if it was supplied.',
           <Music className="size-5 text-coffee" aria-hidden="true" />,
+        )}
+        {card(
+          '/bookings/classrooms',
+          'Classrooms',
+          'Check CR Conference Hall, CR1, CR3 and G12 for a time, then book from a free slot.',
         )}
         {card(
           '/bookings/chill-zone',
@@ -167,7 +178,7 @@ export function OtherSportsPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Other sports"
-        description="Table tennis, pool and basketball each have their own rules. Where booking is not configured you only see information."
+        description="Table tennis, pool, snooker and basketball each have their own rules. Where booking is not configured you only see information."
         badge={DEMO_BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="sports" />
@@ -227,6 +238,7 @@ export function ResourcePage() {
     chillZone: '/bookings/chill-zone',
     tableTennis: '/bookings/sports?activity=tableTennis',
     pool: '/bookings/sports?activity=pool',
+    snooker: '/bookings/sports?activity=snooker',
     basketball: '/bookings/sports?activity=basketball',
   }[r.activity]
   return (
@@ -264,6 +276,8 @@ export function ResourcePage() {
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
           <dt className="text-ink-muted">Published hours</dt>
           <dd>{hoursText(r.hours)}</dd>
+          <dt className="text-ink-muted">Capacity</dt>
+          <dd>{capacityText(sports, r)}</dd>
           <dt className="text-ink-muted">Booking</dt>
           <dd>{p.bookable ? 'Configured (demo rules)' : 'Not configured'}</dd>
           {p.bookable ? (

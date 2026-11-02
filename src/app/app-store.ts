@@ -5,6 +5,15 @@ import type { StorageMode } from '@/data/storage/storage-adapter'
 import type { Profile } from '@/domain/profile'
 import type { Services } from './services'
 
+export type ThemeChoice = 'system' | 'light' | 'dark'
+
+/** Writes the choice to the document so the CSS tokens switch. `system` removes it and follows the device. */
+function applyTheme(theme: ThemeChoice) {
+  if (typeof document === 'undefined') return
+  if (theme === 'system') delete document.documentElement.dataset.theme
+  else document.documentElement.dataset.theme = theme
+}
+
 export type AppStatus = 'loading' | 'ready' | 'error'
 
 export interface AppStoreState {
@@ -16,6 +25,9 @@ export interface AppStoreState {
   /** Local Chill Spot simulator visibility (off by default; an explicit Settings choice). */
   showDemoOps: boolean
   setShowDemoOps(on: boolean): void
+  /** Appearance only. Persisted on this device. */
+  theme: ThemeChoice
+  setTheme(theme: ThemeChoice): void
   init(): Promise<void>
   /** Switches the active demo profile. Returns false if the id is unknown. */
   setActiveProfile(id: string): boolean
@@ -27,16 +39,33 @@ export type AppStore = StoreApi<AppStoreState>
 export function createAppStore(services: Services): AppStore {
   let initStarted = false
 
+  // One place writes the app state, so a new field is never dropped by an older save call.
+  const persist = () => {
+    const s = store.getState()
+    services.appState.save({
+      activeProfileId: s.activeProfileId,
+      showDemoOps: s.showDemoOps,
+      theme: s.theme,
+    })
+  }
+
   const store = createStore<AppStoreState>((set, get) => ({
     status: 'loading',
     profiles: [],
     activeProfileId: DEFAULT_PROFILE_ID,
     storageMode: services.storage.mode,
     showDemoOps: false,
+    theme: 'system',
 
     setShowDemoOps(on) {
       set({ showDemoOps: on })
-      services.appState.save({ activeProfileId: get().activeProfileId, showDemoOps: on })
+      persist()
+    },
+
+    setTheme(theme) {
+      set({ theme })
+      applyTheme(theme)
+      persist()
     },
 
     async init() {
@@ -59,8 +88,10 @@ export function createAppStore(services: Services): AppStore {
           profiles,
           activeProfileId: active,
           showDemoOps: saved?.showDemoOps === true,
+          theme: saved?.theme ?? 'system',
           storageMode: services.storage.mode,
         })
+        applyTheme(saved?.theme ?? 'system')
       } catch (error) {
         set({
           status: 'error',
@@ -72,7 +103,7 @@ export function createAppStore(services: Services): AppStore {
     setActiveProfile(id) {
       if (!get().profiles.some((p) => p.id === id)) return false
       set({ activeProfileId: id })
-      services.appState.save({ activeProfileId: id, showDemoOps: get().showDemoOps })
+      persist()
       set({ storageMode: services.storage.mode })
       return true
     },

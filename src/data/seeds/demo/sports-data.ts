@@ -1,3 +1,4 @@
+import { reconcileLeases } from '@/domain/sports-logic'
 import type { Provenance } from '@/domain/provenance'
 import {
   defaultSpacePolicies,
@@ -7,9 +8,11 @@ import {
   type Policy,
   type Resource,
   type SportsConfig,
+  type SportsReservation,
   type SportsStore,
+  defaultSnookerPolicy,
 } from '@/domain/sports'
-import { isoFromMs } from '@/lib/time'
+import { addDays, fixedClock, isoFromMs, todayIn } from '@/lib/time'
 import type { LocalTime } from '@/lib/time'
 
 const t = (v: string) => v as LocalTime
@@ -44,6 +47,7 @@ export const demoSportsConfig = (): SportsConfig => ({
     badminton: { ...base, maxActive: 2, allowPartner: true, allowWaitlist: true },
     tableTennis: { ...base, slotMinutes: 30, allowPartner: true },
     pool: { ...base, bookable: false },
+    snooker: defaultSnookerPolicy(),
     basketball: { ...base, horizonDays: 3, graceMinutes: 15 },
     ...defaultSpacePolicies(),
   },
@@ -51,6 +55,7 @@ export const demoSportsConfig = (): SportsConfig => ({
   reminderMinutes: 30,
   occupancyStaleMinutes: 60,
   gymSessionStaleMinutes: 120,
+  checkInMaxMinutes: 60,
 })
 
 const SPACE_LABEL = 'Illustrative sample space (not a real campus space)'
@@ -61,6 +66,27 @@ const SPACE_LABEL = 'Illustrative sample space (not a real campus space)'
  * never booked; its two group rooms are the bookable resources. Chill Zone spots are demo
  * coordination records: their evening hours run past midnight on purpose.
  */
+const SNOOKER_LABEL = 'Supplied table count (two); slot rules are demo values'
+
+/**
+ * Two distinguishable snooker tables under one facility. The count of two is supplied by the owner; it does
+ * not establish live availability or official slot rules. Each table is its own bookable resource.
+ */
+export function snookerResources(nowIso: string): Resource[] {
+  return [1, 2].map((n) => ({
+    id: `DEMO-SNOOKER-${n}`,
+    activity: 'snooker' as const,
+    label: `Snooker table ${n}`,
+    bookable: true,
+    location: 'Sample location (fictional)',
+    hours: { open: t('10:00'), close: t('21:00') },
+    status: 'open' as const,
+    sourceLabel: SNOOKER_LABEL,
+    asOf: nowIso,
+    provenance: demo(nowIso, SNOOKER_LABEL),
+  }))
+}
+
 export function spaceResources(nowIso: string): Resource[] {
   const r = (
     id: string,
@@ -128,7 +154,68 @@ export function demoCatalogue(nowIso: string): Book[] {
 }
 
 /** The starting Sports scenario: fictional, labelled resources and nothing booked. */
-export function initialSportsStore(nowMs: number): SportsStore {
+const EXAMPLE_LABEL = 'Illustrative example booking (not a real campus booking)'
+
+/**
+ * Two persistent examples so "My bookings" shows real history from the first visit: an upcoming confirmed
+ * badminton court and a cancelled study room. They are demo seeds for the first demo profile only, dated
+ * relative to when the store is created, and the "Book again" link on each goes to the live booking page.
+ */
+export function exampleReservations(nowMs: number): SportsReservation[] {
+  const nowIso = isoFromMs(nowMs)
+  const today = todayIn(fixedClock(nowIso))
+  const make = (
+    id: string,
+    resourceId: string,
+    date: ReturnType<typeof addDays>,
+    start: string,
+    end: string,
+    state: SportsReservation['state'],
+  ): SportsReservation => ({
+    id,
+    ownerProfileId: 'demo-student-a',
+    resourceId,
+    date,
+    start: t(start),
+    end: t(end),
+    state,
+    disrupted: false,
+    createdAt: nowIso,
+    updatedAt: nowIso,
+    version: state === 'cancelled' ? 2 : 1,
+    provenance: demo(nowIso, EXAMPLE_LABEL),
+    history: [
+      {
+        id: `${id}-h1`,
+        entityId: id,
+        actorKind: 'student',
+        action: 'created',
+        at: nowIso,
+        dataMode: 'demoSeed',
+        note: 'Example booking',
+      },
+      ...(state === 'cancelled'
+        ? [
+            {
+              id: `${id}-h2`,
+              entityId: id,
+              actorKind: 'student' as const,
+              action: 'cancelled',
+              at: nowIso,
+              dataMode: 'demoSeed' as const,
+              note: 'Example cancellation',
+            },
+          ]
+        : []),
+    ],
+  })
+  return [
+    make('DEMO-EX-BADMINTON', 'DEMO-COURT-2', addDays(today, 2), '18:00', '19:00', 'confirmedDemo'),
+    make('DEMO-EX-STUDY-ROOM', 'DEMO-LIB-ROOM-1', addDays(today, 1), '15:00', '16:00', 'cancelled'),
+  ]
+}
+
+export function initialSportsStore(nowMs: number, examples = false): SportsStore {
   const nowIso = isoFromMs(nowMs)
   const label = 'Illustrative sample facility (not a real campus facility)'
   const resource = (
@@ -167,10 +254,11 @@ export function initialSportsStore(nowMs: number): SportsStore {
       resource('DEMO-TT-1', 'tableTennis', 'Demo table tennis table 1', '07:00'),
       resource('DEMO-TT-2', 'tableTennis', 'Demo table tennis table 2', '07:00'),
       resource('DEMO-POOL-1', 'pool', 'Demo pool table', null),
+      ...snookerResources(nowIso),
       resource('DEMO-BBALL-1', 'basketball', 'Demo basketball court', '07:00'),
       ...spaceResources(nowIso),
     ],
-    reservations: [],
+    reservations: examples ? exampleReservations(nowMs) : [],
     waitlist: [],
     gymSessions: [],
     occupancy: null,
@@ -191,12 +279,29 @@ export function initialSportsStore(nowMs: number): SportsStore {
 }
 
 /** Tops up a store saved before the space services existed with their fixtures. Existing records are untouched. */
-export function normalizeSportsStore(stored: SportsStore, nowMs: number): SportsStore {
+export function normalizeSportsStore(
+  stored: SportsStore,
+  nowMs: number,
+  examples = false,
+): SportsStore {
+  return reconcileLeases(topUp(stored, nowMs, examples), nowMs)
+}
+
+function topUp(stored: SportsStore, nowMs: number, examples: boolean): SportsStore {
   const have = new Set(stored.resources.map((r) => r.id))
-  const missing = spaceResources(isoFromMs(nowMs)).filter((r) => !have.has(r.id))
-  if (missing.length === 0 && stored.catalogue.length > 0) return stored
+  const missing = [
+    ...snookerResources(isoFromMs(nowMs)),
+    ...spaceResources(isoFromMs(nowMs)),
+  ].filter((r) => !have.has(r.id))
+  const haveRes = new Set(stored.reservations.map((r) => r.id))
+  const missingExamples = examples
+    ? exampleReservations(nowMs).filter((r) => !haveRes.has(r.id))
+    : []
+  if (missing.length === 0 && missingExamples.length === 0 && stored.catalogue.length > 0)
+    return stored
   return {
     ...stored,
+    reservations: [...stored.reservations, ...missingExamples],
     resources: [...stored.resources, ...missing],
     catalogue: stored.catalogue.length > 0 ? stored.catalogue : demoCatalogue(isoFromMs(nowMs)),
   }

@@ -1,6 +1,12 @@
 import { AxeBuilder } from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 
+// These journeys pick evening slots, so they run at a fixed 2 Nov 2026, 14:00 IST instead of the real clock
+// (otherwise they fail after 6 pm).
+test.beforeEach(async ({ page }) => {
+  await page.clock.setFixedTime('2026-11-02T08:30:00Z')
+})
+
 /**
  * Sports & Fitness journeys (COS-SPORTS-001 SP-T03 and the end-to-end flows). Every facility is a
  * labelled demo fixture; nothing here reaches a real booking system, sensor or access control.
@@ -69,7 +75,9 @@ test.describe('phone journey', () => {
     await expect(page.getByRole('link', { name: 'View this booking' })).toBeVisible()
     expect(await noOverflow(page)).toBe(false)
     await page.goto('/bookings/my')
-    await expect(page.getByRole('link', { name: 'Open booking' })).toBeVisible()
+    await expect(
+      page.locator('a[href^="/bookings/my/bk-"], a[href*="/classrooms/bookings/crb-"]'),
+    ).toBeVisible()
     await audit(page, 'My bookings with a booking (phone)')
   })
 })
@@ -107,7 +115,7 @@ test.describe('desktop journeys', () => {
         .getByText(/Demo badminton court 1 \(demo reservation\)/),
     ).toHaveCount(1)
     await page.goto('/bookings/my')
-    await page.getByRole('link', { name: 'Open booking' }).click()
+    await page.locator('a[href^="/bookings/my/bk-"], a[href*="/classrooms/bookings/crb-"]').click()
     await page.getByRole('button', { name: 'Cancel booking' }).click()
     await page.getByRole('dialog').getByRole('button', { name: 'Cancel booking' }).click()
     await expect(page.getByText('Cancelled', { exact: true }).first()).toBeVisible()
@@ -139,7 +147,7 @@ test.describe('desktop journeys', () => {
     await page.getByRole('button', { name: /demo profile/i }).click()
     await page.getByRole('menuitemradio', { name: /Demo Student A/ }).click()
     await page.goto('/bookings/my')
-    await page.getByRole('link', { name: 'Open booking' }).click()
+    await page.locator('a[href^="/bookings/my/bk-"], a[href*="/classrooms/bookings/crb-"]').click()
     await page.getByRole('button', { name: 'Cancel booking' }).click()
     await page.getByRole('dialog').getByRole('button', { name: 'Cancel booking' }).click()
     await page.goto('/bookings/badminton')
@@ -170,7 +178,7 @@ test.describe('desktop journeys', () => {
     await row.getByRole('button', { name: 'Close', exact: true }).click()
     await page.goto('/bookings/my')
     await expect(page.getByText(/Needs your attention \(1\)/)).toBeVisible()
-    await page.getByRole('link', { name: 'Open booking' }).click()
+    await page.locator('a[href^="/bookings/my/bk-"], a[href*="/classrooms/bookings/crb-"]').click()
     await expect(page.getByText(/Nothing was cancelled for you/)).toBeVisible()
     await expect(page.getByText('Confirmed (demo)').first()).toBeVisible()
   })
@@ -204,9 +212,9 @@ test.describe('desktop journeys', () => {
     await page.getByRole('button', { name: 'Reset Sports demo records…' }).click()
     await page.getByRole('dialog').getByRole('button', { name: 'Reset Sports records' }).click()
     await page.goto('/bookings/my')
-    await expect(
-      page.getByText('No upcoming bookings. Pick a facility from Bookings.'),
-    ).toBeVisible()
+    // Only the labelled example bookings remain: the court this test booked was cleared by the reset.
+    await expect(page.getByText(/Upcoming \(1\)/)).toBeVisible()
+    await expect(page.locator('a[href^="/bookings/my/bk-"]')).toHaveCount(0)
     await page.goto('/services/parcels')
     await expect(page.getByRole('link', { name: /Collect parcel details/ })).toBeVisible()
   })

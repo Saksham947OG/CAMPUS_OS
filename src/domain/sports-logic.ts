@@ -18,6 +18,7 @@ import {
   type Activity,
   type Book,
   type Equipment,
+  type FaultReport,
   type Loan,
   type Occupancy,
   type Policy,
@@ -337,7 +338,9 @@ export function studentAct(
       ),
     ])
   }
-  if (r.state !== 'checkedIn') return fail('Check in before marking the booking finished.')
+  // An expired check-in can still be closed by the student's own word; the app never does it for them.
+  if (r.state !== 'checkedIn' && r.state !== 'checkInExpired')
+    return fail('Check in before marking the booking finished.')
   const ev = makeAudit(r.id, 'student', 'completed', c, 'Self-reported')
   const next = bump(r, ev, { state: 'completed' }, c)
   return ok(replaceRes(s, next), next)
@@ -779,6 +782,7 @@ export function gymCheckIn(
     profileId,
     ...(facilityId !== GYM_ID ? { facilityId } : {}),
     startedAt: c.nowIso,
+    expiresAt: isoFromMs(Date.parse(c.nowIso) + s.config.checkInMaxMinutes * 60_000),
     provenance: userProvenance(c.nowIso),
   }
   return ok({ ...s, gymSessions: [session, ...s.gymSessions].slice(0, 300) }, { created: true })
@@ -796,7 +800,9 @@ export function gymCheckOut(
   return ok(
     {
       ...s,
-      gymSessions: s.gymSessions.map((g) => (g.id === open.id ? { ...g, endedAt: c.nowIso } : g)),
+      gymSessions: s.gymSessions.map((g) =>
+        g.id === open.id ? { ...g, endedAt: c.nowIso, closeReason: 'MANUAL' as const } : g,
+      ),
     },
     undefined,
   )
@@ -877,6 +883,7 @@ export function reportFault(
   equipmentId: string,
   text: string,
   c: Ctx,
+  evidence: FaultReport['evidence'] = [],
 ): Change<void> {
   if (!s.equipment.some((x) => x.id === equipmentId)) return fail('That equipment was not found.')
   if (!text.trim()) return fail('Describe the problem so it can be noted.')
@@ -886,6 +893,7 @@ export function reportFault(
     profileId,
     note: text.trim().slice(0, 300),
     at: c.nowIso,
+    ...(evidence?.length ? { evidence } : {}),
   }
   return ok({ ...s, faultReports: [report, ...s.faultReports].slice(0, 100) }, undefined)
 }
@@ -1053,3 +1061,82 @@ export function dueLoanNotices(s: SportsStore, nowMs: number, c: Ctx): Change<nu
 
 export const bookOf = (s: SportsStore, id: string): Book | undefined =>
   s.catalogue.find((b) => b.id === id)
+
+/**
+ * A check-in is a lease with an end. Any open self-report past its end is closed as AUTO_EXPIRED at its
+ * expiry time. That means the digital check-in stopped counting; it does NOT mean the person left, so
+ * physical use stays unconfirmed. It is derived from timestamps, so running it twice, or after a reload,
+ * gives the same result and never revives a closed session. Returns the same object when nothing expired.
+ */
+export function reconcileLeases(s: SportsStore, nowMs: number): SportsStore {
+  const maxMs = s.config.checkInMaxMinutes * 60_000
+  let changed = false
+  const gymSessions = s.gymSessions.map((g) => {
+    if (g.endedAt) return g
+    const end = g.expiresAt ? Date.parse(g.expiresAt) : Date.parse(g.startedAt) + maxMs
+    if (end > nowMs) return g
+    changed = true
+    return {
+      ...g,
+      expiresAt: g.expiresAt ?? isoFromMs(end),
+      endedAt: isoFromMs(end),
+      closeReason: 'AUTO_EXPIRED' as const,
+    }
+  })
+  // A booked session's lease ends with the booking. A check-in nobody closed is expired, never "finished":
+  // the record says physical use is unconfirmed. Derived from the slot end, so a reload changes nothing.
+  const reservations = s.reservations.map((r) => {
+    if (r.state !== 'checkedIn' && r.state !== 'inUse') return r
+    const { end } = spanMs(r)
+    if (end > nowMs) return r
+    changed = true
+    const at = isoFromMs(end)
+    return {
+      ...r,
+      state: 'checkInExpired' as const,
+      updatedAt: at,
+      version: r.version + 1,
+      history: [
+        ...r.history,
+        {
+          id: `${r.id}-lease-expired`,
+          entityId: r.id,
+          actorKind: 'system' as const,
+          action: 'checkInExpired',
+          at,
+          dataMode: 'simulated' as const,
+          note: 'The booking ended. Check-in expired; physical use unconfirmed.',
+        },
+      ],
+    }
+  })
+  return changed ? { ...s, gymSessions, reservations } : s
+}
+
+/** "Still here": renews an open check-in for another full lease, never after it expired. */
+export function gymRenew(
+  s: SportsStore,
+  profileId: string,
+  c: Ctx,
+  nowMs: number,
+  facilityId: string = GYM_ID,
+): Change<void> {
+  const mine = forFacility(facilityId)
+  const open = s.gymSessions.find((g) => g.profileId === profileId && !g.endedAt && mine(g))
+  if (!open) return fail('That check-in has already expired. Check in again if you are still here.')
+  const end = open.expiresAt
+    ? Date.parse(open.expiresAt)
+    : Date.parse(open.startedAt) + s.config.checkInMaxMinutes * 60_000
+  if (end <= nowMs)
+    return fail('That check-in has already expired. Check in again if you are still here.')
+  const next = isoFromMs(nowMs + s.config.checkInMaxMinutes * 60_000)
+  return ok(
+    {
+      ...s,
+      gymSessions: s.gymSessions.map((g) =>
+        g.id === open.id ? { ...g, expiresAt: next, lastConfirmedAt: c.nowIso } : g,
+      ),
+    },
+    undefined,
+  )
+}

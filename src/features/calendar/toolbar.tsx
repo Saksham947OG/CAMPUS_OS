@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import { ChevronLeft, ChevronRight, Filter, PanelRight, Search } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
@@ -117,6 +118,17 @@ export function CalendarToolbar({
           />
         </label>
 
+        <Button asChild variant="outline" className="min-h-11">
+          <Link to="/calendar/find-a-time">Find a time</Link>
+        </Button>
+        <Button asChild variant="outline" className="min-h-11">
+          <Link to="/academics/exams">Exam Schedule</Link>
+        </Button>
+        <Button asChild variant="outline" className="min-h-11">
+          <Link to="/academics/exams" aria-label="My Seating (opens the exam list with your seats)">
+            My Seating
+          </Link>
+        </Button>
         {showFiltersButton ? (
           <Button variant="outline" className="min-h-11 gap-2" onClick={onOpenFilters}>
             <Filter aria-hidden="true" />

@@ -92,6 +92,11 @@ export const seatAllocationSchema = z.object({
   /** Two allocations for one profile, exam and version cannot both be right, so neither is chosen. */
   needsVerification: z.boolean(),
   sourceLabel: z.string().min(1).max(100),
+  /** Set only when a seat came from a (simulated) email. The seat is still not an official allotment. */
+  sourceNoticeId: id.optional(),
+  sourceEmailId: id.optional(),
+  sourceRevision: z.number().int().min(1).optional(),
+  validation: z.enum(['CONFIRMED_DEMO']).optional(),
   provenance: provenanceSchema,
   history: z.array(seatVersionSchema),
 })

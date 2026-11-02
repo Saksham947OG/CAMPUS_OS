@@ -160,6 +160,12 @@ export function NotificationsPage() {
               </select>
             </label>
             <Link
+              to="/notifications/mail"
+              className="min-h-11 py-2.5 text-sm font-medium text-teal-strong underline"
+            >
+              Campus Mail
+            </Link>
+            <Link
               to="/notifications/preferences"
               className="min-h-11 py-2.5 text-sm font-medium text-teal-strong underline"
             >

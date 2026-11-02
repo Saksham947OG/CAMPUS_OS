@@ -330,14 +330,15 @@ describe('music room (SR-AT-12 … SR-AT-16)', () => {
     ).toHaveLength(1)
   })
 
-  it('SR-AT-16: a session that has passed its end time is not checked out for the student', async () => {
+  it('SR-AT-16: a session that has passed its end time is expired, never completed for the student', async () => {
     const env = setup()
     const { reservation } = await env.ok(book(env, A, 'DEMO-MUSIC-1', '10:00', TODAY)) // 10:00–11:30
     await env.ok(env.repo.act(A, reservation.id, 'checkIn'))
     env.setNow('2026-11-02T10:00:00Z') // 15:30 IST, hours after the slot ended
     const r = (await env.repo.load()).reservations[0]!
-    expect(r.state).toBe('checkedIn')
-    await env.ok(env.repo.act(A, reservation.id, 'finish'))
+    // V3 §5.3: the lease ends with the booking, so the stale check-in is expired, not "finished" for the student.
+    expect(r.state).toBe('checkInExpired')
+    await env.ok(env.repo.act(A, reservation.id, 'finish')) // the student can still say they finished
     expect((await env.repo.load()).reservations[0]!.state).toBe('completed')
   })
 })

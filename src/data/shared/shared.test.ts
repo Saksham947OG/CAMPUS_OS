@@ -168,7 +168,8 @@ describe('exam seating', () => {
     expect(
       s.seats.every((x) => /Fictional demo seat \(not an official allotment\)/.test(x.sourceLabel)),
     ).toBe(true)
-    expect(examsFor(s, new Set(['course-a'])).map((e) => e.id)).toEqual(['exam-1'])
+    // exam-4 is the quiz the Campus Mail demo sends seating for; it is dated today so it sorts first.
+    expect(examsFor(s, new Set(['course-a'])).map((e) => e.id)).toEqual(['exam-4', 'exam-1'])
     expect(examsFor(s, new Set())).toEqual([])
   })
 

@@ -112,7 +112,7 @@ test.describe('desktop', () => {
         .getByText(/Demo Spot 1 \(demo reservation\)/),
     ).toHaveCount(1)
     await page.goto('/bookings/my')
-    await page.getByRole('link', { name: 'Open booking' }).click()
+    await page.locator('a[href^="/bookings/my/bk-"], a[href*="/classrooms/bookings/crb-"]').click()
     await page.getByRole('link', { name: 'Open this day in Calendar' }).click()
     await expect(page.getByText(/Demo Spot 1 \(demo reservation\)/).first()).toBeVisible()
   })

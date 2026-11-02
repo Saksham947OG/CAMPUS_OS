@@ -4,9 +4,21 @@
 import { readFileSync } from 'node:fs'
 
 const css = readFileSync(new URL('../src/design/tokens.css', import.meta.url), 'utf8')
-const tokens = Object.fromEntries(
-  [...css.matchAll(/--([a-z0-9-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)].map(([, name, hex]) => [name, hex]),
-)
+const hexes = (text) =>
+  Object.fromEntries(
+    [...text.matchAll(/--([a-z0-9-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)].map(([, name, hex]) => [
+      name,
+      hex,
+    ]),
+  )
+const between = (a, b) => css.slice(css.indexOf(a) + a.length, css.indexOf(b))
+const lightCss = css.slice(0, css.indexOf('/* DARK:START */'))
+const darkCss = between('/* DARK:START */', '/* DARK:END */')
+const darkMediaCss = between('/* DARK-MEDIA:START */', '/* DARK-MEDIA:END */')
+const lightTokens = hexes(lightCss)
+const darkTokens = { ...lightTokens, ...hexes(darkCss) }
+// The "System" dark block must carry exactly the same values as the chosen-Dark block.
+const sameDark = JSON.stringify(hexes(darkCss)) === JSON.stringify(hexes(darkMediaCss))
 
 const channel = (hex, i) => {
   const c = parseInt(hex.slice(i, i + 2), 16) / 255
@@ -66,20 +78,31 @@ const pairs = [
 ]
 
 let failures = 0
-for (const [fg, bg, min, use] of pairs) {
-  const f = tokens[fg]
-  const b = tokens[bg]
-  if (!f || !b) {
-    console.error(`MISSING TOKEN  ${fg} / ${bg}`)
-    failures++
-    continue
-  }
-  const r = ratio(f, b)
-  const ok = r >= min
-  if (!ok) failures++
-  console.log(
-    `${ok ? 'PASS' : 'FAIL'}  ${r.toFixed(2).padStart(5)}:1 (need ${min})  ${fg} on ${bg} — ${use}`,
-  )
+if (!sameDark) {
+  console.error('FAIL  the System-dark block differs from the chosen-Dark block in tokens.css')
+  failures++
 }
-console.log(`\n${pairs.length - failures}/${pairs.length} pairs pass`)
+let total = 0
+for (const [theme, tokens] of [
+  ['light', lightTokens],
+  ['dark', darkTokens],
+]) {
+  for (const [fg, bg, min, use] of pairs) {
+    total++
+    const f = tokens[fg]
+    const b = tokens[bg]
+    if (!f || !b) {
+      console.error(`MISSING TOKEN  ${fg} / ${bg}`)
+      failures++
+      continue
+    }
+    const r = ratio(f, b)
+    const ok = r >= min
+    if (!ok) failures++
+    console.log(
+      `${ok ? 'PASS' : 'FAIL'}  ${theme.padEnd(5)} ${r.toFixed(2).padStart(5)}:1 (need ${min})  ${fg} on ${bg} — ${use}`,
+    )
+  }
+}
+console.log(`\n${total - failures}/${total} pairs pass`)
 process.exit(failures ? 1 : 0)

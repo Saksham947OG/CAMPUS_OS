@@ -3,9 +3,13 @@ import { Field, inputClass } from '@/components/form-kit'
 import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { measureLabel } from '@/domain/shared'
+import { activityLabel } from '@/domain/sports'
+import { coordinationCounts } from '@/selectors/coordination'
 import { computeScenario, presets, totalsByMeasure } from '@/selectors/timetax'
 import { Empty, Loading, Pill, SectionCard, SubNav } from '../essentials/ess-common'
 import { useAction } from '../essentials/ess-hooks'
+import { useMeetings } from '../meetings/meeting-hooks'
+import { useSports } from '../sports/sports-hooks'
 import { useShared } from './shared-hooks'
 
 const tabs = [
@@ -34,6 +38,44 @@ const LEGEND = (
   </ul>
 )
 
+/** Event counts from this browser's demo records. Deliberately no minutes, savings or percentages. */
+function CoordinationActivity() {
+  const { meetings, profileId } = useMeetings()
+  const { sports } = useSports()
+  const c = coordinationCounts(meetings, sports, profileId)
+  const units = Object.entries(c.unitReservations)
+  return (
+    <SectionCard id="tt-coord-h" title="Coordination activity in this demo">
+      <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 text-sm">
+        <dt>Meetings you organised</dt>
+        <dd>{c.meetingsOrganized}</dd>
+        <dt>Meetings you were invited to</dt>
+        <dd>{c.meetingsInvitedTo}</dd>
+        <dt>Polls you created</dt>
+        <dd>{c.pollsCreated}</dd>
+        <dt>Polls that became a meeting</dt>
+        <dd>{c.pollsFinalizedToMeeting}</dd>
+        <dt>Meetings with a room held in the demo</dt>
+        <dd>{c.meetingsWithRoom}</dd>
+        <dt>Stale digital check-ins closed by the app</dt>
+        <dd>{c.staleCheckInsClosed}</dd>
+        {units.map(([activity, n]) => (
+          <div key={activity} className="contents">
+            <dt>{activityLabel[activity as keyof typeof activityLabel]} unit reservations</dt>
+            <dd>{n}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-2 text-xs text-ink-muted">
+        These are counts of records saved in this browser by the active demo profile. They are not
+        time saved, not measured outcomes and not campus results: a log of app events cannot show
+        what would have happened without the app. A real comparison needs timed, comparable tasks
+        with a recorded method and sample.
+      </p>
+    </SectionCard>
+  )
+}
+
 export function TimeTaxPage() {
   const { shared, status, profileId } = useShared()
   if (status === 'loading' || !shared) return <Loading />
@@ -50,6 +92,7 @@ export function TimeTaxPage() {
       <SectionCard id="tt-ev-h" title="Kinds of evidence">
         {LEGEND}
       </SectionCard>
+      <CoordinationActivity />
       <SectionCard id="tt-sum-h" title="Your saved what-ifs">
         {mine.length === 0 ? (
           <Empty>

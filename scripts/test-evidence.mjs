@@ -72,6 +72,7 @@ const ids = [
   ...Array.from({ length: 40 }, (_, i) => `AC-AT-${String(i + 1).padStart(2, '0')}`),
   ...Array.from({ length: 45 }, (_, i) => `CO-AT-${String(i + 1).padStart(2, '0')}`),
   ...Array.from({ length: 30 }, (_, i) => `CH2-AT-${String(i + 1).padStart(2, '0')}`),
+  ...Array.from({ length: 6 }, (_, i) => `CHAT-AT-${String(i + 1).padStart(2, '0')}`),
 ]
 const DEFERRED = {
   'H-T08':
@@ -85,6 +86,8 @@ const DEFERRED = {
 // Behaviour is covered by automated tests, but the acceptance wording asks for a human inspection
 // that has not happened, so the ID is reported PARTIAL rather than PASS.
 const PARTIAL = {
+  'CHAT-AT-01':
+    'Launcher, panel, close and the top-bar entry point are tested in components, and the panel fits 320 to 768 px with axe scans (automated, Chromium only). No screen reader or real-device pass has been done.',
   'CH-AT-30':
     'Mobile/desktop journeys, keyboard operation, reduced-motion emulation, overflow and axe scans are automated (Chromium only). No manual screen-reader, real-device or visual sign-off has been done.',
   'ESS-M08':

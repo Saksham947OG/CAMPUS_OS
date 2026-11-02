@@ -1,3 +1,4 @@
+import { evidenceMetaSchema } from './evidence'
 import { z } from 'zod'
 import { provenanceSchema } from './provenance'
 import { dateOnlySchema, localTimeSchema } from './records'
@@ -223,6 +224,8 @@ export const ticketSchema = z.object({
   /** What the student said, kept apart from anything the simulator assigns. */
   reportedSeverity: z.enum(['normal', 'urgent']),
   attachments: z.array(attachmentSchema),
+  /** Photo or video saved on this device only (V3 §5.4). Nobody receives it. */
+  evidence: z.array(evidenceMetaSchema).max(3).optional(),
   demoPriority: z.enum(['normal', 'high']).optional(),
   /** A demo label only. No real team or person is ever invented. */
   teamLabel: z.string().max(60).optional(),

@@ -15,7 +15,7 @@ const note = z.string().trim().max(300)
 export const auditEventSchema = z.object({
   id,
   entityId: id,
-  actorKind: z.enum(['student', 'demoSimulator', 'import']),
+  actorKind: z.enum(['student', 'demoSimulator', 'import', 'system']),
   action: z.string().min(1).max(60),
   at: iso,
   dataMode: z.enum(['userCreated', 'simulated', 'demoSeed', 'provided']),

@@ -1,3 +1,4 @@
+import { UrgentSignalBanner } from './urgent-signal'
 import { Settings2 } from 'lucide-react'
 import { useState } from 'react'
 import { RouteStatusBadge } from '@/components/status-badge'
@@ -89,6 +90,8 @@ export function HomePage() {
           {briefing.summary}
         </p>
       </div>
+
+      <UrgentSignalBanner />
 
       {home.source === 'recovered' ? (
         <output className="block rounded-md border border-border-strong bg-mist p-3 text-sm text-ink">

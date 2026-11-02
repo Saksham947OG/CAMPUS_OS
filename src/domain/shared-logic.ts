@@ -80,6 +80,48 @@ export function changeSeat(
   return ok({ ...s, seats }, next, [note])
 }
 
+/**
+ * A seat that arrived by (simulated) email. It is versioned like any other change and carries where it
+ * came from, but it sends NO message of its own: the mail module sends the single alert, so the student
+ * is never told twice about one change.
+ */
+export function applyMailSeat(
+  s: SharedStore,
+  examId: string,
+  ownerProfileId: string,
+  input: SeatInput,
+  meta: { sourceNoticeId: string; sourceEmailId: string; revision: number },
+  c: Ctx,
+): Change<SeatAllocation> {
+  const exam = s.exams.find((e) => e.id === examId)
+  if (!exam) return fail('That exam was not found.')
+  const fields = clean(input)
+  if (Object.keys(fields).length === 0) return fail('The notice has no seating fields.')
+  const base = s.seats.find((x) => x.examId === examId && x.ownerProfileId === ownerProfileId)
+  const version = (base?.version ?? 0) + 1
+  const next: SeatAllocation = {
+    id: base?.id ?? c.newId('seat'),
+    examId,
+    ownerProfileId,
+    ...fields,
+    version,
+    updatedAt: c.nowIso,
+    needsVerification: false,
+    sourceLabel: 'Simulated email, confirmed in the demo only (not an official allotment)',
+    sourceNoticeId: meta.sourceNoticeId,
+    sourceEmailId: meta.sourceEmailId,
+    sourceRevision: meta.revision,
+    validation: 'CONFIRMED_DEMO',
+    provenance: simulatedProvenance(c.nowIso),
+    history: [...(base?.history ?? []), { version, at: c.nowIso, ...fields }],
+  }
+  const seats = [
+    ...s.seats.filter((x) => !(x.examId === examId && x.ownerProfileId === ownerProfileId)),
+    next,
+  ]
+  return ok({ ...s, seats }, next)
+}
+
 /** Two allocations for one profile, exam and version are a contradiction. Both are flagged and neither is chosen. */
 export function injectSeatConflict(
   s: SharedStore,

@@ -15,8 +15,9 @@ import {
 import { waitlistPosition } from '@/domain/sports-logic'
 import { Empty, Loading, Pill, SectionCard, SubNav } from '../essentials/ess-common'
 import { useAction } from '../essentials/ess-hooks'
+import { MyClassroomBookings } from '../classrooms/classroom-pages'
 import { useSports } from './sports-hooks'
-import { bookingTabs } from './sports-nav'
+import { bookPathFor, bookingTabs } from './sports-nav'
 
 function Row({ b }: { b: BookingSummary }) {
   return (
@@ -35,9 +36,16 @@ function Row({ b }: { b: BookingSummary }) {
           ? 'Washing machine reservation (managed under Laundry)'
           : 'Demo sports reservation'}
       </p>
-      <Button asChild size="sm" variant="outline" className="mt-2 min-h-11">
-        <Link to={b.href}>{b.kind === 'machine' ? 'Manage under Laundry' : 'Open booking'}</Link>
-      </Button>
+      <div className="mt-2 flex flex-wrap gap-2">
+        <Button asChild size="sm" variant="outline" className="min-h-11">
+          <Link to={b.href}>{b.kind === 'machine' ? 'Manage under Laundry' : 'Open booking'}</Link>
+        </Button>
+        {!b.active && b.activity && bookPathFor[b.activity] ? (
+          <Button asChild size="sm" variant="ghost" className="min-h-11">
+            <Link to={bookPathFor[b.activity]!}>Book again</Link>
+          </Button>
+        ) : null}
+      </div>
     </li>
   )
 }
@@ -71,6 +79,7 @@ export function MyBookingsPage() {
         badge={<Pill tone="demo">Demo · your records only</Pill>}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="my" />
+      <MyClassroomBookings />
       {disrupted.length ? group('dis-h', 'Needs your attention', disrupted, '') : null}
       {group('act-h', 'Upcoming', active, 'No upcoming bookings. Pick a facility from Bookings.')}
       {group('past-h', 'Past', past, 'No past bookings.')}
@@ -185,7 +194,9 @@ export function BookingDetailPage() {
           <dd>
             {r.state === 'checkedIn' || r.state === 'completed'
               ? 'Self-reported (not verified)'
-              : 'Not checked in'}
+              : r.state === 'checkInExpired'
+                ? 'Expired when the booking ended; physical use unconfirmed'
+                : 'Not checked in'}
           </dd>
           <dt className="text-ink-muted">Record</dt>
           <dd>
@@ -211,7 +222,11 @@ export function BookingDetailPage() {
               </time>
               <span className="font-medium">{h.action}</span>
               <Pill tone={h.actorKind === 'student' ? 'plain' : 'demo'}>
-                {h.actorKind === 'student' ? 'You' : 'Simulated (demo)'}
+                {h.actorKind === 'student'
+                  ? 'You'
+                  : h.actorKind === 'system'
+                    ? 'Automatic (when the app runs)'
+                    : 'Simulated (demo)'}
               </Pill>
               {h.note ? <span className="text-ink-muted">{h.note}</span> : null}
             </li>
@@ -237,7 +252,7 @@ export function BookingDetailPage() {
             </Button>
           </>
         ) : null}
-        {r.state === 'checkedIn' ? (
+        {r.state === 'checkedIn' || r.state === 'checkInExpired' ? (
           <Button
             className="min-h-11"
             onClick={() =>

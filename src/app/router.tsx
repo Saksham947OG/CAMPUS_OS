@@ -255,8 +255,57 @@ const communityPages: Record<string, () => ReactNode> = {
   'community-participation': () => <ParticipationPage />,
 }
 
+const ClassroomsPage = lazy(() =>
+  import('@/features/classrooms/classroom-pages').then((m) => ({ default: m.ClassroomsPage })),
+)
+const ClassroomBookingPage = lazy(() =>
+  import('@/features/classrooms/classroom-pages').then((m) => ({
+    default: m.ClassroomBookingPage,
+  })),
+)
+
+const MailPage = lazy(() =>
+  import('@/features/mail/mail-pages').then((m) => ({ default: m.MailPage })),
+)
+const MailDetailPage = lazy(() =>
+  import('@/features/mail/mail-pages').then((m) => ({ default: m.MailDetailPage })),
+)
+
+const FindATimePage = lazy(() =>
+  import('@/features/meetings/find-a-time-page').then((m) => ({ default: m.FindATimePage })),
+)
+const MeetingPage = lazy(() =>
+  import('@/features/meetings/meeting-pages').then((m) => ({ default: m.MeetingPage })),
+)
+const PollsPage = lazy(() =>
+  import('@/features/meetings/meeting-pages').then((m) => ({ default: m.PollsPage })),
+)
+const PollPage = lazy(() =>
+  import('@/features/meetings/meeting-pages').then((m) => ({ default: m.PollPage })),
+)
+
+const GradesPage = lazy(() =>
+  import('@/features/academics/grades-pages').then((m) => ({ default: m.GradesPage })),
+)
+const AttendancePage = lazy(() =>
+  import('@/features/academics/grades-pages').then((m) => ({ default: m.AttendancePage })),
+)
+
+const ReportPage = lazy(() =>
+  import('@/features/help/report-page').then((m) => ({ default: m.ReportPage })),
+)
+
 const sharedPages: Record<string, () => ReactNode> = {
   'notification-prefs': () => <NotificationPrefsPage />,
+  mail: () => <MailPage />,
+  'help-report': () => <ReportPage />,
+  'academics-grades': () => <GradesPage />,
+  'academics-attendance': () => <AttendancePage />,
+  'calendar-find-a-time': () => <FindATimePage />,
+  'calendar-meeting': () => <MeetingPage />,
+  'calendar-polls': () => <PollsPage />,
+  'calendar-poll': () => <PollPage />,
+  'mail-detail': () => <MailDetailPage />,
   'academics-exams': () => <ExamsPage />,
   'academics-exam-detail': () => <ExamDetailPage />,
   'best-time': () => <BestTimePage />,
@@ -288,6 +337,8 @@ const essentialsPages: Record<string, () => ReactNode> = {
   'bookings-music': () => <MusicRoomPage />,
   'bookings-chill': () => <ChillZonePage />,
   bookings: () => <BookingsHubPage />,
+  'bookings-classrooms': () => <ClassroomsPage />,
+  'bookings-classroom-booking': () => <ClassroomBookingPage />,
   'bookings-gym': () => <GymPage />,
   'bookings-badminton': () => <BadmintonPage />,
   'bookings-sports': () => <OtherSportsPage />,

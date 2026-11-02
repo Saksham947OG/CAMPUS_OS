@@ -14,6 +14,7 @@ import {
 } from '@/domain/sports-logic'
 import {
   reservationStateLabel,
+  resourceNoun,
   type Activity,
   type Resource,
   type SportsReservation,
@@ -100,6 +101,60 @@ export function slotViews(
   })
 }
 
+export type UnitState = 'available' | 'reserved' | 'mine' | 'maintenance' | 'unknown' | 'past'
+export interface UnitView {
+  resource: Resource
+  state: UnitState
+}
+export interface UnitSummary {
+  units: UnitView[]
+  /** Physical inventory the demo data lists. Maintenance never changes this number. */
+  total: number
+  reservable: number
+}
+
+/**
+ * Per-unit state for one interval of a multi-unit facility (e.g. two snooker tables). "Reservable" counts
+ * only units with no recorded booking and an open status; it says nothing about physical use.
+ */
+export function unitSummary(
+  s: SportsStore,
+  activity: Activity,
+  serviceDate: DateOnly,
+  startDate: DateOnly,
+  start: LocalTime,
+  profileId: string,
+  nowMs: number,
+): UnitSummary {
+  const units = resourcesFor(s, activity)
+    .filter((r) => r.bookable !== false)
+    .map((resource): UnitView => {
+      if (resource.status === 'closed') return { resource, state: 'maintenance' }
+      if (resource.status === 'unknown') return { resource, state: 'unknown' }
+      const v = slotViews(s, resource, serviceDate, profileId, nowMs).find(
+        (x) => x.startDate === startDate && x.start === start,
+      )
+      if (!v) return { resource, state: 'unknown' }
+      if (v.state === 'past') return { resource, state: 'past' }
+      if (v.state === 'reserved') return { resource, state: v.mine ? 'mine' : 'reserved' }
+      return { resource, state: 'available' }
+    })
+  return {
+    units,
+    total: units.length,
+    reservable: units.filter((u) => u.state === 'available').length,
+  }
+}
+
+export const unitStateLabel: Record<UnitState, string> = {
+  available: 'Available in demo schedule',
+  reserved: 'Reserved',
+  mine: 'Reserved by you',
+  maintenance: 'Maintenance',
+  unknown: 'Unknown',
+  past: 'Past',
+}
+
 /** Known Calendar commitments that overlap a chosen slot. A warning only: the booking can still be saved. */
 export function scheduleWarnings(
   data: ProfileData,
@@ -156,6 +211,12 @@ export function facilityView(s: SportsStore, profileId: string, nowMs: number, f
     selfReportedNow: open.length - stale.length,
     staleForReview: stale.length,
     mySession: open.find((g) => g.profileId === profileId),
+    /** The latest check-in of yours that ran out. The digital check-in stopped; presence is unconfirmed. */
+    myExpired: open.some((g) => g.profileId === profileId)
+      ? undefined
+      : sessions
+          .filter((g) => g.profileId === profileId && g.closeReason === 'AUTO_EXPIRED')
+          .sort((a, b) => (a.endedAt! < b.endedAt! ? 1 : -1))[0],
     snapshot: !o
       ? 'Unknown. No occupancy snapshot has been recorded.'
       : o.count === null
@@ -201,6 +262,8 @@ export interface BookingSummary {
   cancelled: boolean
   disrupted: boolean
   href: string
+  /** The facility's activity, so a finished or cancelled booking can link to "Book again". */
+  activity?: Activity
 }
 
 export function bookingSummaries(
@@ -221,6 +284,7 @@ export function bookingSummaries(
     cancelled: r.state === 'cancelled' || r.state === 'noShow',
     disrupted: r.disrupted,
     href: `/bookings/my/${r.id}`,
+    activity: sports.resources.find((x) => x.id === r.resourceId)?.activity,
   }))
   const b: BookingSummary[] = (ess?.reservations ?? [])
     .filter((r) => r.ownerProfileId === profileId)
@@ -276,4 +340,24 @@ export function spanText(s: {
   return s.endDate === s.startDate
     ? `${formatDateShort(s.startDate)}, ${formatTime(s.start)}–${formatTime(s.end)}`
     : `${formatDateShort(s.startDate)} ${formatTime(s.start)} → ${formatDateShort(s.endDate)} ${formatTime(s.end)}`
+}
+
+const UNIT_COUNTED: readonly Activity[] = [
+  'badminton',
+  'tableTennis',
+  'pool',
+  'snooker',
+  'basketball',
+]
+
+/**
+ * Capacity in the right unit for the facility, or an explicit "Capacity not provided". Courts and tables are
+ * counted from the demo fixtures (editable data, not a measurement). People or seats are never invented, and a
+ * physical count is kept apart from per-booking group limits, reservations and self-reported check-ins.
+ */
+export function capacityText(s: SportsStore, r: Resource): string {
+  if (!UNIT_COUNTED.includes(r.activity)) return 'Capacity not provided'
+  const n = s.resources.filter((x) => x.activity === r.activity).length
+  const noun = resourceNoun[r.activity]
+  return `${n} ${noun}${n === 1 ? '' : 's'} listed in the demo fixtures (editable sample data)`
 }

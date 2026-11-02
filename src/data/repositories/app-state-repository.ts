@@ -5,6 +5,8 @@ export const appStateSchema = z.object({
   activeProfileId: z.string().min(1),
   /** Explicit, per-device switch for the local Chill Spot simulator panel (DEC-046). Not a security control. */
   showDemoOps: z.boolean().optional(),
+  /** Appearance choice. Missing means "system". Presentation only: it never changes data. */
+  theme: z.enum(['system', 'light', 'dark']).optional(),
 })
 export type AppState = z.infer<typeof appStateSchema>
 

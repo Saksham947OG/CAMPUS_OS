@@ -33,6 +33,8 @@ import {
   SubNav,
 } from '../essentials/ess-common'
 import { useAction } from '../essentials/ess-hooks'
+import type { EvidenceMeta } from '@/domain/evidence'
+import { EvidencePicker, EvidencePreview } from '../help/report-page'
 import { AttachmentField, DemoBanner, EMERGENCY_NOTE, StatusPill, Timeline } from './admin-common'
 import { useAdmin } from './admin-hooks'
 import { adminTabs } from './admin-nav'
@@ -133,6 +135,7 @@ function NewTicketPage({ kind }: { kind: 'complaint' | 'teachingAid' }) {
   const [description, setDescription] = useState('')
   const [severity, setSeverity] = useState<'normal' | 'urgent'>('normal')
   const [files, setFiles] = useState<Attachment[]>([])
+  const [evidence, setEvidence] = useState<EvidenceMeta[]>([])
   const [classroom, setClassroom] = useState('')
   const [asset, setAsset] = useState<(typeof ASSET_TYPES)[number]>('projector')
   const [device, setDevice] = useState('')
@@ -163,6 +166,7 @@ function NewTicketPage({ kind }: { kind: 'complaint' | 'teachingAid' }) {
               : 'selfReported',
             reportedSeverity: severity,
             attachments: files,
+            ...(evidence.length ? { evidence } : {}),
             ...(isTeaching
               ? {
                   teaching: {
@@ -365,6 +369,7 @@ function NewTicketPage({ kind }: { kind: 'complaint' | 'teachingAid' }) {
             newId={newId}
             warning={PHOTO_WARNING}
           />
+          <EvidencePicker value={evidence} onChange={setEvidence} />
           {similar.length > 0 ? (
             <p role="note" className="rounded-md bg-mist p-3 text-sm">
               You already have a similar open ticket here:{' '}
@@ -562,6 +567,21 @@ export function TicketDetailPage() {
             {t.attachments.length
               ? t.attachments.map((a) => a.displayName).join(', ') + ' (names only)'
               : 'None'}
+          </dd>
+          <dt className="text-ink-muted">Photo or video evidence</dt>
+          <dd>
+            {t.evidence?.length ? (
+              <span className="flex flex-col gap-2">
+                {t.evidence.map((m) => (
+                  <EvidencePreview key={m.id} meta={m} />
+                ))}
+                <span className="text-xs text-ink-muted">
+                  Saved on this device only. It was not sent to any team.
+                </span>
+              </span>
+            ) : (
+              'None'
+            )}
           </dd>
         </dl>
         {solveMinutes !== null ? (

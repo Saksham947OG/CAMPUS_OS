@@ -7,11 +7,14 @@ import { activityLabel, resourceNoun, type Activity, type Resource } from '@/dom
 import { policyFor } from '@/domain/sports-logic'
 import { addDays, formatDateShort, formatInstant, formatTime, type DateOnly } from '@/lib/time'
 import {
+  capacityText,
   hoursText,
   resourcesFor,
   scheduleWarnings,
   slotViews,
   spanText,
+  unitStateLabel,
+  unitSummary,
   type SlotView,
 } from '@/selectors/sports'
 import { Empty, Pill, SectionCard } from '../essentials/ess-common'
@@ -19,6 +22,25 @@ import { useAction } from '../essentials/ess-hooks'
 import { useSports } from './sports-hooks'
 
 const keyOf = (s: SlotView) => `${s.startDate}|${s.start}`
+const ANY = 'any'
+/** Facilities with several distinguishable units get an "any available" choice and a per-unit status list. */
+const UNIT_ACTIVITIES: readonly Activity[] = ['badminton', 'tableTennis', 'snooker']
+
+/** One slot per interval across every unit: free if any unit is free, reserved only when all are taken. */
+function mergeUnits(perUnit: SlotView[][]): SlotView[] {
+  const [first = []] = perUnit
+  return first.map((slot, i) => {
+    const same = perUnit.map((u) => u[i]).filter((x): x is SlotView => Boolean(x))
+    const state = same.some((x) => x.state === 'free')
+      ? 'free'
+      : same.every((x) => x.state === 'past')
+        ? 'past'
+        : same.every((x) => x.state === 'closed')
+          ? 'closed'
+          : 'reserved'
+    return { ...slot, state, mine: same.some((x) => x.mine) }
+  })
+}
 
 const ACCESS_NOTE: Partial<Record<Activity, string>> = {
   chillZone:
@@ -38,6 +60,9 @@ function ResourceInfo({ r, activity }: { r: Resource; activity: Activity }) {
       <p className="text-ink-muted">{r.location}</p>
       <p>
         <strong>Published hours:</strong> {hoursText(r.hours)}
+      </p>
+      <p>
+        <strong>Capacity:</strong> {capacityText(sports, r)}
       </p>
       <p>
         <strong>Status:</strong>{' '}
@@ -84,6 +109,8 @@ export function SlotBooker({ activity }: { activity: Activity }) {
   )
   if (!sports) return null
   const policy = sports.config.policies[activity]
+  const unitAware = UNIT_ACTIVITIES.includes(activity) && resources.length > 1
+  const anyUnit = unitAware && resourceId === ANY
   const resource = resources.find((r) => r.id === resourceId) ?? resources[0]
   if (!resource)
     return <Empty>No {activityLabel[activity].toLowerCase()} resources are configured.</Empty>
@@ -115,8 +142,18 @@ export function SlotBooker({ activity }: { activity: Activity }) {
   }
 
   const days = Array.from({ length: policy.horizonDays + 1 }, (_, i) => addDays(now.today, i))
-  const slots = slotViews(sports, resource, date, profileId, now.ms)
+  const slots = anyUnit
+    ? mergeUnits(resources.map((r) => slotViews(sports, r, date, profileId, now.ms)))
+    : slotViews(sports, resource, date, profileId, now.ms)
   const chosen = slots.find((s) => keyOf(s) === slot && s.state === 'free')
+  const units =
+    unitAware && chosen
+      ? unitSummary(sports, activity, date, chosen.startDate, chosen.start, profileId, now.ms)
+      : null
+  // "Any" allocates the first eligible unit and says which one. Nothing is hidden from the student.
+  const target = anyUnit
+    ? (units?.units.find((u) => u.state === 'available')?.resource ?? resource)
+    : resource
   const warnings = chosen
     ? scheduleWarnings(data, chosen.startDate, chosen.start, chosen.end, chosen.endDate)
     : []
@@ -127,14 +164,14 @@ export function SlotBooker({ activity }: { activity: Activity }) {
     const r = await act(
       () =>
         repo.reserve(profileId, {
-          resourceId: resource.id,
+          resourceId: target.id,
           date: chosen.startDate,
           start: chosen.start,
           idempotencyKey: key,
           ...(partner.trim() ? { partnerNote: partner.trim() } : {}),
           ...(people ? { participants: Number(people) } : {}),
         }),
-      `Reservation saved in the demo: ${resource.label}, ${spanText(chosen)}.`,
+      `Reservation saved in the demo: ${target.label}, ${spanText(chosen)}.`,
     )
     setBusy(false)
     if (r.ok) {
@@ -171,12 +208,15 @@ export function SlotBooker({ activity }: { activity: Activity }) {
             <select
               {...a}
               className={inputClass}
-              value={resource.id}
+              value={anyUnit ? ANY : resource.id}
               onChange={(e) => {
                 setResourceId(e.target.value)
                 setSlot('')
               }}
             >
+              {unitAware ? (
+                <option value={ANY}>Any available {resourceNoun[activity]} (demo picks one)</option>
+              ) : null}
               {resources.map((r) => (
                 <option key={r.id} value={r.id}>
                   {r.label}
@@ -287,8 +327,34 @@ export function SlotBooker({ activity }: { activity: Activity }) {
       {chosen ? (
         <div className="mt-3 rounded-md border border-border bg-coffee-tint p-3">
           <p className="font-medium">
-            Review: {resource.label}, {spanText(chosen)}
+            Review: {target.label}, {spanText(chosen)}
           </p>
+          {anyUnit ? (
+            <p className="mt-1 text-sm">
+              You chose any {resourceNoun[activity]}, so the demo will reserve{' '}
+              <strong>{target.label}</strong>. Only that one is held.
+            </p>
+          ) : null}
+          {units ? (
+            <div data-testid="unit-status" className="mt-2 rounded-md bg-surface p-2 text-sm">
+              <p className="font-medium">
+                {units.reservable} of {units.total} {resourceNoun[activity]}s reservable in demo
+                schedule
+              </p>
+              <ul className="mt-1 space-y-0.5">
+                {units.units.map((u) => (
+                  <li key={u.resource.id}>
+                    {u.resource.label}: {unitStateLabel[u.state]}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-1 text-xs text-ink-muted">
+                {units.total} {resourceNoun[activity]}s are listed in the demo data. Maintenance on
+                one changes what can be reserved, not how many exist. This is a recorded schedule,
+                not live availability.
+              </p>
+            </div>
+          ) : null}
           {warnings.length ? (
             <p role="alert" className="mt-1 rounded-md bg-terracotta-tint p-2 text-sm">
               This overlaps with {warnings.join(', ')} in your Calendar. You can still book it.

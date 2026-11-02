@@ -12,6 +12,7 @@ import {
   type SharedStore,
 } from '@/domain/shared'
 import {
+  applyMailSeat,
   changeSeat,
   injectSeatConflict,
   rescheduleExam,
@@ -33,6 +34,12 @@ type Out<T> = Promise<Result<T>>
 export interface SharedRepository {
   load(): Promise<SharedStore>
   changeSeat(examId: string, ownerProfileId: string, input: SeatInput): Out<SeatAllocation>
+  applyMailSeat(
+    examId: string,
+    ownerProfileId: string,
+    input: SeatInput,
+    meta: { sourceNoticeId: string; sourceEmailId: string; revision: number },
+  ): Out<SeatAllocation>
   injectSeatConflict(examId: string, ownerProfileId: string): Out<void>
   resolveSeatConflict(seatId: string): Out<void>
   rescheduleExam(examId: string, patch: { date: DateOnly; startTime?: LocalTime }): Out<Exam>
@@ -70,6 +77,8 @@ export function createSharedRepository(o: SharedRepositoryOptions): SharedReposi
       return read()
     },
     changeSeat: (examId, owner, input) => run((s, c) => changeSeat(s, examId, owner, input, c)),
+    applyMailSeat: (examId, owner, input, meta) =>
+      run((s, c) => applyMailSeat(s, examId, owner, input, meta, c)),
     injectSeatConflict: (examId, owner) => run((s, c) => injectSeatConflict(s, examId, owner, c)),
     resolveSeatConflict: (id) => run((s) => resolveSeatConflict(s, id)),
     rescheduleExam: (id, patch) => run((s) => rescheduleExam(s, id, patch, o.profileIds)),

@@ -337,6 +337,17 @@ export function ExamDetailPage() {
               {v.seat.sourceLabel} · version {v.seat.version} · updated{' '}
               {formatInstant(v.seat.updatedAt)}
             </p>
+            {v.seat.sourceEmailId ? (
+              <p className="mt-1 text-sm">
+                <Link
+                  to={`/notifications/mail/${v.seat.sourceEmailId}`}
+                  className="font-medium text-coffee underline"
+                >
+                  View the original mail
+                </Link>{' '}
+                (simulated, revision {v.seat.sourceRevision})
+              </p>
+            ) : null}
             {v.seat.history.length > 1 ? (
               <details className="mt-2">
                 <summary className="min-h-11 cursor-pointer py-2.5 text-sm font-medium text-coffee">
