@@ -51,7 +51,7 @@ export function BookingsHubPage() {
         {card(
           '/bookings/gym',
           'Gym',
-          'Published hours, a reported occupancy sample, equipment notices and self-check-in.',
+          '6 AM–10 PM in 30-minute slots, demo reservations, equipment notices and self-check-in.',
           <Dumbbell className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(

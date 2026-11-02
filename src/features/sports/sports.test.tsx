@@ -230,7 +230,26 @@ describe('gym (SP-T21 … SP-T23, SP-T34)', () => {
     const body = screen.getByRole('main').textContent ?? ''
     expect(body).toMatch(/not a live or verified headcount/)
     expect(body).not.toMatch(/\d\s*%|\bof \d+ (people|seats)/)
-    expect(screen.getByRole('button', { name: 'Booking not configured' })).toBeDisabled()
+    expect(screen.getByText(/Published slots for/)).toBeInTheDocument()
+  })
+
+  it('shows all 32 half-hour gym slots and saves the selected session', async () => {
+    const user = userEvent.setup()
+    const { services } = renderApp('/bookings/gym')
+    await heading('Gym')
+    await user.selectOptions(screen.getByLabelText('Date'), '2026-11-03')
+    const slots = screen.getByRole('group', { name: /Published slots for/ })
+    expect(within(slots).getAllByRole('button')).toHaveLength(32)
+    expect(within(slots).getByRole('button', { name: /^6:00 am$/ })).toBeEnabled()
+    await user.click(within(slots).getByRole('button', { name: /^9:30 pm$/ }))
+    await user.click(screen.getByRole('button', { name: 'Confirm demo reservation' }))
+    await waitFor(async () =>
+      expect((await services.sports.load()).reservations).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ resourceId: 'DEMO-GYM', start: '21:30', end: '22:00' }),
+        ]),
+      ),
+    )
   })
 
   it('SP-T21 / SP-T22: check-in is a repeatable-safe self-report and a correction is explicit', async () => {

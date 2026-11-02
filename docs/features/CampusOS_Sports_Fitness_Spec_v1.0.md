@@ -94,6 +94,8 @@ Do **not** turn `reservation expired` into `court is physically empty`; do **not
 
 ## 4. Gym (F04)
 
+**2026-11-03 update (DEC-154):** Owner-supplied schedule is 06:00–22:00 with 30-minute sessions (32 per day). Expose the shared local demo booking flow; an interval reservation is an app record, not a physical capacity allocation or official access entitlement. Capacity remains unknown. This supersedes the conditional information-only default below.
+
 ### 4.1 Student experience
 
 Top section: published hours, *reported* occupancy status and its source/as-of time, closure banner if any, next eligible session (only if capacity rules are configured), equipment and maintenance notices. Sections: `Overview`, `Sessions / Bookings` (conditional on configured capacity booking), `Equipment`, `My Visits` (self-reported demo check-ins).

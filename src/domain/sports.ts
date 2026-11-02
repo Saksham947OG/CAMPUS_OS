@@ -40,7 +40,7 @@ export const activityLabel: Record<Activity, string> = {
   chillZone: 'Chill Zone',
 }
 export const resourceNoun: Record<Activity, string> = {
-  gym: 'gym',
+  gym: 'session',
   badminton: 'court',
   tableTennis: 'table',
   pool: 'table',
@@ -285,6 +285,8 @@ export type Loan = z.infer<typeof loanSchema>
 
 export const sportsStoreSchema = z.object({
   schemaVersion: z.literal(1),
+  /** Marks the one-time upgrade from the information-only gym. */
+  gymScheduleVersion: z.literal(1).optional(),
   config: sportsConfigSchema,
   resources: z.array(resourceSchema),
   reservations: z.array(sportsReservationSchema),

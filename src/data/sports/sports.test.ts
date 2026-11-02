@@ -361,6 +361,36 @@ describe('badminton partner, waitlist and no-show (SP-T15 … SP-T20)', () => {
   })
 })
 
+describe('gym schedule upgrade', () => {
+  it('upgrades a saved information-only gym without losing user records or closures', async () => {
+    const env = setup()
+    await env.ok(book(env, A, 'DEMO-COURT-1', '12:00'))
+    await env.ok(env.repo.gymCheckIn(A))
+    const old = await env.repo.load()
+    delete old.gymScheduleVersion
+    old.config.policies.gym.bookable = false
+    old.config.policies.gym.slotMinutes = 60
+    const gym = old.resources.find((r) => r.id === 'DEMO-GYM')!
+    gym.hours!.close = t('21:00')
+    gym.status = 'closed'
+    gym.closureNote = 'Maintenance'
+    env.memory.storage.setItem(SPORTS_STORE_KEY, JSON.stringify(old))
+    const upgraded = await env.build().load()
+    expect(upgraded.config.policies.gym).toMatchObject({ bookable: true, slotMinutes: 30 })
+    expect(upgraded.resources.find((r) => r.id === 'DEMO-GYM')).toMatchObject({
+      hours: { open: '06:00', close: '22:00' },
+      status: 'closed',
+      closureNote: 'Maintenance',
+    })
+    expect(upgraded.reservations).toEqual(old.reservations)
+    expect(upgraded.gymSessions).toEqual(old.gymSessions)
+    // A later demo policy edit is respected once the upgrade has been saved.
+    upgraded.config.policies.gym.bookable = false
+    env.memory.storage.setItem(SPORTS_STORE_KEY, JSON.stringify(upgraded))
+    expect((await env.build().load()).config.policies.gym.bookable).toBe(false)
+  })
+})
+
 describe('gym and other sports (SP-T21 … SP-T25)', () => {
   it('SP-T21: a second check-in does not create a second session; check-out and correction are explicit', async () => {
     const env = setup()
@@ -410,8 +440,6 @@ describe('gym and other sports (SP-T21 … SP-T25)', () => {
     const env = setup()
     const pool = await book(env, A, 'DEMO-POOL-1', '12:00')
     expect(!pool.ok && pool.error.message).toMatch(/not configured/)
-    const gym = await book(env, A, 'DEMO-GYM', '12:00')
-    expect(!gym.ok && gym.error.message).toMatch(/not configured/)
     await env.ok(env.repo.setPolicy('pool', { bookable: true }))
     const noHours = await book(env, A, 'DEMO-POOL-1', '12:00')
     expect(!noHours.ok && noHours.error.message).toMatch(/hours were not provided/)

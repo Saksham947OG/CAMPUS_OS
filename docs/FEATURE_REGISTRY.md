@@ -73,7 +73,7 @@
 | F01 | Chill Spot | Campus Services / café; specified as `COS-CHILL-001` | IMPLEMENTED (local prototype; backend deferred) |
 | F02 | Academic calendar | Calendar; extended in `COS-CAL-001` | IMPLEMENTED (as `COS-CAL-001`) |
 | F03 | Leave forms / out-times | Administration; `COS-ADMIN-001` | IMPLEMENTED (a demo request with a simulated review; never a permission or a gate pass) |
-| F04 | Gym schedules / occupancy / booking | Bookings; `COS-SPORTS-001` | IMPLEMENTED (hours, self-reported and simulated occupancy sample, equipment notes; gym booking is not configured because no capacity rule exists) |
+| F04 | Gym schedules / occupancy / booking | Bookings; `COS-SPORTS-001` | IMPLEMENTED (hours, self-reported and simulated occupancy sample, equipment notes; owner-supplied 06:00–22:00 schedule with 30-minute local demo booking slots; physical capacity remains unknown (DEC-154)) |
 | F05 | SS Laundry + self-service machines | Campus Services; specified as `COS-ESSENTIALS-001` | IMPLEMENTED (local prototype; backend deferred) |
 | F06 | Badminton booking | Bookings; `COS-SPORTS-001` | IMPLEMENTED (local demo reservations, partner note, waitlist and offers, no-show simulator) |
 | F07 | Other sports facilities | Bookings; `COS-SPORTS-001` | IMPLEMENTED (table tennis and basketball bookable with their own rules; pool is information only) |

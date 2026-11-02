@@ -11,6 +11,7 @@ import { useAction } from '../essentials/ess-hooks'
 import { bookingTabs } from './sports-nav'
 import { useSports } from './sports-hooks'
 import { SportsOps } from './sports-ops'
+import { SlotBooker } from './slot-booker'
 import { useState } from 'react'
 
 export function GymPage() {
@@ -22,12 +23,11 @@ export function GymPage() {
   if (status === 'loading' || !sports) return <Loading />
   const v = gymView(sports, profileId, now.ms)
   const gym = v.gym
-  const policy = sports.config.policies.gym
   return (
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Gym"
-        description="Published hours, a reported occupancy sample and equipment notices. Hours, counts and equipment here are fictional demo data."
+        description="Gym sessions from 6:00 AM to 10:00 PM in 30-minute intervals, self-check-in and equipment notices. Reservations and occupancy remain local demo data."
         badge={<Pill tone="demo">Demo · sample facility</Pill>}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="gym" />
@@ -60,18 +60,13 @@ export function GymPage() {
           Self-reported and simulated figures cover only demo profiles, so they are not a live or
           verified headcount, and no “x of y” or percentage is shown. Capacity is not provided.
         </p>
-        <div className="mt-3">
-          {policy.bookable ? null : (
-            <Button disabled className="min-h-11">
-              Booking not configured
-            </Button>
-          )}
-          <p className="mt-1 text-xs text-ink-muted">
-            Booking rules and capacity for the gym were not provided, so no sessions are offered.
-            You can still check the published hours above.
-          </p>
-        </div>
+        <p className="mt-2 text-xs text-ink-muted">
+          Hours and session duration were supplied by the project owner. Demo reservations hold a
+          slot in this app only; gym capacity and official booking rules are not provided.
+        </p>
       </SectionCard>
+
+      <SlotBooker activity="gym" />
 
       <SectionCard id="gym-visit-h" title="My visit (self-reported)">
         <p className="text-ink-muted">

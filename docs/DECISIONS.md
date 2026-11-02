@@ -157,6 +157,7 @@
 | DEC-151 | **Home Up next** has a Today / Tomorrow switch. Tomorrow lists only timed, not-cancelled recorded items in time order, links to the Calendar day and is never "happening now". | APPROVED DEFAULT | V3 §4.1. |
 | DEC-152 | **Dark theme** (Settings → Appearance: Match my device / Light / Dark) is a persisted override that swaps the same design tokens. `npm run check:contrast` validates every pair for both themes and that the system-dark block equals the chosen-dark block. Reduced motion was already honoured globally. | APPROVED DEFAULT | V3 design foundation. |
 | DEC-153 | **Time Tax coordination activity** shows event counts from local records only (meetings, polls, rooms, stale check-ins closed, unit reservations). It derives no minutes, percentages or savings, and says so; a log of app events cannot establish a counterfactual. | APPROVED DEFAULT | V3 §11. |
+| DEC-154 | **Gym schedule.** On 2026-11-03 the owner requested 06:00–22:00 in 30-minute intervals. Gym now exposes 32 daily slots through the existing local demo reservation engine. Other booking rules remain demo defaults; a reservation holds one interval in app data only and establishes no physical capacity or exclusive campus access. Existing saved stores receive a one-time schedule upgrade preserving reservations, check-ins, closures and other activity policies. Supersedes the earlier information-only gym default. | APPROVED | Owner request in chat. |
 
 ## How to change a decision
 

@@ -405,3 +405,10 @@ titles to real results. It records what was executed here; it does not certify a
 - Performance budgets (the non-binding "Home under 2 s" goal in COS-HOME-001 §11 has not been benchmarked).
 - Behaviour on real campus data: none has been supplied, so every record is demonstration data (`demoSeed`) or created in the browser.
 - Cross-tab storage synchronisation (not implemented).
+
+## 2026-11-03 — Gym half-hour schedule (DEC-154)
+
+- Owner requested 06:00–22:00 with 30-minute intervals: 32 daily slots, final session 21:30–22:00, through the existing local demo booking flow.
+- Added regression coverage for all 32 visible slots and a saved final-session reservation; legacy-store coverage preserves existing reservations, check-ins and facility closure while upgrading the schedule, and respects subsequent policy edits.
+- Passed: `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm test` (52 files, 733 tests), `npm run build`.
+- Browser inspection confirmed the schedule renders with half-hour controls and a saved reservation state. Added `e2e-live/gym.spec.ts` for booking, reload persistence and phone-width overflow checks. Automated Playwright execution was blocked before test execution by macOS sandbox permissions (`MachPortRendezvousServer`); that browser test is not claimed as passed.

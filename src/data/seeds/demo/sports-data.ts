@@ -38,12 +38,12 @@ const base: Policy = {
 
 /**
  * `demoSportsConfig` (COS-SPORTS-001 §10): illustrative values for a reproducible presentation.
- * They are NOT campus policy. Each activity has its own row; pool is information-only and the gym is
- * not bookable because no capacity rule has been supplied. Participant limits are unknown.
+ * They are NOT campus policy. Each activity has its own row; pool is information-only.
+ * Gym hours and 30-minute intervals were supplied by the owner; participant limits remain unknown.
  */
 export const demoSportsConfig = (): SportsConfig => ({
   policies: {
-    gym: { ...base, bookable: false },
+    gym: { ...base, slotMinutes: 30 },
     badminton: { ...base, maxActive: 2, allowPartner: true, allowWaitlist: true },
     tableTennis: { ...base, slotMinutes: 30, allowPartner: true },
     pool: { ...base, bookable: false },
@@ -245,9 +245,10 @@ export function initialSportsStore(nowMs: number, examples = false): SportsStore
   })
   return {
     schemaVersion: 1,
+    gymScheduleVersion: 1,
     config: demoSportsConfig(),
     resources: [
-      resource('DEMO-GYM', 'gym', 'Demo gym', '06:00'),
+      resource('DEMO-GYM', 'gym', 'Demo gym', '06:00', '22:00'),
       resource('DEMO-COURT-1', 'badminton', 'Demo badminton court 1', '07:00'),
       resource('DEMO-COURT-2', 'badminton', 'Demo badminton court 2', '07:00'),
       resource('DEMO-COURT-3', 'badminton', 'Demo badminton court 3', '07:00'),
@@ -284,7 +285,31 @@ export function normalizeSportsStore(
   nowMs: number,
   examples = false,
 ): SportsStore {
-  return reconcileLeases(topUp(stored, nowMs, examples), nowMs)
+  // Upgrade existing browsers without resetting their bookings, check-ins or other policies.
+  const upgraded: SportsStore =
+    stored.gymScheduleVersion === 1
+      ? stored
+      : {
+          ...stored,
+          gymScheduleVersion: 1,
+          config: {
+            ...stored.config,
+            policies: {
+              ...stored.config.policies,
+              gym: { ...stored.config.policies.gym, bookable: true, slotMinutes: 30 },
+            },
+          },
+          resources: stored.resources.map((r) =>
+            r.id === 'DEMO-GYM'
+              ? {
+                  ...r,
+                  bookable: true,
+                  hours: { open: t('06:00'), close: t('22:00') },
+                }
+              : r,
+          ),
+        }
+  return reconcileLeases(topUp(upgraded, nowMs, examples), nowMs)
 }
 
 function topUp(stored: SportsStore, nowMs: number, examples: boolean): SportsStore {
