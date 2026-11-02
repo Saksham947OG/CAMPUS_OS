@@ -52,7 +52,13 @@ describe('architecture guardrails', () => {
     // use-now.ts is the single real-clock tick for the UI and in-app reminders (re-reads the Clock;
     // it never fabricates operator or server events); toaster.tsx auto-dismisses UI feedback.
     // Anything else needs a documented decision.
-    const allowed = new Set(['hooks/use-now.ts', 'components/toaster.tsx'])
+    // DEC-159: visible NPC simulation and opted-in presence heartbeat only; neither writes operator events.
+    const allowed = new Set([
+      'hooks/use-now.ts',
+      'components/toaster.tsx',
+      'features/presence/campus-life.tsx',
+      'features/presence/real-presence.tsx',
+    ])
     const offenders = files.filter(
       (f) => !allowed.has(f) && !isTest(f) && banned.test(readFileSync(join(SRC, f), 'utf8')),
     )

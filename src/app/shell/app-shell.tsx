@@ -1,3 +1,4 @@
+import { CampusLife } from '@/features/presence/campus-life'
 import { TriangleAlert } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { Outlet, useLocation } from 'react-router'
@@ -80,6 +81,7 @@ export function AppShell() {
           tabIndex={-1}
           className="mx-auto w-full max-w-[var(--content-max)] flex-1 px-4 pb-24 pt-6 outline-none md:px-6 md:pb-8 md:pt-8"
         >
+          <CampusLife />
           <MainContent />
         </main>
       </div>

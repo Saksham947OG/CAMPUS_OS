@@ -14,7 +14,7 @@ import { SUGGESTIONS, answer, type Answer } from '@/selectors/assistant'
 export const OPEN_ASSISTANT_EVENT = 'campusos:open-assistant'
 
 /**
- * The CampusOS Assistant (COS-CHAT-001): one bottom-right panel for the whole shell. It is deterministic
+ * The Campus AI (COS-CHAT-001): one bottom-right panel for the whole shell. It is deterministic
  * and local: it applies fixed rules to the active profile's records, makes no network request, uses no
  * key, never claims reference data is live or official, and never takes an action. It answers with a source
  * and a link to the screen that owns the information.
@@ -83,7 +83,7 @@ export function CampusAssistant() {
     <section
       className="fixed bottom-20 right-4 z-40 flex flex-col items-end gap-3 md:bottom-6 md:right-6"
       aria-labelledby={open ? headingId : undefined}
-      aria-label={open ? undefined : 'CampusOS Assistant'}
+      aria-label={open ? undefined : 'Campus AI'}
     >
       {open ? (
         <div className="w-[min(23rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-border-strong bg-surface shadow-xl">
@@ -92,7 +92,7 @@ export function CampusAssistant() {
               <Bot className="size-5 text-teal" aria-hidden="true" />
               <div>
                 <h2 id={headingId} className="font-semibold text-ink">
-                  CampusOS Assistant
+                  Campus AI
                 </h2>
                 <p className="text-xs text-ink-muted">
                   Demo assistant · uses recorded CampusOS data · not a language model
@@ -103,7 +103,7 @@ export function CampusAssistant() {
               variant="ghost"
               size="icon"
               className="size-11"
-              aria-label="Close CampusOS Assistant"
+              aria-label="Close Campus AI"
               onClick={close}
             >
               <X aria-hidden="true" />
@@ -168,7 +168,7 @@ export function CampusAssistant() {
             }}
           >
             <label className="sr-only" htmlFor={inputId}>
-              Ask CampusOS Assistant
+              Ask Campus AI
             </label>
             <input
               ref={inputRef}
@@ -212,7 +212,7 @@ export function CampusAssistant() {
         aria-controls={open ? headingId : undefined}
       >
         <MessageCircle aria-hidden="true" />
-        {open ? 'Hide assistant' : 'Ask CampusOS'}
+        {open ? 'Hide assistant' : 'Ask Campus AI'}
       </Button>
     </section>
   )

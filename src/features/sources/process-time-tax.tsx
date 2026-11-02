@@ -284,8 +284,9 @@ export function ProcessTimeTax({
       ) : null}
       {composite ? (
         <p className="mt-3 rounded-md bg-teal-tint p-3">
-          <strong>{rangeText(composite)} potential reduction</strong> across Ananya’s four source
-          processes. Composite of observations from different days; not measured daily savings.
+          <strong>{rangeText(composite)} potential reduction</strong> across this persona’s four
+          selected processes. Reported baselines and planning assumptions; potential reduction, not
+          measured savings.
         </p>
       ) : null}
       {!compact ? (
@@ -320,7 +321,8 @@ export function ProcessTimeTax({
       ) : (
         <p className="mt-2 text-sm">
           {all.filter((r) => r.baseline).length} processes have a reported or illustrative baseline;{' '}
-          {all.filter((r) => !r.baseline).length} still need timed observations.
+          {all.filter((r) => !r.baseline).length} lack a baseline estimate. Estimates still need
+          field validation.
         </p>
       )}
       <p className="mt-3 text-xs text-ink-muted">

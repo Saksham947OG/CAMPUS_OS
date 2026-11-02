@@ -46,7 +46,12 @@ it('loads every source-backed service and all three personas without schema erro
     services.mail.load(),
     services.meetings.load(),
   ])
-  expect((await services.shared.load()).seats).toEqual([])
+  expect((await services.shared.load()).seats[0]).toMatchObject({
+    hall: 'Conference Hall',
+    column: '3',
+    row: '5',
+    provenance: { dataMode: 'demoSeed' },
+  })
   expect((await services.sports.load()).reservations.some((r) => r.id.startsWith('DEMO-EX-'))).toBe(
     false,
   )
@@ -79,7 +84,9 @@ it('keeps source dates fixed, inventories every source and calculates the docume
   expect(sourceLibrary).toHaveLength(28)
   expect(new Set(sourceLibrary.map((s) => s.id)).size).toBe(28)
   expect(compositeRange(personaEvidence('demo-student-a'))).toEqual([53, 69])
-  expect(personaEvidence('demo-student-b').find((p) => p.id === 'gym')!.baseline).toBeNull()
+  expect(personaEvidence('demo-student-b').find((p) => p.id === 'gym')!.basis).toBe('illustrative')
+  expect(compositeRange(personaEvidence('demo-student-b'))).not.toBeNull()
+  expect(compositeRange(personaEvidence('demo-student-empty'))).not.toBeNull()
   expect(buildCampusDataset('2026-11-03' as DateOnly)).toEqual(
     buildCampusDataset('2026-11-04' as DateOnly),
   )

@@ -33,7 +33,7 @@ const process = (
 export function personaEvidence(profileId: string): ProcessEvidence[] {
   const a = profileId === 'demo-student-a',
     b = profileId === 'demo-student-b'
-  return [
+  const rows: ProcessEvidence[] = [
     process(
       'breakfast',
       'mess',
@@ -132,7 +132,7 @@ export function personaEvidence(profileId: string): ProcessEvidence[] {
       ['persona-3-chart'],
       a
         ? '5–15 minute search is an illustrative planning assumption.'
-        : 'Library capacity 130 is supplied; seat-search duration and current occupancy are missing.',
+        : 'Library reference capacity is 140 (owner update; earlier chart 130); seat-search duration and current occupancy are missing.',
     ),
     process(
       'classrooms',
@@ -197,6 +197,37 @@ export function personaEvidence(profileId: string): ProcessEvidence[] {
       'Club events are proposals. Fragmentation is described, but no matched time study establishes savings.',
     ),
   ]
+  if (!a) {
+    const defaults: Record<string, [number, number, number, number]> = {
+      breakfast: [5, 10, 2, 3],
+      lunch: [10, 20, 3, 5],
+      dinner: [5, 10, 2, 3],
+      machines: [15, 30, 0, 5],
+      'chill-spot': [10, 20, 3, 5],
+      gym: [10, 20, 2, 5],
+      library: [5, 15, 1, 3],
+      classrooms: [10, 20, 2, 5],
+      'ss-laundry': [5, 10, 0, 2],
+      parcels: [5, 10, 0, 2],
+      academics: [5, 10, 1, 2],
+      administration: [10, 20, 3, 5],
+      community: [10, 20, 3, 5],
+      sports: [5, 15, 1, 3],
+    }
+    for (const row of rows) {
+      const v = defaults[row.id]
+      if (!v) continue
+      if (!row.baseline || !row.target) {
+        row.baseline = [v[0], v[1]]
+        row.target = [v[2], v[3]]
+        row.basis = 'illustrative'
+        row.note =
+          'Owner-authorized planning assumption. Waiting only; productive exercise, eating and study are excluded. Replace with timed observations when available.'
+      }
+      row.includeInComposite = ['lunch', 'gym', 'classrooms', 'community'].includes(row.id)
+    }
+  }
+  return rows
 }
 export function potentialRange(row: ProcessEvidence): [number, number] | null {
   if (!row.baseline || !row.target) return null
@@ -220,7 +251,7 @@ export const sourceGaps = [
     service: 'academics',
     title: 'Individual exam seats and quiz syllabus',
     detail:
-      'The exam and quiz PDFs list halls, but no authenticated persona-to-seat assignment or current syllabus. No seat number has been invented.',
+      'Owner-authorized seating scenarios now assign Conference Hall, column 3, rows 5–7. These assumptions are separate from official seat confirmation and current syllabus, which still need staff verification.',
   },
   {
     id: 'live-occupancy',

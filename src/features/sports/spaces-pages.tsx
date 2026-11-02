@@ -150,8 +150,8 @@ export function LibraryPage() {
       <SlotBooker activity="library" />
       {sports.resources.find((r) => r.id === LIBRARY_ID)?.referenceCapacity ? (
         <p className="rounded-md bg-mist p-3 text-sm">
-          Library reference capacity: 130 people, supplied in the persona chart. Current occupancy
-          is not known.
+          Library reference capacity: 140 people, updated by the owner (earlier chart: 130). Current
+          occupancy is not known.
         </p>
       ) : null}
       <PersonMinutesScenario id="lib-tt-h" noun="library trips to full or unavailable rooms" />

@@ -8,8 +8,8 @@ beforeEach(() => setViewport(1600))
 afterEach(() => clearViewport())
 
 async function openAssistant(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(await screen.findByRole('button', { name: 'Ask CampusOS' }))
-  const panel = await screen.findByRole('region', { name: 'CampusOS Assistant' })
+  await user.click(await screen.findByRole('button', { name: 'Ask Campus AI' }))
+  const panel = await screen.findByRole('region', { name: 'Campus AI' })
   return within(panel)
 }
 const ask = async (
@@ -17,16 +17,16 @@ const ask = async (
   a: ReturnType<typeof within>,
   q: string,
 ) => {
-  await user.type(a.getByLabelText('Ask CampusOS Assistant'), q)
+  await user.type(a.getByLabelText('Ask Campus AI'), q)
   await user.click(a.getByRole('button', { name: 'Send question' }))
 }
 
-describe('CampusOS Assistant', () => {
+describe('Campus AI', () => {
   it('CHAT-AT-01: the shared-shell launcher opens an accessible, labelled panel, and the top-bar button opens the same one', async () => {
     const user = userEvent.setup()
     renderApp('/')
     const a = await openAssistant(user)
-    expect(a.getByRole('heading', { name: 'CampusOS Assistant' })).toBeInTheDocument()
+    expect(a.getByRole('heading', { name: 'Campus AI' })).toBeInTheDocument()
     expect(
       a.getByText(/Demo assistant · uses recorded CampusOS data · not a language model/),
     ).toBeInTheDocument()
@@ -34,11 +34,11 @@ describe('CampusOS Assistant', () => {
       'aria-expanded',
       'true',
     )
-    await user.click(a.getByRole('button', { name: 'Close CampusOS Assistant' }))
-    expect(screen.queryByRole('heading', { name: 'CampusOS Assistant' })).not.toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Open CampusOS Assistant' }))
-    expect(await screen.findByRole('heading', { name: 'CampusOS Assistant' })).toBeInTheDocument()
-    expect(screen.getAllByRole('region', { name: 'CampusOS Assistant' })).toHaveLength(1) // one assistant, not two
+    await user.click(a.getByRole('button', { name: 'Close Campus AI' }))
+    expect(screen.queryByRole('heading', { name: 'Campus AI' })).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Open Campus AI' }))
+    expect(await screen.findByRole('heading', { name: 'Campus AI' })).toBeInTheDocument()
+    expect(screen.getAllByRole('region', { name: 'Campus AI' })).toHaveLength(1) // one assistant, not two
   })
 
   it('CHAT-AT-02: typed and suggested questions work, and Escape closes it and returns focus to the launcher', async () => {
@@ -49,10 +49,10 @@ describe('CampusOS Assistant', () => {
     expect(await a.findByText(/academic demonstration/i)).toBeInTheDocument()
     await ask(user, a, 'what is on today')
     expect((await a.findAllByText(/Source:/)).length).toBe(2)
-    expect(a.getByLabelText('Ask CampusOS Assistant')).toHaveValue('')
+    expect(a.getByLabelText('Ask Campus AI')).toHaveValue('')
     await user.keyboard('{Escape}')
-    expect(screen.queryByRole('heading', { name: 'CampusOS Assistant' })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Ask CampusOS' })).toHaveFocus()
+    expect(screen.queryByRole('heading', { name: 'Campus AI' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Ask Campus AI' })).toHaveFocus()
   })
 
   it('CHAT-AT-03: schedule and task answers come from the active profile’s records and link to the Calendar', async () => {

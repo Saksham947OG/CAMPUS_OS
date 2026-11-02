@@ -111,3 +111,7 @@
 ## Source-backed campus data (2026-11-03)
 
 `COS-DATA-001`: IMPLEMENTED — supplied Drive snapshot, 28-file source register, three personalized personas, source-labelled campus records, fixed November reference week, existing-browser migration, functional Time Tax observations and evidence-based Best Time to Go. Contract: `docs/features/CampusOS_Source_Data_Personas_Spec_v1.0.md`; DEC-155–DEC-158. Raw private identity and individual roster records are flagged for authenticated storage. Live provider/Drive synchronization is not connected.
+
+## Campus activity and opt-in presence (2026-11-03)
+
+`COS-PRESENCE-001`: IMPLEMENTED — cross-route simulation of 300 virtual students, facility capacity cards, animated NPC activity, explicit pause, opt-in foreground geofencing and optional local anonymous shared-session server. DEC-159–160; configuration and limitations: `docs/PRESENCE_SETUP.md`. Real production occupancy is not provisioned. All-persona potential time reductions and assumed exam seating remain clearly labelled planning scenarios. Validation: `docs/TEST_EVIDENCE.md` (744 tests).

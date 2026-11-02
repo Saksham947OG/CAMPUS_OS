@@ -103,14 +103,14 @@ export function campusSports(): SportsStore {
       r.activity === 'gym'
         ? 'Owner-supplied 06:00–22:00 · 30-minute slots'
         : r.activity === 'library'
-          ? 'Persona chart: library capacity 130; booking rules illustrative'
+          ? 'Owner capacity 140; older chart 130; booking rules illustrative'
           : source,
     provenance:
       r.activity === 'gym'
         ? supplied('Owner-supplied gym hours and slot duration')
         : illustrative(source),
     ...(r.id === 'DEMO-LIBRARY'
-      ? { referenceCapacity: 130 }
+      ? { referenceCapacity: 140 }
       : r.id === 'DEMO-GYM'
         ? { referenceCapacity: 20, referenceCapacityApproximate: true }
         : {}),
@@ -292,7 +292,24 @@ export function campusShared(): SharedStore {
       sourceLabel: e.provenance.sourceLabel!,
       provenance: e.provenance,
     }))
-  s.seats = [] // Hall lists are not individual seat assignments.
+  s.seats = s.exams.flatMap((exam) =>
+    campusProfiles.map((profile, i) => ({
+      id: `assumed-seat-${exam.id}-${profile.id}`,
+      examId: exam.id,
+      ownerProfileId: profile.id,
+      hall: 'Conference Hall',
+      row: String(5 + i),
+      column: '3',
+      version: 1,
+      updatedAt: SOURCE_AS_OF,
+      needsVerification: false,
+      sourceLabel: 'Owner-authorized seating scenario · not an official allotment',
+      provenance: illustrative('Assumed seating: Conference Hall, column 3; persona rows 5–7'),
+      history: [
+        { version: 1, at: SOURCE_AS_OF, hall: 'Conference Hall', row: String(5 + i), column: '3' },
+      ],
+    })),
+  )
   return s
 }
 export function campusClassrooms(): ClassroomStore {

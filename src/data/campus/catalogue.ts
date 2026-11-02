@@ -2,7 +2,7 @@ import type { Profile } from '@/domain/profile'
 import type { Provenance } from '@/domain/provenance'
 import type { LocalTime, DateOnly } from '@/lib/time'
 
-export const IMPORT_VERSION = 'campus-2026-11-v1'
+export const IMPORT_VERSION = 'campus-2026-11-v2'
 export const REFERENCE_WEEK = { start: '2026-11-02' as DateOnly, end: '2026-11-08' as DateOnly }
 export const t = (value: string) => value as LocalTime
 export const supplied = (sourceLabel: string, sourceRecordId?: string): Provenance => ({
