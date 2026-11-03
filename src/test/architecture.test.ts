@@ -56,7 +56,7 @@ describe('architecture guardrails', () => {
     const allowed = new Set([
       'hooks/use-now.ts',
       'components/toaster.tsx',
-      'features/presence/campus-life.tsx',
+      'features/presence/world-context.tsx',
       'features/presence/real-presence.tsx',
     ])
     const offenders = files.filter(

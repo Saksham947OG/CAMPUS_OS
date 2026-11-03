@@ -435,3 +435,7 @@ titles to real results. It records what was executed here; it does not certify a
 
 - Added `src/domain/capacity.test.ts` (table rows verbatim, library facility vs cabins, per-unit participant limits), assistant capacity answers, hub/gym capacity text, a gym slot that holds exactly 20 reservations then reads full, classroom capacity 70, and a Calendar side panel that stays closed until a selection and closes again.
 - Fixed wording found in a walkthrough: "on this devicenstration" (four pages), "Available locally schedule", lowercase court and table names, stale "Fictional faculty/clubs" and "arrive later" descriptions, 24-hour exam start times, and a stale "capacity not supplied" note on Classrooms.
+
+## Persona scenarios, classroom counter and capacity board — 2026-11-03
+
+- `campus.test.ts` asserts composites of 53–69 (Ananya), 50–72 (Abeer) and 52–73 (Myra). `classrooms.test.ts` checks rooms in use against the supplied timetable (2 of 6 at 10:30, 0 in the gap, 0 at 3 am). `capacity-board.test.tsx` checks the meters, the Time Tax at stake and the table fallback.

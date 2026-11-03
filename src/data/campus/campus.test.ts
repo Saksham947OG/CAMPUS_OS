@@ -85,8 +85,9 @@ it('keeps source dates fixed, inventories every source and calculates the docume
   expect(new Set(sourceLibrary.map((s) => s.id)).size).toBe(28)
   expect(compositeRange(personaEvidence('demo-student-a'))).toEqual([53, 69])
   expect(personaEvidence('demo-student-b').find((p) => p.id === 'gym')!.basis).toBe('illustrative')
-  expect(compositeRange(personaEvidence('demo-student-b'))).not.toBeNull()
-  expect(compositeRange(personaEvidence('demo-student-empty'))).not.toBeNull()
+  // Each persona has its own scenario that lands near an hour, like Ananya's 53–69.
+  expect(compositeRange(personaEvidence('demo-student-b'))).toEqual([50, 72])
+  expect(compositeRange(personaEvidence('demo-student-empty'))).toEqual([52, 73])
   expect(buildCampusDataset('2026-11-03' as DateOnly)).toEqual(
     buildCampusDataset('2026-11-04' as DateOnly),
   )

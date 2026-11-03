@@ -1,4 +1,5 @@
 import { CampusLife } from '@/features/presence/campus-life'
+import { CampusWorldProvider } from '@/features/presence/world-context'
 import { TriangleAlert } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { Outlet, useLocation } from 'react-router'
@@ -64,29 +65,31 @@ export function AppShell() {
   }, [pathname])
 
   return (
-    <div className="flex min-h-dvh">
-      <a
-        href="#main-content"
-        className="sr-only z-50 rounded-md bg-surface px-4 py-3 text-sm font-semibold text-ink focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:border focus:border-border-strong"
-      >
-        Skip to main content
-      </a>
-      <Sidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar />
-        <StorageNotice />
-        <main
-          id="main-content"
-          ref={mainRef}
-          tabIndex={-1}
-          className="mx-auto w-full max-w-[var(--content-max)] flex-1 px-4 pb-24 pt-6 outline-none md:px-6 md:pb-8 md:pt-8"
+    <CampusWorldProvider>
+      <div className="flex min-h-dvh">
+        <a
+          href="#main-content"
+          className="sr-only z-50 rounded-md bg-surface px-4 py-3 text-sm font-semibold text-ink focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:border focus:border-border-strong"
         >
-          <CampusLife />
-          <MainContent />
-        </main>
+          Skip to main content
+        </a>
+        <Sidebar />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <TopBar />
+          <StorageNotice />
+          <main
+            id="main-content"
+            ref={mainRef}
+            tabIndex={-1}
+            className="mx-auto w-full max-w-[var(--content-max)] flex-1 px-4 pb-24 pt-6 outline-none md:px-6 md:pb-8 md:pt-8"
+          >
+            <CampusLife />
+            <MainContent />
+          </main>
+        </div>
+        <MobileNav />
+        <CampusAssistant />
       </div>
-      <MobileNav />
-      <CampusAssistant />
-    </div>
+    </CampusWorldProvider>
   )
 }

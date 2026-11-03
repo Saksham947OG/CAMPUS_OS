@@ -1,31 +1,30 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router'
-import { useServices } from '@/app/services'
 import { Button } from '@/components/ui/button'
-import { facilities, initialWorld, advanceWorld } from './world'
+import { facilities, type NPC } from './world'
+import { useCampusWorld, type FacilityLoad } from './use-campus-world'
 import { RealPresence } from './real-presence'
 export function CampusLife() {
-  const { sourceData } = useServices()
-  return sourceData ? <CampusWorld /> : null
+  const value = useCampusWorld()
+  return value ? <CampusWorld {...value} /> : null
 }
-function CampusWorld() {
-  const [world, setWorld] = useState(initialWorld),
-    [paused, setPaused] = useState(false),
-    [real, setReal] = useState(false),
+function CampusWorld({
+  world,
+  loads,
+  paused,
+  setPaused,
+}: {
+  world: readonly NPC[]
+  loads: readonly FacilityLoad[]
+  paused: boolean
+  setPaused: (p: boolean | ((p: boolean) => boolean)) => void
+}) {
+  const [real, setReal] = useState(false),
     [open, setOpen] = useState(false)
-  const tick = useRef(0)
   const { pathname } = useLocation()
-  useEffect(() => {
-    if (paused) return
-    const interval = setInterval(() => {
-      if (!document.hidden) setWorld((w) => advanceWorld(w, ++tick.current))
-    }, 8000)
-    return () => clearInterval(interval)
-  }, [paused])
-  const counts = facilities.map((_, i) => world.filter((p) => p.place === i).length)
-  const relevant = facilities.find((f) => f.id !== 'campus' && pathname.startsWith(f.path))
+  const relevant = loads.find((f) => f.id !== 'campus' && pathname.startsWith(f.path))
   const recent = world.filter((p) => p.id % 31 === world[0]!.place % 31).slice(0, 4)
-  const lead = relevant ? [relevant] : facilities.slice(0, 3)
+  const lead = relevant ? [relevant] : loads.slice(0, 3)
   return (
     <section
       className="mb-4 overflow-hidden rounded-xl border border-border bg-surface shadow-card"
@@ -41,7 +40,7 @@ function CampusWorld() {
             <li key={f.id}>
               {f.label}{' '}
               <strong className="tabular-nums">
-                {counts[facilities.indexOf(f)]}/{f.capacity}
+                {f.count}/{f.capacity}
               </strong>
             </li>
           ))}
@@ -77,7 +76,7 @@ function CampusWorld() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2 p-3 sm:grid-cols-4 lg:grid-cols-7">
-            {facilities.map((f, i) => (
+            {loads.map((f, i) => (
               <Link
                 key={f.id}
                 to={f.path}
@@ -95,13 +94,13 @@ function CampusWorld() {
                 </span>
                 <p className="mt-1 truncate text-xs font-medium">{f.label}</p>
                 <p className="text-lg font-semibold tabular-nums">
-                  {counts[i]}
+                  {f.count}
                   <span className="text-xs font-normal text-ink-muted"> / {f.capacity}</span>
                 </p>
                 <div className="mt-1 h-1 overflow-hidden rounded bg-mist">
                   <div
                     className="h-full bg-teal"
-                    style={{ width: `${(counts[i]! / f.capacity) * 100}%` }}
+                    style={{ width: `${(f.count / f.capacity) * 100}%` }}
                   />
                 </div>
               </Link>
@@ -126,9 +125,11 @@ function CampusWorld() {
             </ul>
             <p className="mt-2 text-xs text-ink-muted">
               NPC activity is a visual simulation, separate from your bookings, equipment status and
-              real check-ins. Library 130, mess 100, gym about 20, classrooms 70, Chill Spot 30–40
-              and the laundry's 2 machines are owner-supplied capacities; the campus-wide limit is
-              illustrative. Empty simulated places are not available reservation slots.
+              real check-ins. Library 130, mess 100, gym about 20, Chill Spot 30–40 and the
+              laundry's 2 machines are owner-supplied capacities; the campus-wide limit is
+              illustrative. Classrooms booked counts rooms with a timetabled class or a held booking
+              right now, from the recorded schedule. Empty simulated places are not available
+              reservation slots.
             </p>
           </details>
         </div>

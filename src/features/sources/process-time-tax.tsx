@@ -25,7 +25,14 @@ function ProcessRow({ row }: { row: ProcessEvidence }) {
   return (
     <li className="rounded-lg border border-border bg-surface p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-semibold">{row.label}</h3>
+        <h3 className="font-semibold">
+          {row.label}
+          {row.includeInComposite ? (
+            <span className="ml-2 rounded-full bg-teal-tint px-2 py-0.5 text-xs font-medium text-teal-strong">
+              Counted in your total
+            </span>
+          ) : null}
+        </h3>
         <span className="rounded-full bg-mist px-2 py-1 text-xs">
           {row.basis === 'reported'
             ? 'Source-reported wait'
@@ -284,17 +291,22 @@ export function ProcessTimeTax({
       ) : null}
       {composite ? (
         <p className="mt-3 rounded-md bg-teal-tint p-3">
-          <strong>{rangeText(composite)} potential reduction</strong> across this persona’s four
-          selected processes. Reported baselines and planning assumptions; potential reduction, not
-          measured savings.
+          <strong>{rangeText(composite)} potential reduction</strong> across this persona’s{' '}
+          {all.filter((r) => r.includeInComposite).length} selected processes. Reported baselines
+          and planning assumptions; potential reduction, not measured savings.
         </p>
       ) : null}
       {!compact ? (
         <>
           <ul className="mt-3 grid gap-3">
-            {rows.map((r) => (
-              <ProcessRow key={r.id} row={r} />
-            ))}
+            {[...rows]
+              .sort(
+                (a, b) =>
+                  Number(Boolean(b.includeInComposite)) - Number(Boolean(a.includeInComposite)),
+              )
+              .map((r) => (
+                <ProcessRow key={r.id} row={r} />
+              ))}
           </ul>
           {service && audit.activity[service] !== undefined ? (
             <p className="mt-3 text-sm">

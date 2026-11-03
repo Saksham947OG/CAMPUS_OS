@@ -30,6 +30,76 @@ const process = (
   note,
   includeInComposite,
 })
+interface ScenarioStep {
+  baseline: [number, number]
+  target: [number, number]
+  /** Absent when the supplied figure stays as it is. */
+  note?: string
+}
+const PLAN = 'Planning scenario (owner-authorized): waiting and searching only. '
+/** Abeer Sethi: Year 2 committee organiser. Potential reduction 50–72 min. */
+const abeerScenario: Record<string, ScenarioStep> = {
+  lunch: { baseline: [15, 15], target: [0, 5] },
+  gym: {
+    baseline: [20, 25],
+    target: [3, 5],
+    note:
+      PLAN +
+      'His two-hour gym visit is supplied; 20–25 minutes of it is assumed to be waiting for equipment or space. Replace with timed observations.',
+  },
+  classrooms: {
+    baseline: [20, 25],
+    target: [5, 5],
+    note:
+      PLAN +
+      'Finding a free room and lining up committee members is assumed to take 20–25 minutes; a checked booking is assumed to take 5.',
+  },
+  community: {
+    baseline: [15, 20],
+    target: [5, 5],
+    note:
+      PLAN +
+      'Chasing committee updates across chats is assumed to take 15–20 minutes a day; one shared plan is assumed to take 5.',
+  },
+}
+/** Myra Kapoor: Year 2 club planner. Potential reduction 52–73 min. */
+const myraScenario: Record<string, ScenarioStep> = {
+  classrooms: {
+    baseline: [20, 25],
+    target: [5, 5],
+    note:
+      PLAN +
+      'Club planning needs a room and agreed times; finding both is assumed to take 20–25 minutes.',
+  },
+  library: {
+    baseline: [12, 15],
+    target: [2, 3],
+    note:
+      PLAN +
+      'A full library and no seat is a supplied frustration; the search is assumed to take 12–15 minutes. Checking and booking a cabin first is assumed to take 2–3.',
+  },
+  parcels: {
+    baseline: [10, 12],
+    target: [0, 2],
+    note:
+      PLAN +
+      'Walking to the guard room before a parcel is ready is a supplied frustration; one wasted trip is assumed to cost 10–12 minutes.',
+  },
+  'ss-laundry': {
+    baseline: [12, 15],
+    target: [0, 2],
+    note:
+      PLAN +
+      'Going to collect laundry that is not ready is a supplied frustration; one wasted trip is assumed to cost 12–15 minutes.',
+  },
+  community: {
+    baseline: [15, 18],
+    target: [5, 5],
+    note:
+      PLAN +
+      'Club follow-ups scattered across messages are assumed to take 15–18 minutes a day; one shared plan is assumed to take 5.',
+  },
+}
 export function personaEvidence(profileId: string): ProcessEvidence[] {
   const a = profileId === 'demo-student-a',
     b = profileId === 'demo-student-b'
@@ -224,7 +294,21 @@ export function personaEvidence(profileId: string): ProcessEvidence[] {
         row.note =
           'Owner-authorized planning assumption. Waiting only; productive exercise, eating and study are excluded. Replace with timed observations when available.'
       }
-      row.includeInComposite = ['lunch', 'gym', 'classrooms', 'community'].includes(row.id)
+    }
+    // A planning scenario per persona (owner-authorized, 3 Nov 2026): the four or five processes that the
+    // persona's routine puts most at risk, sized so each profile's composite is about an hour, like Ananya's.
+    // Every figure is a planning assumption except Abeer's reported 15-minute lunch wait.
+    const scenario = b ? abeerScenario : myraScenario
+    for (const row of rows) {
+      const sc = scenario[row.id]
+      row.includeInComposite = Boolean(sc)
+      if (!sc) continue
+      row.baseline = sc.baseline
+      row.target = sc.target
+      if (sc.note) {
+        row.basis = 'illustrative'
+        row.note = sc.note
+      }
     }
   }
   return rows
