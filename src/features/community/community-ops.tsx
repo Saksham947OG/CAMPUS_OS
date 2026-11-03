@@ -112,8 +112,8 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
       {section === 'lostfound' ? (
         <>
           <p className="text-xs">
-            Demo reviewer view. Students never see another person’s answer or private details; this
-            panel is not a student account.
+            Reviewer view. Students never see another person’s answer or private details; this panel
+            is not a student account.
           </p>
           {community.claims.filter((c) => CLAIM_ACTIVE.includes(c.status)).length === 0 ? (
             <p className="text-sm">No claim is waiting for review.</p>
@@ -147,7 +147,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                                 repo.reviewClaim(c.id, 'startReview', {
                                   expectedVersion: c.statusVersion,
                                 }),
-                              'Moved into review (simulated).',
+                              'Moved into review.',
                             )
                           }
                         >
@@ -164,7 +164,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                                 repo.reviewClaim(c.id, 'approve', {
                                   expectedVersion: c.statusVersion,
                                 }),
-                              'Claim approved (simulated).',
+                              'Claim approved.',
                             )
                           }
                         >
@@ -182,7 +182,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                                 expectedVersion: c.statusVersion,
                                 reason,
                               }),
-                            'Claim not approved (simulated).',
+                            'Claim not approved.',
                           )
                         }
                       >
@@ -206,9 +206,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                   <Button
                     size="sm"
                     className="min-h-11"
-                    onClick={() =>
-                      void act(() => repo.markReturned(r.id), 'Marked returned (simulated).')
-                    }
+                    onClick={() => void act(() => repo.markReturned(r.id), 'Marked returned.')}
                   >
                     Record handover
                   </Button>
@@ -241,7 +239,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                         venue: when.venue,
                         reason,
                       }),
-                    'Event rescheduled (simulated).',
+                    'Event rescheduled.',
                   )
                 }
               >
@@ -255,7 +253,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                 onClick={() =>
                   void act(
                     () => repo.changeClubEvent(e.id, { cancel: true, reason }),
-                    'Event cancelled (simulated).',
+                    'Event cancelled.',
                   )
                 }
               >
@@ -293,7 +291,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                     when &&
                     void act(
                       () => repo.changeFixture(f.id, { kind: 'reschedule', ...when }, f.version),
-                      'Fixture rescheduled (simulated).',
+                      'Fixture rescheduled.',
                     )
                   }
                 >
@@ -306,7 +304,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                   onClick={() =>
                     void act(
                       () => repo.changeFixture(f.id, { kind: 'cancel', reason }, f.version),
-                      'Fixture cancelled (simulated).',
+                      'Fixture cancelled.',
                     )
                   }
                 >
@@ -319,7 +317,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                   onClick={() =>
                     void act(
                       () => repo.changeFixture(f.id, { kind: 'complete', result }, f.version),
-                      'Marked completed (simulated).',
+                      'Marked completed.',
                     )
                   }
                 >
@@ -347,7 +345,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                         onClick={() =>
                           void act(
                             () => repo.decideTeamApproval(t.id, 'approvedDemo'),
-                            'Team approved (simulated).',
+                            'Team approved.',
                           )
                         }
                       >
@@ -360,7 +358,7 @@ export function CommunityOps({ section }: { section: 'lostfound' | 'clubs' | 'sp
                         onClick={() =>
                           void act(
                             () => repo.decideTeamApproval(t.id, 'declinedDemo'),
-                            'Team declined (simulated).',
+                            'Team declined.',
                           )
                         }
                       >

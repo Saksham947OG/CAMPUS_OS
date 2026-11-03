@@ -33,9 +33,9 @@ function CampusWorld({
       <style>{`@keyframes campus-bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}.campus-avatar{animation:campus-bob 2.8s ease-in-out infinite}@media(prefers-reduced-motion:reduce){.campus-avatar{animation:none}}`}</style>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 bg-teal-tint px-3 py-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-teal-strong">
-          Campus in motion · simulation
+          Campus pulse · estimated
         </p>
-        <ul className="flex flex-wrap gap-x-3 text-sm" aria-label="Simulated headcount">
+        <ul className="flex flex-wrap gap-x-3 text-sm" aria-label="Estimated headcount">
           {lead.map((f) => (
             <li key={f.id}>
               {f.label}{' '}
@@ -62,7 +62,8 @@ function CampusWorld({
         <div id="campus-life-detail">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2 text-sm">
             <p>
-              300 virtual students · {paused ? 'paused' : 'updates every 8 seconds'} · Student{' '}
+              Estimated from 300 students’ typical patterns ·{' '}
+              {paused ? 'paused' : 'updates every 8 seconds'} · Student{' '}
               {String(recent[0]?.id ?? 0).padStart(3, '0')} is{' '}
               {facilities[recent[0]?.place ?? 0]!.action}
             </p>
@@ -108,7 +109,7 @@ function CampusWorld({
           </div>
           <details className="border-t border-border px-4 py-2">
             <summary className="cursor-pointer py-1 text-sm font-medium">
-              Student activity stream · virtual characters
+              Estimated student activity
             </summary>
             <ul className="mt-2 grid gap-2 sm:grid-cols-2">
               {recent.map((p) => (
@@ -124,12 +125,12 @@ function CampusWorld({
               ))}
             </ul>
             <p className="mt-2 text-xs text-ink-muted">
-              NPC activity is a visual simulation, separate from your bookings, equipment status and
-              real check-ins. Library 130, mess 100, gym about 20, Chill Spot 30–40 and the
-              laundry's 2 machines are owner-supplied capacities; the campus-wide limit is
-              illustrative. Classrooms booked counts rooms with a timetabled class or a held booking
-              right now, from the recorded schedule. Empty simulated places are not available
-              reservation slots.
+              These activity figures are estimates, separate from your bookings, equipment status
+              and real check-ins; no live campus feed is connected. Library 130, mess 100, gym about
+              20, Chill Spot 30–40 and the laundry's 2 machines are owner-supplied capacities; the
+              campus-wide limit is an assumption. Classrooms booked counts rooms with a timetabled
+              class or a held booking right now, from the recorded schedule. Empty places in the
+              estimate are not available reservation slots.
             </p>
           </details>
         </div>

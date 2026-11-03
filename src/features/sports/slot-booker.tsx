@@ -59,9 +59,9 @@ function slotNote(s: SlotView): string {
 
 const ACCESS_NOTE: Partial<Record<Activity, string>> = {
   chillZone:
-    'This is a demo coordination record. It is not campus approval, gives no right to occupy any area, and “reserved” does not mean the spot is allocated by the college.',
+    'This is a coordination record. It is not campus approval, gives no right to occupy any area, and “reserved” does not mean the spot is allocated by the college.',
   library:
-    'A demo room reservation: it does not create seats, and nobody has verified the room will be free or open.',
+    'A room reservation: it does not create seats, and nobody has verified the room will be free or open.',
   musicRoom:
     'A local reservation: it does not guarantee equipment, and a session running past its slot is not authorised.',
 }
@@ -82,7 +82,7 @@ function ResourceInfo({ r, activity }: { r: Resource; activity: Activity }) {
       <p>
         <strong>Status:</strong>{' '}
         {r.status === 'open'
-          ? 'Open (demo report)'
+          ? 'Open (report)'
           : r.status === 'closed'
             ? `Closed: ${r.closureNote ?? 'no reason recorded'}`
             : 'Unknown'}
@@ -230,7 +230,9 @@ export function SlotBooker({ activity }: { activity: Activity }) {
               }}
             >
               {unitAware ? (
-                <option value={ANY}>Any available {resourceNoun[activity]} (demo picks one)</option>
+                <option value={ANY}>
+                  Any available {resourceNoun[activity]} (one is picked for you)
+                </option>
               ) : null}
               {resources.map((r) => (
                 <option key={r.id} value={r.id}>
@@ -338,7 +340,7 @@ export function SlotBooker({ activity }: { activity: Activity }) {
           </p>
           {anyUnit ? (
             <p className="mt-1 text-sm">
-              You chose any {resourceNoun[activity]}, so the demo will reserve{' '}
+              You chose any {resourceNoun[activity]}, so CampusOS will reserve{' '}
               <strong>{target.label}</strong>. Only that one is held.
             </p>
           ) : null}

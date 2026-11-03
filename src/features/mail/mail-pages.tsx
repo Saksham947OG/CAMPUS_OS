@@ -24,8 +24,8 @@ export function MailPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Campus Mail"
-        description="A simulated mailbox. No real account is connected and nothing is fetched; messages arrive only from the demo lab."
-        badge={<Pill tone="demo">Saved on this device · simulated mail</Pill>}
+        description="A campus mailbox kept on this device. No real account is connected and nothing is fetched; messages arrive only from the lab."
+        badge={<Pill tone="demo">Saved on this device</Pill>}
       />
       <p className="text-sm text-ink" data-testid="mail-status">
         Mailbox: <strong>{alias ?? 'none'}</strong> · Saved on this device · last sync: not
@@ -132,7 +132,7 @@ export function MailDetailPage() {
   const seatApplied = e.stages.some((s) => s.stage === 'seat' && s.status === 'done')
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <PageHeader title={e.subject} badge={<Pill tone="demo">Local · simulated message</Pill>} />
+      <PageHeader title={e.subject} badge={<Pill tone="demo">Local · message</Pill>} />
       <Link to="/notifications/mail" className="text-sm font-medium text-coffee underline">
         Back to Campus Mail
       </Link>

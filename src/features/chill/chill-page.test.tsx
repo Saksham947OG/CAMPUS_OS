@@ -48,7 +48,7 @@ describe('Chill Spot entry points', () => {
     await open()
     expect(screen.getByText('Supplied Chill Spot menu')).toBeInTheDocument()
     expect(screen.getAllByText(/Hours not provided/).length).toBeGreaterThan(0)
-    expect(screen.getAllByText('Local · simulated data').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Local data').length).toBeGreaterThan(0)
     expect(screen.getAllByText(/Counter line/).length).toBeGreaterThan(0)
   })
 

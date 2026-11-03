@@ -43,7 +43,7 @@ export function TopBar() {
   const unread = unreadCount(notifications.value.items, nprefs.value)
 
   return (
-    <header className="sticky top-0 z-30 flex h-[var(--topbar-height)] items-center gap-1 border-b border-border bg-surface/95 px-3 backdrop-blur md:gap-2 md:px-6">
+    <header className="sticky top-0 z-[var(--z-sticky)] flex h-[var(--topbar-height)] items-center gap-1 bg-canvas/80 px-3 backdrop-blur-md md:gap-2 md:px-6">
       <div className="md:hidden">
         <Wordmark responsive />
       </div>
@@ -54,7 +54,7 @@ export function TopBar() {
 
       <div className="ml-auto flex items-center gap-1 md:gap-2">
         {/* Search is still a "coming later" page, so on the narrowest phones its icon makes room for Campus AI. */}
-        <div className="max-[359px]:hidden">
+        <div className="md:hidden max-[359px]:hidden">
           <UtilityLink id="search" />
         </div>
         <CampusAi />

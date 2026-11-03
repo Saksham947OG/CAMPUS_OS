@@ -105,7 +105,7 @@ export function OrderCard({
 
 const stepLabel: Partial<Record<OrderStatus, string>> = {
   pending: 'Request submitted',
-  queued: 'Accepted by the demo café',
+  queued: 'Accepted by the café',
   preparing: 'Preparation started',
   ready: 'Ready for pickup',
   collected: 'Collection recorded',
@@ -130,7 +130,7 @@ export function Timeline({ order }: { order: ChillOrder }) {
             <span className="font-medium text-ink">{stepLabel[h.to] ?? h.to}</span>
             <span className="block text-xs text-ink-muted">
               <time dateTime={h.occurredAt}>{formatInstant(h.occurredAt)}</time> ·{' '}
-              {h.actor === 'student' ? 'You' : 'Demo café (simulated)'}
+              {h.actor === 'student' ? 'You' : 'Café'}
               {h.reason ? ` · ${h.reason}` : ''}
             </span>
             {h.handlingNote ? (

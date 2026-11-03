@@ -28,7 +28,7 @@ describe('Campus AI', () => {
     const a = await openAssistant(user)
     expect(a.getByRole('heading', { name: 'Campus AI' })).toBeInTheDocument()
     expect(
-      a.getByText(/Demo assistant · uses recorded CampusOS data · not a language model/),
+      a.getByText(/Assistant · uses recorded CampusOS data · not a language model/),
     ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Hide assistant' })).toHaveAttribute(
       'aria-expanded',
@@ -46,7 +46,7 @@ describe('Campus AI', () => {
     renderApp('/')
     const a = await openAssistant(user)
     await user.click(a.getByRole('button', { name: 'Is this live data?' }))
-    expect(await a.findByText(/academic demonstration/i)).toBeInTheDocument()
+    expect(await a.findByText(/student planning tool/i)).toBeInTheDocument()
     await ask(user, a, 'what is on today')
     expect((await a.findAllByText(/Source:/)).length).toBe(2)
     expect(a.getByLabelText('Ask Campus AI')).toHaveValue('')
@@ -136,7 +136,7 @@ describe('Campus AI', () => {
   it('answers only from the active profile: another profile’s seat and tasks are never shown', async () => {
     const user = userEvent.setup()
     const { services } = renderApp('/')
-    await services.shared.changeSeat('exam-1', 'demo-student-b', { hall: 'Demo Hall 9' })
+    await services.shared.changeSeat('exam-1', 'demo-student-b', { hall: 'Hall 9' })
     const a = await openAssistant(user)
     await user.click(a.getByRole('button', { name: 'Show my seating' }))
     await a.findAllByText(/Source:/)

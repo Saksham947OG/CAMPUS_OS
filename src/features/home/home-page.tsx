@@ -5,7 +5,12 @@ import { RouteStatusBadge } from '@/components/status-badge'
 import { Button } from '@/components/ui/button'
 import { routeById } from '@/app/routes'
 import { useAppStore } from '@/app/app-store'
-import type { HomePrefs, HomeWidgetId, WidgetLayout } from '@/data/prefs/home-prefs'
+import {
+  withMissingWidgets,
+  type HomePrefs,
+  type HomeWidgetId,
+  type WidgetLayout,
+} from '@/data/prefs/home-prefs'
 import { DataError } from '@/features/common/data-error'
 import { useCampusData } from '@/hooks/use-campus-data'
 import { useNow } from '@/hooks/use-now'
@@ -19,6 +24,10 @@ import { EditorHost } from '../calendar/editors/editor-host'
 import type { EditorRequest } from '../calendar/editors/editor-types'
 import { CustomizeSheet } from './customize-sheet'
 import type { HomeCtx } from './home-context'
+import { CampusScene } from './campus-scene'
+import { DayTimeline } from './day-timeline'
+import { MonthGlance } from './month-glance'
+import { NextReservations } from './next-reservations'
 import { homeWidgets } from './widgets'
 
 const sizeClass: Record<WidgetLayout['size'], string> = {
@@ -52,10 +61,10 @@ export function HomePage() {
   const ctx: HomeCtx = {
     data,
     now,
-    prefs: home.value,
+    prefs: { ...home.value, widgets: withMissingWidgets(home.value.widgets) },
     planning: planning.value,
     profileName: profile?.displayName ?? '',
-    updatePrefs: (fn) => home.update(fn),
+    updatePrefs: (fn) => home.update((p) => fn({ ...p, widgets: withMissingWidgets(p.widgets) })),
     updatePlanning: (fn) => planning.update(fn),
     openEditor: setEditor,
   }
@@ -67,29 +76,42 @@ export function HomePage() {
 
   return (
     <div className="group/home flex flex-col gap-6" data-density={home.value.density}>
-      <div>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <h1
-            id="page-title"
-            className="font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl"
-          >
-            {greetingFor(now.hour)}
-            {ctx.profileName ? `, ${ctx.profileName}` : ''}
-          </h1>
-          {route.status !== 'live' ? <RouteStatusBadge status={route.status} /> : null}
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
+        <div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <h1
+              id="page-title"
+              className="font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl"
+            >
+              {greetingFor(now.hour)}
+              {ctx.profileName ? `, ${ctx.profileName}` : ''}
+            </h1>
+            {route.status !== 'live' ? <RouteStatusBadge status={route.status} /> : null}
+          </div>
+          <p className="mt-2 text-base text-ink-muted">{formatDateLong(now.today)}</p>
+          <p className="mt-1 max-w-xl text-lg text-ink" data-testid="briefing">
+            {briefing.summary}
+          </p>
           <Button
             variant="outline"
-            className="min-h-11 gap-2 md:ml-auto"
+            className="press mt-4 min-h-11 gap-2"
             onClick={() => setCustomizeOpen(true)}
           >
             <Settings2 aria-hidden="true" /> Customize
           </Button>
         </div>
-        <p className="mt-1 text-base text-ink-muted">{formatDateLong(now.today)}</p>
-        <p className="mt-1 text-base text-ink" data-testid="briefing">
-          {briefing.summary}
-        </p>
+        <CampusScene />
       </div>
+
+      <MonthGlance now={now} />
+
+      <section
+        aria-label="Your day and reservations"
+        className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]"
+      >
+        <DayTimeline data={data} now={now} />
+        <NextReservations data={data} now={now} />
+      </section>
 
       <UrgentSignalBanner />
 

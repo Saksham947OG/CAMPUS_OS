@@ -24,11 +24,18 @@ const base = () => layoutForPreset('balanced')
 const ids = (w: ReturnType<typeof base>, zone: 1 | 2 | 3) => inZone(w, zone).map((x) => x.id)
 
 describe('H-T10 / H-T11 widget layout operations', () => {
-  it('default Balanced layout shows all nine optional widgets in the spec zones', () => {
+  it('default Balanced layout shows all ten optional widgets in the spec zones', () => {
     const w = base()
-    expect(w.filter((x) => x.visible && x.id !== 'schedule')).toHaveLength(9)
+    expect(w.filter((x) => x.visible && x.id !== 'schedule')).toHaveLength(10)
     expect(ids(w, 1)).toEqual(['upNext', 'deadlines'])
-    expect(ids(w, 2)).toEqual(['quickActions', 'activity', 'messPreview', 'myTasks', 'freePockets'])
+    expect(ids(w, 2)).toEqual([
+      'quickActions',
+      'activity',
+      'messPreview',
+      'myTasks',
+      'freePockets',
+      'workspace',
+    ])
     expect(ids(w, 3)).toEqual(['campusPulse', 'timeTax'])
   })
 
@@ -61,6 +68,7 @@ describe('H-T10 / H-T11 widget layout operations', () => {
       'myTasks',
       'messPreview',
       'freePockets',
+      'workspace',
     ])
   })
 
@@ -81,7 +89,7 @@ describe('H-T10 / H-T11 widget layout operations', () => {
       ok: false,
       reason: expect.stringMatching(/already first/),
     })
-    expect(moveWithinZone(base(), 'freePockets', 1)).toMatchObject({
+    expect(moveWithinZone(base(), 'workspace', 1)).toMatchObject({
       ok: false,
       reason: expect.stringMatching(/already last/),
     })
@@ -116,7 +124,15 @@ describe('H-T12 presets and the Custom label', () => {
         .filter((w) => w.visible && w.id !== 'schedule')
         .map((w) => w.id)
         .sort(),
-    ).toEqual(['activity', 'deadlines', 'freePockets', 'myTasks', 'quickActions', 'upNext'])
+    ).toEqual([
+      'activity',
+      'deadlines',
+      'freePockets',
+      'myTasks',
+      'quickActions',
+      'upNext',
+      'workspace',
+    ])
     expect(academic.quickActions).toEqual(prefs.quickActions) // unrelated preferences untouched
     expect(matchHomePreset(academic.widgets)).toBe('academic')
     expect(homePrefsSchema.safeParse(academic).success).toBe(true)

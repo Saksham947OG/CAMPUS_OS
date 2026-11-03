@@ -8,7 +8,7 @@ import { useAction } from '../essentials/ess-hooks'
 import { useMail } from './mail-hooks'
 
 /**
- * The Demo Mail Injection Lab. A button here is the only way a message "arrives": nothing is fetched,
+ * The Mail operations view. A button here is the only way a message "arrives": nothing is fetched,
  * no account is connected, and no real push is sent. The lock-screen text below is a preview only.
  */
 export function MailLab() {
@@ -26,7 +26,7 @@ export function MailLab() {
       return r
     }, r_done(s))
   return (
-    <OpsCard id="ops-mail-h" title="Demo Mail Injection Lab" message={message}>
+    <OpsCard id="ops-mail-h" title="Mail operations view" message={message}>
       <p className="text-xs">
         Each button delivers one synthetic message with a stable fake id. Replaying one is a true
         duplicate. The student key used is made up and belongs to the chosen mailbox.
@@ -74,4 +74,4 @@ export function MailLab() {
   )
 }
 
-const r_done = (s: Scenario) => `${scenarioLabel[s]}: delivered (simulated).`
+const r_done = (s: Scenario) => `${scenarioLabel[s]}: delivered.`

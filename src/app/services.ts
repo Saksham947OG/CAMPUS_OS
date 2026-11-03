@@ -18,6 +18,10 @@ import {
   createAcademicsRepository,
   type AcademicsRepository,
 } from '@/data/academics/academics-repository'
+import {
+  createWorkspaceRepository,
+  type WorkspaceRepository,
+} from '@/data/workspace/workspace-repository'
 import { createContext, useContext } from 'react'
 import { createPrefsRepositories, type PrefsRepositories } from '@/data/prefs/prefs'
 import { createSharedRepository, type SharedRepository } from '@/data/shared/shared-repository'
@@ -61,6 +65,7 @@ export interface Services {
   classrooms: ClassroomRepository
   mail: MailRepository
   meetings: MeetingRepository
+  workspace: WorkspaceRepository
   reports: ReportRepository
   /** Id factory for user-created records (injected so tests are deterministic). */
   newId: (prefix: string) => string
@@ -140,6 +145,14 @@ export function createServices(
     campus: () => campusRepo!,
     classrooms,
   })
+  const workspace = createWorkspaceRepository({
+    storage,
+    clock,
+    newId,
+    notifications: prefs.notifications,
+    meetings: () => meetings,
+    seed: sourceData,
+  })
   const academics = createAcademicsRepository({
     storage,
     clock,
@@ -166,7 +179,9 @@ export function createServices(
       ...community.bookingRefs(profileId),
       ...classrooms.bookingRefs(profileId),
       ...meetings.bookingRefs(profileId),
+      ...workspace.bookingRefs(profileId),
     ],
+    extraDeadlines: (profileId) => workspace.deadlineRefs(profileId),
   })
   campusRepo = campus
   return {
@@ -178,6 +193,7 @@ export function createServices(
     classrooms,
     mail,
     meetings,
+    workspace,
     reports,
     sports,
     admin,

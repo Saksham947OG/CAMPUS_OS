@@ -203,7 +203,7 @@ describe('meeting engine', () => {
       category: 'meeting',
       manageRoute: `/academics/appointments/${meeting.id}`,
     })
-    expect(refs[0]?.resource).toMatch(/demo, not official/)
+    expect(refs[0]?.resource).toMatch(/not official/)
     expect(repo.bookingRefs(B)).toHaveLength(0)
     await ok(repo.studentAct(A, meeting.id, 'requestCancellation', 2))
     await ok(repo.simulateMeeting(meeting.id, 'cancel', { expectedVersion: 3 }))

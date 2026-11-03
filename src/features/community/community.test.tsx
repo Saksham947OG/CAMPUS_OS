@@ -113,7 +113,7 @@ describe('Lost & Found', () => {
     if (!r.ok) throw new Error('setup')
     await enableOps(user, router, '/community/lost-found')
     const ops = await screen.findByTestId('demo-ops')
-    expect(ops.textContent).toMatch(/Demo reviewer view/)
+    expect(ops.textContent).toMatch(/Reviewer view/)
     await user.click(within(ops).getByRole('button', { name: 'Start review' }))
     await user.click(await within(ops).findByRole('button', { name: 'Approve claim' }))
     await user.click(await within(ops).findByRole('button', { name: 'Record handover' }))
@@ -180,8 +180,7 @@ describe('Clubs', () => {
     await router.navigate('/calendar?view=day&date=2026-11-05')
     await user.click(await screen.findByRole('radio', { name: 'Campus Life' }))
     expect(
-      (await screen.findAllByText(/Sample robotics workshop \(Demo Robotics Club, demo event\)/))
-        .length,
+      (await screen.findAllByText(/Sample robotics workshop \(Demo Robotics Club, event\)/)).length,
     ).toBeGreaterThan(0)
     await router.navigate('/community')
     await heading('Community')
@@ -217,7 +216,7 @@ describe('Clubs', () => {
     expect(services.academics.bookingRefs(A)).toHaveLength(1)
     expect(services.academics.bookingRefs(A)[0]).toMatchObject({
       category: 'meeting',
-      resource: 'Meeting with Demo Quiz Club (demo, not official)',
+      resource: 'Meeting with Demo Quiz Club (not official)',
     })
   })
 
@@ -354,8 +353,7 @@ describe('Sports', () => {
     await router.navigate('/calendar?view=day&date=2026-11-09')
     await user.click(await screen.findByRole('radio', { name: 'Campus Life' }))
     expect(
-      (await screen.findAllByText(/Demo Hoopers vs Demo Strikers \(sample\) \(demo fixture\)/))
-        .length,
+      (await screen.findAllByText(/Demo Hoopers vs Demo Strikers \(sample\) \(fixture\)/)).length,
     ).toBeGreaterThan(0)
     const notes = (await services.prefs.notifications.load(A)).value.items.filter((n) =>
       /fixture you are in changed/.test(n.title),

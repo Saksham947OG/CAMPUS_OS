@@ -97,6 +97,8 @@
 | F25 | Preference-based Notification Center | Shared shell; `COS-SHARED-001` | IMPLEMENTED (in-app only: categories, priority and mute over the one inbox; nothing is sent by email, SMS or push; Campus Mail adds a simulated inbox, `COS-MASTER-V2`) |
 | F26 | Individual exam-seating alerts | Academics; `COS-SHARED-001` | IMPLEMENTED (fictional seats, private and versioned; no official allotment) |
 | COS-CHAT-001 | CampusOS Assistant | Shared shell; `docs/features/CampusOS_Assistant_Spec_v1.0.md` | IMPLEMENTED (local deterministic assistant; no AI provider or backend) |
+| COS-WORKSPACE-001 | Collaborative Workspace | `/workspace`; `docs/features/CampusOS_Collaborative_Workspace_Spec_v1.0.md` | IMPLEMENTED LOCALLY (single browser; cross-profile between the three personas; W5 server-backed sharing is the final phase; DEC-165, DEC-166) |
+| COS-DESIGN-LIVING-001 | Living Interface design and motion | Shared shell, Home, Time Tax; `docs/features/CampusOS_Living_Interface_Spec_v1.0.md` | IMPLEMENTED IN PART (phases 1–3 and the Time Tax comparison; DEC-168) |
 
 **Additional unnumbered concepts:** unexpected meetings, CR/SR academic updates, classroom booking, attendance counter, fixed schedules, and cross-campus search. These remain contextual backlog topics unless covered by an approved spec. A feature can appear in Calendar/Home as imported information **without** authorizing the underlying service workflow.
 
@@ -115,3 +117,16 @@
 ## Campus activity and opt-in presence (2026-11-03)
 
 `COS-PRESENCE-001`: IMPLEMENTED — cross-route simulation of 300 virtual students, facility capacity cards, animated NPC activity, explicit pause, opt-in foreground geofencing and optional local anonymous shared-session server. DEC-159–160; configuration and limitations: `docs/PRESENCE_SETUP.md`. Real production occupancy is not provisioned. All-persona potential time reductions and assumed exam seating remain clearly labelled planning scenarios. Validation: `docs/TEST_EVIDENCE.md` (744 tests).
+
+## Collaborative Workspace (2026-11-03)
+
+`COS-WORKSPACE-001`: IMPLEMENTED LOCALLY — spec milestones W1–W4 and W6 (canvas, bounded automations, a local rule-based helper) in a single browser, with cross-profile collaboration between the three personas: invitations that must be accepted, roles, notices, mentions, merge on concurrent saves, live updates between tabs of the same browser, team polls, campus-room holds through Classrooms, meetings and team deadlines shown in Calendar and Home, files, Markdown and CSV import and a Home widget. **Not built:** W5 (authenticated, server-backed, multi-device collaboration and server-enforced access — the final connected phase), email or push delivery, and any real AI provider. See DEC-165 and DEC-166.
+
+## Living interface and sample content (2026-11-03)
+
+`COS-DESIGN-LIVING-001`: IMPLEMENTED IN PART — floating grouped sidebar with pins and a Next-up capsule, floating phone bar, command panel, motion preference, focus mode, Home with a campus illustration, day timeline and reservation tickets, hover and focus previews, service illustrations and the interactive Time Tax comparison. Workspace now opens with sample content built from the three personas' records, and cross-collaboration is a counted Time Tax process (DEC-167, DEC-168). Not built: drag ghosts and morphs, an editor selection toolbar, supplied campus photography and posters, and live-service graphics beyond the Services hub.
+
+## Publishing pass (2026-11-03)
+
+Search (`/search`) is now a live page; no route is marked Coming later. Live alerts (4:00–5:30 pm) and the Home month glance are implemented (DEC-169). Provenance labels remain by design.
+

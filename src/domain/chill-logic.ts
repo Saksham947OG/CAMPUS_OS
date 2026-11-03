@@ -41,7 +41,7 @@ export function canTransition(
   if (ALLOWED.some((t) => t.from === from && t.to === to)) {
     return {
       ok: false,
-      reason: `Only ${actor === 'student' ? 'the demo café' : 'the student'} can do that.`,
+      reason: `Only ${actor === 'student' ? 'the café' : 'the student'} can do that.`,
     }
   }
   return { ok: false, reason: `An order cannot go from “${from}” to “${to}”.` }
@@ -62,7 +62,7 @@ export const userProvenance = (nowIso: string): Provenance => ({
 
 export const simulatedProvenance = (
   nowIso: string,
-  label = 'Simulated by the local demo operator',
+  label = 'Simulated by the local operator',
 ): Provenance => ({
   dataMode: 'simulated',
   verification: 'notApplicable',
@@ -147,7 +147,7 @@ export function recordWalkIn(store: ChillStore, lines: OrderLineSnapshot[], cloc
     occurredAt: clock.nowIso,
     version: 1,
     dataMode: 'simulated',
-    reason: 'Walk-in recorded at the counter (simulated)',
+    reason: 'Walk-in recorded at the counter',
   }
   const order: ChillOrder = {
     id: clock.newId('order'),
@@ -162,7 +162,7 @@ export function recordWalkIn(store: ChillStore, lines: OrderLineSnapshot[], cloc
     paymentVerification: 'notHandledInApp',
     acceptedAt: clock.nowIso,
     queueSequence: store.nextQueueSequence,
-    provenance: simulatedProvenance(clock.nowIso, 'Simulated walk-in (demonstration)'),
+    provenance: simulatedProvenance(clock.nowIso, 'Simulated walk-in'),
     version: 1,
     history: [transition],
   }

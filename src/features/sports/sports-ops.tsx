@@ -72,7 +72,7 @@ export function SportsOps() {
                   onClick={() =>
                     void act(
                       () => repo.reopenResource(r.id),
-                      `${r.label} reopened (simulated). Existing flags stay until resolved.`,
+                      `${r.label} reopened. Existing flags stay until resolved.`,
                     )
                   }
                 >
@@ -97,7 +97,7 @@ export function SportsOps() {
                     onClick={() =>
                       void act(
                         () => repo.closeResource(r.id, notes[r.id] ?? ''),
-                        `${r.label} closed (simulated).`,
+                        `${r.label} closed.`,
                       )
                     }
                   >
@@ -233,7 +233,7 @@ export function SportsOps() {
                 },
                 facility,
               ),
-            'Occupancy snapshot recorded (simulated).',
+            'Occupancy snapshot recorded.',
           )
         }}
       >
@@ -305,7 +305,7 @@ export function SportsOps() {
                   onClick={() =>
                     void act(
                       () => repo.setEquipmentStatus(e.id, s),
-                      `${e.label}: ${equipmentStatusLabel[s]} (simulated).`,
+                      `${e.label}: ${equipmentStatusLabel[s]}.`,
                     )
                   }
                 >
@@ -358,7 +358,7 @@ export function SportsOps() {
           )}
         </Field>
         <Button type="submit" className="min-h-11">
-          Apply demo config
+          Apply config
         </Button>
       </form>
 
@@ -368,7 +368,7 @@ export function SportsOps() {
           e.preventDefault()
           void act(
             () => repo.addEquipment('DEMO-MUSIC-1', eqName),
-            'Equipment entry added (simulated). It starts as status unknown.',
+            'Equipment entry added. It starts as status unknown.',
           ).then((r) => {
             if (r.ok) setEqName('')
           })
@@ -406,7 +406,7 @@ export function SportsOps() {
                   bookId: loanBook,
                   dueDate: loanDue as DateOnly,
                 }),
-              'Demo loan added (simulated). It is not library data.',
+              'Loan added. It is not library data.',
             )
           }}
         >
@@ -426,7 +426,7 @@ export function SportsOps() {
               </select>
             )}
           </Field>
-          <Field label="Demo book">
+          <Field label="Book">
             {(a) => (
               <select
                 {...a}
@@ -459,7 +459,7 @@ export function SportsOps() {
             className="min-h-11"
             disabled={!isDateOnly(loanDue)}
           >
-            Add demo loan
+            Add loan
           </Button>
         </form>
         <ul className="mt-2 flex flex-col gap-2">
@@ -503,9 +503,7 @@ export function SportsOps() {
                     size="sm"
                     variant="outline"
                     className="min-h-11"
-                    onClick={() =>
-                      void act(() => repo.recordLoanReturn(l.id), 'Return recorded (simulated).')
-                    }
+                    onClick={() => void act(() => repo.recordLoanReturn(l.id), 'Return recorded.')}
                   >
                     Record return
                   </Button>

@@ -1,9 +1,10 @@
 import { CircleHelp, FlaskConical, MoveRight, TriangleAlert } from 'lucide-react'
 import { CategoryIcon } from '@/components/category-icon'
+import { ContextPreview } from '@/components/context-preview'
 import { categoryColorVar } from '@/domain/categories'
 import { cn } from '@/lib/utils'
 import type { CalendarItem } from '@/selectors/items'
-import { describeItem, itemShortTime } from './describe'
+import { describeItem, itemShortTime, itemTimeText } from './describe'
 import { useFlag } from './bottleneck-flags'
 import { FlagBadge } from './flag-badge'
 
@@ -30,7 +31,7 @@ export function ItemChip({
   const time = showTime ? itemShortTime(item) : null
   const cancelled = item.status === 'cancelled'
   const done = item.taskState === 'personallyCompleted'
-  return (
+  const button = (
     <button
       type="button"
       onClick={(e) => {
@@ -75,5 +76,18 @@ export function ItemChip({
         <FlaskConical className="size-3 shrink-0 text-ink-muted" aria-hidden="true" />
       ) : null}
     </button>
+  )
+  return (
+    <ContextPreview
+      trigger={button}
+      title={item.title}
+      lines={[
+        itemTimeText(item),
+        item.location ?? '',
+        conflict ? 'Overlaps another commitment' : '',
+        flag?.summary ?? '',
+      ]}
+      source={item.provenance.sourceLabel}
+    />
   )
 }

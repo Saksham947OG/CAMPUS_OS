@@ -42,7 +42,7 @@ export function EditorHost({ request, data, planning, getItemsOn, onClose }: Pro
         <SheetHeader className="p-0 pb-3">
           <SheetTitle>{request ? editorTitle(request) : 'Editor'}</SheetTitle>
           <SheetDescription>
-            Saved on this device only. Supplied and sample records can never be edited here.
+            Saved on this device only. Supplied and illustrative records can never be edited here.
           </SheetDescription>
         </SheetHeader>
         {request?.kind === 'event' ? (

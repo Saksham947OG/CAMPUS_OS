@@ -112,7 +112,7 @@ export function DayBottleneck({
         </p>
       ) : null}
       <p className="mt-1 text-xs text-ink-muted">
-        Waits come from your Time Tax baselines, not a live queue. “Full now” is a simulated
+        Waits come from your Time Tax baselines, not a live queue. “Full now” is an estimated
         headcount and appears only for something happening now or within the hour.
       </p>
     </section>

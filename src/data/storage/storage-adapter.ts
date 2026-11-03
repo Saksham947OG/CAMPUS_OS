@@ -36,6 +36,8 @@ export interface StorageAdapter {
   write(key: string, value: unknown): WriteResult
   remove(key: string): void
   onModeChange(listener: (mode: StorageMode) => void): () => void
+  /** Another tab of this browser changed a saved key (`null` when storage was cleared). Same device only. */
+  onExternalChange(listener: (key: string | null) => void): () => void
 }
 
 export interface CreateStorageAdapterOptions {
@@ -147,6 +149,15 @@ export function createStorageAdapter(options: CreateStorageAdapterOptions = {}):
     onModeChange(listener) {
       listeners.add(listener)
       return () => listeners.delete(listener)
+    },
+
+    onExternalChange(listener) {
+      if (typeof window === 'undefined') return () => {}
+      const handler = (e: StorageEvent) => {
+        if (e.storageArea === backend) listener(e.key)
+      }
+      window.addEventListener('storage', handler)
+      return () => window.removeEventListener('storage', handler)
     },
   }
 }

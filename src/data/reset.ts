@@ -10,12 +10,13 @@ import type { MeetingRepository } from './meetings/meeting-repository'
 import type { MailRepository } from './mail/mail-repository'
 import type { ClassroomRepository } from './classrooms/classroom-repository'
 import type { CommunityRepository } from './community/community-repository'
+import type { WorkspaceRepository } from './workspace/workspace-repository'
 import type { SharedRepository } from './shared/shared-repository'
 import type { PrefsRepositories } from './prefs/prefs'
 
 /**
  * "Reset demo" (C-A25): restores seed data by removing everything the personas created or
- * saved on this device — records, reminders, the inbox, layouts and filters, plus demo café orders and carts. It is a separate,
+ * saved on this device — records, reminders, the inbox, layouts and filters, plus café orders and carts. It is a separate,
  * deliberately confirmed operation and is never triggered by "Reset filters" or "Reset layout".
  * The active-profile choice is kept.
  */
@@ -34,6 +35,7 @@ export async function resetDemoData(
   mail?: MailRepository,
   meetings?: MeetingRepository,
   reports?: ReportRepository,
+  workspace?: WorkspaceRepository,
 ): Promise<void> {
   for (const p of profiles) {
     await campus.resetUserData(p.id)
@@ -61,4 +63,6 @@ export async function resetDemoData(
   await meetings?.resetAll()
   // App issue reports are their own store. Evidence files saved on this device are removed from the reports, not from other apps.
   await reports?.resetAll()
+  // Workspace spaces, pages, tasks and the demo team are their own store, cleared on their own.
+  await workspace?.resetAll()
 }

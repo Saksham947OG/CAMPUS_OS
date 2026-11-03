@@ -43,10 +43,7 @@ function ExamOps() {
         className="flex flex-wrap items-end gap-2"
         onSubmit={(e) => {
           e.preventDefault()
-          void act(
-            () => repo.changeSeat(exam, who, { hall, row, column: col }),
-            'Seating changed (simulated).',
-          )
+          void act(() => repo.changeSeat(exam, who, { hall, row, column: col }), 'Seating changed.')
         }}
       >
         <Field label="Exam">
@@ -121,7 +118,7 @@ function ExamOps() {
           onClick={() =>
             void act(
               () => repo.injectSeatConflict(exam, who),
-              'A contradicting allocation was added (simulated).',
+              'A contradicting allocation was added.',
             )
           }
         >
@@ -139,7 +136,7 @@ function ExamOps() {
                 date: date as DateOnly,
                 ...(time ? { startTime: time as LocalTime } : {}),
               }),
-            'Exam rescheduled (simulated).',
+            'Exam rescheduled.',
           )
         }}
       >
@@ -181,10 +178,7 @@ function ExamOps() {
                 variant="outline"
                 className="min-h-11"
                 onClick={() =>
-                  void act(
-                    () => repo.resolveSeatConflict(s.id),
-                    'That allocation now stands (simulated).',
-                  )
+                  void act(() => repo.resolveSeatConflict(s.id), 'That allocation now stands.')
                 }
               >
                 Keep this one

@@ -51,7 +51,7 @@ export function NotificationsPage() {
     <article>
       <PageHeader
         title="Notifications"
-        description="In-app reminders and demo café order updates. They appear only while CampusOS is open; nothing is sent by push, email, SMS or WhatsApp."
+        description="In-app reminders and café order updates. They appear only while CampusOS is open; nothing is sent by push, email, SMS or WhatsApp."
         badge={route.status !== 'live' ? <RouteStatusBadge status={route.status} /> : undefined}
       />
 

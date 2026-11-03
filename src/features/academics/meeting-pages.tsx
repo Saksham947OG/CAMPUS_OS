@@ -35,7 +35,7 @@ export function FacultyDirectoryPage() {
       <PageHeader
         title="Faculty Connect"
         description="Faculty names come from supplied documents; office hours and meeting windows are not supplied. Presence is never shown: nothing here says someone is in their office."
-        badge={<Pill tone="demo">Local · fictional people</Pill>}
+        badge={<Pill tone="demo">Local · directory</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current="faculty" />
       <div className="flex flex-wrap items-end gap-3">
@@ -98,7 +98,7 @@ export function FacultyProfilePage() {
   const windows = openWindows(academics, 'faculty', f.id, now.ms)
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <PageHeader title={f.displayName} badge={<Pill tone="demo">Local · fictional person</Pill>} />
+      <PageHeader title={f.displayName} badge={<Pill tone="demo">Local · directory entry</Pill>} />
       <BackLink to="/academics/faculty">Back to Faculty Connect</BackLink>
       <SectionCard id="fp-info-h" title="Profile">
         <dl className="grid gap-2 sm:grid-cols-2">
@@ -118,7 +118,7 @@ export function FacultyProfilePage() {
       </SectionCard>
       <SectionCard
         id="fp-win-h"
-        title="Published sample windows"
+        title="Published windows"
         action={
           <Link
             to={`/academics/faculty/appointments/new?actor=${f.id}`}
@@ -312,7 +312,7 @@ export function MeetingNewPage({ kind }: { kind: MeetingActorKind }) {
         ) : (
           <p className="text-sm">To: {academics.office.name}</p>
         )}
-        <Field label="Published sample window">
+        <Field label="Published window">
           {(a) => (
             <select
               {...a}
@@ -433,8 +433,8 @@ export function OfficePage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="BMS Office"
-        description="A fictional office. This page does not change leave approvals or campus access."
-        badge={<Pill tone="demo">Illustrative data office</Pill>}
+        description="An illustrative office. This page does not change leave approvals or campus access."
+        badge={<Pill tone="demo">Office information</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current="office" />
       <SectionCard id="of-info-h" title={o.name}>
@@ -459,7 +459,7 @@ export function OfficePage() {
       </SectionCard>
       <SectionCard
         id="of-win-h"
-        title="Sample requestable windows"
+        title="Requestable windows"
         action={
           <Link
             to="/academics/office/appointments/new"
@@ -563,9 +563,8 @@ export function MeetingDetailPage() {
         </dl>
         {m.alternative ? (
           <p className="mt-3 rounded-md border border-border-strong bg-mist p-3">
-            Alternative proposed (simulated): {formatDateShort(m.alternative.date)}{' '}
-            {m.alternative.start}–{m.alternative.end}. Your original time stays as it is until you
-            accept.
+            Alternative proposed: {formatDateShort(m.alternative.date)} {m.alternative.start}–
+            {m.alternative.end}. Your original time stays as it is until you accept.
           </p>
         ) : null}
         <output aria-live="polite" className="mt-2 block min-h-5 font-medium">
@@ -577,10 +576,7 @@ export function MeetingDetailPage() {
               <Button
                 className="min-h-11"
                 onClick={() =>
-                  void step(
-                    'acceptAlternative',
-                    'Alternative accepted, awaiting demo confirmation.',
-                  )
+                  void step('acceptAlternative', 'Alternative accepted, awaiting confirmation.')
                 }
               >
                 Accept alternative

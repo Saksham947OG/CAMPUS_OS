@@ -9,22 +9,25 @@
  */
 :root {
   /* ── Brand palette (COS-HOME-001 §4.2) ─────────────────────────── */
-  --canvas: #f7f5f0;
-  --ink: #192b34;
-  --accent-teal: #317c72;
+  --canvas: #f6f4ee;
+  --ink: #202c30;
+  --accent-teal: #246e65;
   --accent-terracotta: #d58a65;
-  --mist: #e9edf3;
-  --surface: #ffffff;
-  --border: #dfe3e3; /* decorative dividers only; never the sole boundary of a control */
+  --mist: #eceee8;
+  --surface: #fffefb;
+  --border: #d8ddd7; /* decorative dividers only; never the sole boundary of a control */
 
   /* ── Derived (Phase 0) ─────────────────────────────────────────── */
-  --ink-muted: #4d5f67; /* secondary text */
+  --ink-muted: #52615f; /* secondary text */
   --border-strong: #7b898c; /* input / control outlines (≥3:1 non-text contrast) */
-  --teal-strong: #25605a; /* teal text on mist / tinted surfaces */
-  --terracotta-text: #a2512c; /* terracotta used as text or icon on light surfaces */
+  --teal-strong: #1f5e57; /* teal text on mist / tinted surfaces */
+  --terracotta-text: #a95138; /* terracotta used as text or icon on light surfaces */
   --terracotta-tint: #f6e4da; /* soft terracotta fill; pair with --ink */
-  --teal-tint: #dcebe8; /* soft teal fill; pair with --ink */
-  --focus-ring: #317c72;
+  --teal-tint: #e0ece6; /* soft teal fill; pair with --ink */
+  --focus-ring: #246e65;
+  /* Living-interface additions (design spec §4): campus blue and a warm illustrative wash. */
+  --blue: #456c8a;
+  --yellow-wash: #f3e6b8;
   /* Chill Spot café accent (COS-CHILL-001 §2): warm coffee tones inside the shared palette. */
   --coffee: #6b4a38; /* coffee text / icons on light surfaces */
   --coffee-tint: #f1e6dd; /* soft coffee fill; pair with --ink */
@@ -48,9 +51,10 @@
   --cat-admin: #6e6a5e;
 
   /* ── Radii ─────────────────────────────────────────────────────── */
-  --radius-sm: 8px;
+  --radius-sm: 10px;
   --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-lg: 18px;
+  --radius-shell: 24px;
 
   /* ── Spacing (4px rhythm) ──────────────────────────────────────── */
   --space-unit: 4px;
@@ -63,18 +67,30 @@
 
   /* ── Component sizing ──────────────────────────────────────────── */
   --touch-target: 44px;
-  --sidebar-width: 248px;
+  --sidebar-width: 244px;
   --sidebar-rail-width: 72px;
+  --shell-inset: 12px;
   --topbar-height: 64px;
   --content-max: 1440px;
 
   /* ── Elevation ─────────────────────────────────────────────────── */
-  --shadow-card: 0 1px 2px rgb(25 43 52 / 0.06), 0 1px 1px rgb(25 43 52 / 0.04);
-  --shadow-overlay: 0 12px 32px rgb(25 43 52 / 0.16), 0 2px 6px rgb(25 43 52 / 0.08);
+  --shadow-card: 0 1px 2px rgb(32 44 48 / 0.06), 0 6px 18px -8px rgb(32 44 48 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(32 44 48 / 0.08), 0 14px 28px -10px rgb(32 44 48 / 0.22);
+  --shadow-shell: 0 1px 0 rgb(255 255 255 / 0.5) inset, 0 10px 36px -12px rgb(32 44 48 / 0.28);
+  --shadow-overlay: 0 12px 32px rgb(32 44 48 / 0.18), 0 2px 6px rgb(32 44 48 / 0.08);
+  --glass: color-mix(in srgb, var(--surface) 74%, transparent);
+
+  /* Stacking order (design spec §19.1): canvas → content → sticky → navigation → popovers → modals → notices. */
+  --z-sticky: 20;
+  --z-nav: 30;
+  --z-popover: 50;
+  --z-modal: 60;
+  --z-notice: 70;
 
   /* ── Motion (reduced-motion override below) ────────────────────── */
-  --duration-fast: 120ms;
-  --duration-base: 200ms;
+  --duration-fast: 140ms;
+  --duration-base: 220ms;
+  --duration-slow: 320ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 
   /* ── Typography ────────────────────────────────────────────────── */
@@ -141,7 +157,11 @@
   --cat-personal: #5fc0b3;
   --cat-booking: #93a5cc;
   --cat-admin: #aaa597;
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 1px 1px rgb(0 0 0 / 0.3);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 6px 18px -8px rgb(0 0 0 / 0.5);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.4), 0 14px 28px -10px rgb(0 0 0 / 0.6);
+  --shadow-shell: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 10px 36px -12px rgb(0 0 0 / 0.7);
+  --yellow-wash: #3b3417;
+  --blue: #93b8d4;
   --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.55), 0 2px 6px rgb(0 0 0 / 0.4);
 }
 /* DARK:END */
@@ -179,7 +199,11 @@
     --cat-personal: #5fc0b3;
     --cat-booking: #93a5cc;
     --cat-admin: #aaa597;
-    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 1px 1px rgb(0 0 0 / 0.3);
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 6px 18px -8px rgb(0 0 0 / 0.5);
+    --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.4), 0 14px 28px -10px rgb(0 0 0 / 0.6);
+    --shadow-shell: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 10px 36px -12px rgb(0 0 0 / 0.7);
+    --yellow-wash: #3b3417;
+    --blue: #93b8d4;
     --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.55), 0 2px 6px rgb(0 0 0 / 0.4);
   }
   /* DARK-MEDIA:END */

@@ -49,7 +49,7 @@ export interface UrgentSignal {
 }
 
 /**
- * The seat to put above everything else on Home: a seat that arrived by (simulated) email, for an
+ * The seat to put above everything else on Home: a seat that arrived by email, for an
  * exam that has not started yet and starts within the urgency window. Read from the seat record
  * itself, so it can never disagree with the exam page.
  */

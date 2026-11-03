@@ -74,7 +74,7 @@ export function LeavePage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Leave and out-time"
-        description="Ask for time away on this device and follow a simulated review. A request here is a record in this app only."
+        description="Ask for time away on this device and follow the review. A request here is a record in this app only."
         badge={<Pill tone="demo">Local · not an official permission</Pill>}
       />
       <SubNav label="Administration sections" items={adminTabs} current="leave" />
@@ -538,7 +538,7 @@ export function LeaveDetailPage() {
           role="alert"
           className="rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm"
         >
-          <strong>Changes requested (simulated).</strong> {lastReason}
+          <strong>Changes requested.</strong> {lastReason}
         </p>
       ) : null}
       {l.decision?.decision === 'rejected' ? (
@@ -558,7 +558,7 @@ export function LeaveDetailPage() {
           {l.status === 'approvedInDemo' ? (
             <p className="mb-2 text-sm">
               Changing an approved request creates a new revision and sends it for review again. The
-              earlier demo approval no longer applies.
+              earlier approval no longer applies.
             </p>
           ) : null}
           <LeaveForm
@@ -594,7 +594,7 @@ export function LeaveDetailPage() {
                 ? l.attachments.map((a) => a.displayName).join(', ') + ' (names only)'
                 : 'None'}
             </dd>
-            <dt className="text-ink-muted">Gate (simulated)</dt>
+            <dt className="text-ink-muted">Gate</dt>
             <dd>
               {l.gate.departedAt
                 ? `Departure logged ${formatInstant(l.gate.departedAt)}`

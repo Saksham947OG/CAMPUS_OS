@@ -48,8 +48,8 @@ export function ParcelsPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Parcels"
-        description="A private list of parcels the local desk scenario has logged for you. This is a demonstration log, not courier tracking, and it does not protect against theft."
-        badge={<Pill tone="demo">Local · simulated log</Pill>}
+        description="A private list of parcels the local desk scenario has logged for you. This is a log, not courier tracking, and it does not protect against theft."
+        badge={<Pill tone="demo">Local · log</Pill>}
       />
       <SectionCard id="wait-h" title="Awaiting collection">
         {waiting.length === 0 ? (
@@ -143,8 +143,8 @@ export function ParcelDetailPage() {
       </div>
       {v.overdue ? (
         <p className="rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm">
-          Logged {v.ageDays} days ago and still uncollected. This is a demo reminder, not a campus
-          rule or fine.
+          Logged {v.ageDays} days ago and still uncollected. This is a reminder, not a campus rule
+          or fine.
         </p>
       ) : null}
       {p.state === 'exception' ? (

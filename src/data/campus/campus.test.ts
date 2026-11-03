@@ -83,11 +83,11 @@ it('preserves personal bookings through the first source import and repeated rel
 it('keeps source dates fixed, inventories every source and calculates the documented range once', () => {
   expect(sourceLibrary).toHaveLength(28)
   expect(new Set(sourceLibrary.map((s) => s.id)).size).toBe(28)
-  expect(compositeRange(personaEvidence('demo-student-a'))).toEqual([53, 69])
+  expect(compositeRange(personaEvidence('demo-student-a'))).toEqual([59, 81])
   expect(personaEvidence('demo-student-b').find((p) => p.id === 'gym')!.basis).toBe('illustrative')
-  // Each persona has its own scenario that lands near an hour, like Ananya's 53–69.
-  expect(compositeRange(personaEvidence('demo-student-b'))).toEqual([50, 72])
-  expect(compositeRange(personaEvidence('demo-student-empty'))).toEqual([52, 73])
+  // Each persona has its own scenario that lands near an hour, like Ananya's 59–81 (53–69 from queues and the washer, plus 6–12 from cross-collaboration).
+  expect(compositeRange(personaEvidence('demo-student-b'))).toEqual([56, 84])
+  expect(compositeRange(personaEvidence('demo-student-empty'))).toEqual([58, 85])
   expect(buildCampusDataset('2026-11-03' as DateOnly)).toEqual(
     buildCampusDataset('2026-11-04' as DateOnly),
   )

@@ -59,6 +59,31 @@ const SettingsPage = lazy(() =>
   import('@/features/settings/settings-page').then((m) => ({ default: m.SettingsPage })),
 )
 
+const SearchPage = lazy(() =>
+  import('@/features/search/search-page').then((m) => ({ default: m.SearchPage })),
+)
+const WorkspaceHomePage = lazy(() =>
+  import('@/features/workspace/workspace-home').then((m) => ({ default: m.WorkspaceHomePage })),
+)
+const WorkspaceSpacePage = lazy(() =>
+  import('@/features/workspace/space-screen').then((m) => ({ default: m.SpaceScreen })),
+)
+const WorkspacePagePage = lazy(() =>
+  import('@/features/workspace/page-screen').then((m) => ({ default: m.PageScreen })),
+)
+const WorkspaceProjectPage = lazy(() =>
+  import('@/features/workspace/project-screen').then((m) => ({ default: m.ProjectScreen })),
+)
+const WorkspaceKnowledgePage = lazy(() =>
+  import('@/features/workspace/knowledge-screen').then((m) => ({ default: m.KnowledgeScreen })),
+)
+const WorkspaceCanvasPage = lazy(() =>
+  import('@/features/workspace/canvas-screen').then((m) => ({ default: m.CanvasScreen })),
+)
+const WorkspaceCapturePage = lazy(() =>
+  import('@/features/workspace/capture-screen').then((m) => ({ default: m.CaptureScreen })),
+)
+
 function Loading({ children }: { children: ReactNode }) {
   return (
     <Suspense fallback={<output className="block text-ink-muted">Loading…</output>}>
@@ -205,6 +230,17 @@ const MentorshipPage = lazy(() =>
 const GroupPage = lazy(() =>
   import('@/features/academics/mentorship-pages').then((m) => ({ default: m.GroupPage })),
 )
+
+const workspacePages: Record<string, () => ReactNode> = {
+  search: () => <SearchPage />,
+  workspace: () => <WorkspaceHomePage />,
+  'workspace-space': () => <WorkspaceSpacePage />,
+  'workspace-page': () => <WorkspacePagePage />,
+  'workspace-project': () => <WorkspaceProjectPage />,
+  'workspace-knowledge': () => <WorkspaceKnowledgePage />,
+  'workspace-capture': () => <WorkspaceCapturePage />,
+  'workspace-canvas': () => <WorkspaceCanvasPage />,
+}
 
 const academicsPages: Record<string, () => ReactNode> = {
   academics: () => <AcademicsHubPage />,
@@ -365,6 +401,7 @@ function elementFor(route: RouteDef) {
     essentialsPages[route.id] ??
     adminPages[route.id] ??
     sharedPages[route.id] ??
+    workspacePages[route.id] ??
     academicsPages[route.id] ??
     communityPages[route.id]
   if (essentials) return <Loading>{essentials()}</Loading>

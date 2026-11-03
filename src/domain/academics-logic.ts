@@ -216,7 +216,7 @@ export function submitMeeting(
       input.profileId,
       id,
       e,
-      'Demo meeting request recorded',
+      'Meeting request recorded',
       'It is stored in this on this device only. Nobody has been told, and a request is not an appointment.',
       meetingPath(id),
     ),
@@ -268,7 +268,7 @@ export function meetingAct(
   if (!m) return fail('That meeting request was not found.')
   const isStudentStep = STUDENT.includes(action)
   if (isStudentStep ? actor !== 'student' : actor !== actorRoleFor(m.actorKind))
-    return fail('That step belongs to a different demo role, not to you.')
+    return fail('That step belongs to a different role, not to you.')
   if (actor === 'student' && m.ownerProfileId !== opts.profileId)
     return fail('That meeting request was not found.')
   if (opts.expectedVersion !== undefined && opts.expectedVersion !== m.statusVersion)
@@ -297,9 +297,9 @@ export function meetingAct(
         return fail('There is no alternative time to accept.')
       to = 'alternativeAccepted'
       Object.assign(patch, m.alternative, { alternative: undefined })
-      title = 'Alternative accepted (awaiting demo confirmation)'
+      title = 'Alternative accepted (awaiting confirmation)'
       body =
-        'You accepted the proposed time. It becomes a demo appointment only when the simulator confirms it.'
+        'You accepted the proposed time. It becomes a appointment only when the simulator confirms it.'
       break
     case 'declineAlternative':
       if (m.status !== 'alternativeProposed')
@@ -323,7 +323,7 @@ export function meetingAct(
           return fail('That window is already accepted for someone else in this reference data.')
       }
       to = 'acceptedDemo'
-      title = 'Demo appointment accepted'
+      title = 'Appointment accepted'
       body = 'Accepted in the on this device only. It is not an official appointment.'
       break
     case 'reject':
@@ -346,14 +346,14 @@ export function meetingAct(
         return fail('Give a valid alternative date and time.')
       to = 'alternativeProposed'
       patch.alternative = opts.alternative
-      title = 'Alternative time proposed (simulated)'
+      title = 'Alternative time proposed'
       body = `An alternative was proposed for ${opts.alternative.date} ${opts.alternative.start}. Your original time is unchanged until you accept it.`
       break
     case 'confirmAlternative':
       if (m.status !== 'alternativeAccepted')
         return fail('The student has not accepted an alternative.')
       to = 'acceptedDemo'
-      title = 'Demo appointment accepted'
+      title = 'Appointment accepted'
       body =
         'The alternative time is accepted in the on this device only. It is not an official appointment.'
       break
@@ -361,14 +361,14 @@ export function meetingAct(
       if (m.status !== 'acceptedDemo' && m.status !== 'cancellationRequested')
         return fail('Only an accepted request can be cancelled.')
       to = 'cancelledDemo'
-      title = 'Demo appointment cancelled'
+      title = 'Appointment cancelled'
       body = 'Cancelled on this device. The history is kept.'
       break
     case 'complete':
       if (m.status !== 'acceptedDemo')
         return fail('Only an accepted request can be marked completed.')
       to = 'completedDemo'
-      title = 'Demo appointment marked completed'
+      title = 'Appointment marked completed'
       body = 'Marked completed by the simulator. Time passing never does this.'
       break
   }
@@ -514,7 +514,7 @@ export function sendInvite(
       profileId,
       id,
       e,
-      'Demo mentorship invitation recorded',
+      'Mentorship invitation recorded',
       'Stored in this on this device only. Nothing was delivered to any professor.',
       groupPath(g.id),
     ),
@@ -543,7 +543,7 @@ export function withdrawInvite(
       profileId,
       i.id,
       e,
-      'Demo mentorship status updated',
+      'Mentorship status updated',
       'You withdrew the invitation.',
       groupPath(i.groupId),
     ),
@@ -579,7 +579,7 @@ export function respondInvite(
       i.ownerProfileId,
       i.id,
       e,
-      'Demo mentorship status updated',
+      'Mentorship status updated',
       'A simulated mentor responded. This does not mean any real professor has agreed.',
       groupPath(i.groupId),
       'important',

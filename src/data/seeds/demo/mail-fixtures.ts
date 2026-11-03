@@ -24,7 +24,7 @@ export const scenarioLabel: Record<Scenario, string> = {
 }
 
 const EXAM = 'DEMO-OPS101 Quiz 1'
-const trusted = 'exams@bms-demo.invalid'
+const trusted = 'exams@bms.invalid'
 
 /** Synthetic messages with stable fake ids, so replaying one is a true duplicate. */
 export function fixture(s: Scenario, studentKey: string | undefined): Incoming {
@@ -39,7 +39,7 @@ export function fixture(s: Scenario, studentKey: string | undefined): Incoming {
       return {
         messageId: 'demo-msg-seat-v1',
         from: trusted,
-        subject: 'Quiz Seating — Revised (Demo)',
+        subject: 'Quiz Seating — Revised',
         providerRevision: '1',
         body: `${head(1)}\n${row(key, 'CR5', '2', '3')}\n`,
       }
@@ -47,7 +47,7 @@ export function fixture(s: Scenario, studentKey: string | undefined): Incoming {
       return {
         messageId: 'demo-msg-seat-v2',
         from: trusted,
-        subject: 'Quiz Seating — Correction (Demo)',
+        subject: 'Quiz Seating — Correction',
         providerRevision: '2',
         body: `${head(2)}\n${row(key, 'CR5', '4', '3')}\n`,
       }
@@ -55,35 +55,35 @@ export function fixture(s: Scenario, studentKey: string | undefined): Incoming {
       return {
         messageId: 'demo-msg-seat-other',
         from: trusted,
-        subject: 'Quiz Seating (Demo)',
+        subject: 'Quiz Seating',
         body: `${head(1)}\n${row('DEMO-BMS-099', 'CR5', '1', '1')}\n`,
       }
     case 'seat-no-room':
       return {
         messageId: 'demo-msg-seat-noroom',
         from: trusted,
-        subject: 'Quiz Seating — Partial (Demo)',
+        subject: 'Quiz Seating — Partial',
         body: `${head(1)}\n${row(key, null, '2', '3')}\n`,
       }
     case 'unlisted-sender':
       return {
         messageId: 'demo-msg-seat-unlisted',
         from: 'someone.else@example.invalid',
-        subject: 'Quiz Seating (Demo)',
+        subject: 'Quiz Seating',
         body: `${head(1)}\n${row(key, 'CR9', '1', '1')}\n`,
       }
     case 'urgent-promo':
       return {
         messageId: 'demo-msg-promo',
         from: 'promo@example.invalid',
-        subject: 'URGENT!!! Win a free coffee (Demo)',
+        subject: 'URGENT!!! Win a free coffee',
         body: 'Click now to win. This is a made-up promotion.',
       }
     case 'attachment-only':
       return {
         messageId: 'demo-msg-attach',
         from: trusted,
-        subject: 'Quiz seating list attached (Demo)',
+        subject: 'Quiz seating list attached',
         body: 'Please see the attached seating list for the quiz.',
         attachments: [{ name: 'seating-list.pdf', readable: false }],
       }
@@ -91,7 +91,7 @@ export function fixture(s: Scenario, studentKey: string | undefined): Incoming {
       return {
         messageId: 'demo-msg-roomwide',
         from: trusted,
-        subject: 'Quiz seating by section (Demo)',
+        subject: 'Quiz seating by section',
         body: 'Seating for the quiz: Everyone in BMS Section B goes to CR5.',
       }
   }

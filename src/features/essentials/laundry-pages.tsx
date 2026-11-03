@@ -83,7 +83,7 @@ export function LaundryHubPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Laundry"
-        description="Two different services: SS Laundry (an outside provider you hand clothes to) and the self-service washing machines. A demonstration with sample data."
+        description="Two different services: SS Laundry (an outside provider you hand clothes to) and the self-service washing machines."
         badge={<Pill tone="demo">Campus data</Pill>}
       />
       <SubNav label="Laundry sections" items={laundryTabs} current="hub" />

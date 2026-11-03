@@ -30,11 +30,11 @@ The story in one line: **every minute lost to a queue, a full room or a missed m
 
 | Profile | Processes counted | Potential reduction |
 | --- | --- | --- |
-| Ananya Sharma | Breakfast, lunch and dinner queues; washer wait | **53–69 min** |
-| Abeer Sethi | Lunch queue, gym crowding, room and group coordination, club follow-ups | **50–72 min** |
-| Myra Kapoor | Room coordination, library seat search, parcel trips, laundry trips, club follow-ups | **52–73 min** |
+| Ananya Sharma | Breakfast, lunch and dinner queues; washer wait | **59–81 min** (53–69 queues and washer, plus 6–12 cross-collaboration) |
+| Abeer Sethi | Lunch queue, gym crowding, room and group coordination, club follow-ups | **56–84 min** (50–72 plus 6–12 cross-collaboration) |
+| Myra Kapoor | Room coordination, library seat search, parcel trips, laundry trips, club follow-ups | **58–85 min** (52–73 plus 6–12 cross-collaboration) |
 
-These match the Time Tax page in the app.
+These match the Time Tax page in the app. Each total now includes a stated 6–12 minute share for cross-collaboration (a planning assumption: one Workspace instead of a chat, a sheet, a calendar, a document and email). Say so out loud, and show the collaboration table and the before/after comparison on the same page.
 
 ## Say it honestly (the questions you will get)
 

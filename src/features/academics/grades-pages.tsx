@@ -136,7 +136,7 @@ function ProfileGradesPage() {
           <Pill tone="demo">
             {sourceData
               ? 'Manual scale · anonymized grade examples'
-              : 'Illustrative persona records, demo grade scale'}
+              : 'Illustrative persona records, grade scale'}
           </Pill>
         }
       />

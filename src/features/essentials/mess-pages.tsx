@@ -379,8 +379,8 @@ export function MessFeesPage() {
       {!f.supplied ? (
         <SectionCard id="nofee-h" title="No fee details available">
           <p>
-            No amount, deadline or payment form has been supplied for this prototype, so none is
-            shown and there is no payment link. Your fee status is <strong>unknown</strong>.
+            No amount, deadline or payment form has been supplied for this app, so none is shown and
+            there is no payment link. Your fee status is <strong>unknown</strong>.
           </p>
         </SectionCard>
       ) : (

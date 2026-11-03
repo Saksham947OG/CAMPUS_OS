@@ -55,7 +55,7 @@ export function ClassroomOps() {
             <Button
               size="sm"
               className="min-h-11"
-              onClick={() => void act(() => repo.decide(r.id, 'approve'), 'Approved (simulated).')}
+              onClick={() => void act(() => repo.decide(r.id, 'approve'), 'Approved.')}
             >
               Approve
             </Button>
@@ -63,9 +63,7 @@ export function ClassroomOps() {
               size="sm"
               variant="outline"
               className="min-h-11"
-              onClick={() =>
-                void act(() => repo.decide(r.id, 'reject', reason), 'Declined (simulated).')
-              }
+              onClick={() => void act(() => repo.decide(r.id, 'reject', reason), 'Declined.')}
             >
               Decline
             </Button>
@@ -131,7 +129,7 @@ export function ClassroomOps() {
             span &&
             void act(
               () => repo.injectOtherBooking(room, span),
-              'Another student’s booking recorded (simulated).',
+              'Another student’s booking recorded.',
             )
           }
         >
@@ -144,8 +142,8 @@ export function ClassroomOps() {
           onClick={() =>
             span &&
             void act(
-              () => repo.closeRoom(room, span, 'Closed (demo maintenance)'),
-              'Room closed for maintenance (simulated).',
+              () => repo.closeRoom(room, span, 'Closed (maintenance)'),
+              'Room closed for maintenance.',
             )
           }
         >

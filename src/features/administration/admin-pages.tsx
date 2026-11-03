@@ -40,7 +40,7 @@ export function AdminHubPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Administration"
-        description="Leave and out-time, facility complaints and classroom equipment reports in one demonstration. Everything here is a record in this app only."
+        description="Leave and out-time, facility complaints and classroom equipment reports in one place. Everything here is a record in this app only."
         badge={<Pill tone="demo">Local · not an official system</Pill>}
       />
       <SubNav label="Administration sections" items={adminTabs} current="hub" />
@@ -52,7 +52,7 @@ export function AdminHubPage() {
         {card(
           '/administration/leave',
           'Leave and out-time',
-          'Request time away and follow a simulated review.',
+          'Request time away and follow the review.',
           <ClipboardCheck className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(

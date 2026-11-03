@@ -217,7 +217,7 @@ export function CheckoutSheet({
         <SheetHeader className="p-0 pb-3">
           <SheetTitle>Review your local order</SheetTitle>
           <SheetDescription>
-            This is a demonstration. Nothing here reaches a real café.
+            Orders are recorded in this app. Nothing here reaches a real café.
           </SheetDescription>
         </SheetHeader>
         <ul className="flex flex-col gap-1.5 text-sm">

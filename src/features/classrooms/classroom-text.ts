@@ -20,7 +20,7 @@ export function statusText(s: SlotStatus): { label: string; detail: string } {
     case 'unknown':
       return {
         label: 'Unknown / not synced',
-        detail: 'The demo schedule does not cover this time, so it is not shown as free.',
+        detail: 'The schedule does not cover this time, so it is not shown as free.',
       }
   }
 }

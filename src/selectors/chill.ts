@@ -168,7 +168,7 @@ export function validateCart(
   const issues: CartIssue[] = lines.flatMap((l) => l.issues)
   if (lines.length === 0) issues.unshift({ code: 'empty', message: 'Your cart is empty' })
   if (opts.paused)
-    issues.push({ code: 'paused', message: 'The demo café is temporarily not taking new requests' })
+    issues.push({ code: 'paused', message: 'The café is temporarily not taking new requests' })
   return {
     lines,
     issues,
@@ -375,7 +375,7 @@ export function queueSnapshot(store: ChillStore, nowMs: number): QueueSnapshot {
   const counterText =
     !store.counter || store.counter.numericValue === null
       ? 'Counter queue unknown'
-      : `${store.counter.numericValue} ${store.counter.numericValue === 1 ? 'person' : 'people'} last reported at counter · Demo · ${counterFresh.asOfLabel}`
+      : `${store.counter.numericValue} ${store.counter.numericValue === 1 ? 'person' : 'people'} last reported at counter · ${counterFresh.asOfLabel}`
   const lastChange = lastOrderChangeAt(store.orders)
   const reported = store.busy?.reportedState
   const condition: CafeCondition = store.pause
@@ -389,7 +389,7 @@ export function queueSnapshot(store: ChillStore, nowMs: number): QueueSnapshot {
     busy: { text: busyText, freshness: busyFresh, observation: store.busy },
     counter: { text: counterText, freshness: counterFresh, observation: store.counter },
     preparation: {
-      text: `${backlog.unfinished} recorded unfinished ${backlog.unfinished === 1 ? 'order' : 'orders'} · Demo`,
+      text: `${backlog.unfinished} recorded unfinished ${backlog.unfinished === 1 ? 'order' : 'orders'}`,
       backlog,
       caveat: 'Recorded orders only; walk-in preparation work may be missing.',
     },
@@ -464,7 +464,7 @@ export function nextStep(order: ChillOrder): string {
     case 'preparing':
       return 'Preparation started. No verified pickup time is available.'
     case 'ready':
-      return 'Ready for pickup. Pay at the café counter and show your demo pickup code.'
+      return 'Ready for pickup. Pay at the café counter and show your pickup code.'
     case 'collected':
       return 'Collection recorded. Payment is not verified in CampusOS.'
     case 'rejected':

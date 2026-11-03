@@ -37,6 +37,13 @@ interface ScenarioStep {
   note?: string
 }
 const PLAN = 'Planning scenario (owner-authorized): waiting and searching only. '
+/**
+ * Group work spreads over a chat, a spreadsheet, a calendar, a document and email. Re-finding the latest decision,
+ * who owns a task and which file is current is assumed to cost 10–15 minutes a day; one Workspace is assumed to cost
+ * 3–4. A planning assumption set in this build, not a measurement and not a supplied figure.
+ */
+const COLLAB_NOTE =
+  'Planning assumption (this build): re-finding the latest decision, task owner, time slot and file across separate chats, sheets, calendars and documents is assumed to take 10–15 minutes a day; one shared Workspace is assumed to take 3–4. Not measured and not in a supplied source.'
 /** Abeer Sethi: Year 2 committee organiser. Potential reduction 50–72 min. */
 const abeerScenario: Record<string, ScenarioStep> = {
   lunch: { baseline: [15, 15], target: [0, 5] },
@@ -61,6 +68,7 @@ const abeerScenario: Record<string, ScenarioStep> = {
       PLAN +
       'Chasing committee updates across chats is assumed to take 15–20 minutes a day; one shared plan is assumed to take 5.',
   },
+  collaboration: { baseline: [10, 15], target: [3, 4] },
 }
 /** Myra Kapoor: Year 2 club planner. Potential reduction 52–73 min. */
 const myraScenario: Record<string, ScenarioStep> = {
@@ -99,6 +107,7 @@ const myraScenario: Record<string, ScenarioStep> = {
       PLAN +
       'Club follow-ups scattered across messages are assumed to take 15–18 minutes a day; one shared plan is assumed to take 5.',
   },
+  collaboration: { baseline: [10, 15], target: [3, 4] },
 }
 export function personaEvidence(profileId: string): ProcessEvidence[] {
   const a = profileId === 'demo-student-a',
@@ -255,6 +264,17 @@ export function personaEvidence(profileId: string): ProcessEvidence[] {
       'missing',
       ['research', 'manual'],
       'Office contact research and rules are supplied. Office hours, service turnaround and observed follow-up durations are missing.',
+    ),
+    process(
+      'collaboration',
+      'workspace',
+      'Cross-collaboration across platforms',
+      [10, 15],
+      [3, 4],
+      'illustrative',
+      ['research'],
+      COLLAB_NOTE,
+      a,
     ),
     process(
       'community',

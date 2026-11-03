@@ -19,7 +19,7 @@ export function DemoBanner({ children }: { children?: ReactNode }) {
 }
 
 export const EMERGENCY_NOTE =
-  'This demo cannot contact emergency help or any campus office. If anyone is in danger, use the established campus or emergency channels.'
+  'This cannot contact emergency help or any campus office. If anyone is in danger, use the established campus or emergency channels.'
 
 export function StatusPill({ label, tone = 'plain' }: { label: string; tone?: 'plain' | 'warn' }) {
   return <Pill tone={tone}>{label}</Pill>
@@ -107,8 +107,7 @@ export function AttachmentField({
         <ul className="text-sm text-ink-muted">
           {value.map((v) => (
             <li key={v.id} className="flex flex-wrap items-center gap-2">
-              {v.displayName} · {Math.max(1, Math.round(v.sizeBytes / 1024))} KB · demo descriptor
-              only
+              {v.displayName} · {Math.max(1, Math.round(v.sizeBytes / 1024))} KB · descriptor only
               <button
                 type="button"
                 className="min-h-11 text-coffee underline"

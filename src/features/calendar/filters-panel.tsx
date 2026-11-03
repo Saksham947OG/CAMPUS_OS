@@ -222,7 +222,7 @@ export function FiltersPanel({
           >
             <option value="all">All</option>
             <option value="provided">Supplied</option>
-            <option value="demo">Sample data</option>
+            <option value="demo">Planning data</option>
             <option value="personal">Personal</option>
           </select>
         </label>

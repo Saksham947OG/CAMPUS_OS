@@ -69,7 +69,7 @@ export function AcademicsHubPage() {
         {card(
           '/academics/courses',
           `My courses (${courses.length})`,
-          `${unread.length} unread sample notice${unread.length === 1 ? '' : 's'}.`,
+          `${unread.length} unread notice${unread.length === 1 ? '' : 's'}.`,
         )}
         {card(
           '/academics/faculty',
@@ -79,9 +79,9 @@ export function AcademicsHubPage() {
         {card(
           '/academics/mentorship',
           `Mentorship (${groups.length})`,
-          'Project groups and simulated mentor invitations.',
+          'Project groups and mentor invitations.',
         )}
-        {card('/academics/office', 'BMS Office', 'Sample office information and requests.')}
+        {card('/academics/office', 'BMS Office', 'Office information and requests.')}
       </ul>
       <SectionCard
         id="ah-meetings-h"
@@ -167,7 +167,7 @@ export function CoursesPage() {
                   </span>
                   {unread > 0 ? (
                     <span className="text-sm text-ink-muted">
-                      {unread} unread sample notice{unread === 1 ? '' : 's'}
+                      {unread} unread notice{unread === 1 ? '' : 's'}
                     </span>
                   ) : null}
                 </Link>

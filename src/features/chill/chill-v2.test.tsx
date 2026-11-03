@@ -128,7 +128,7 @@ describe('Chill Spot V2 pages', () => {
     await heading(`Order ${o.displayNumber}`)
     const before = (await services.chill.load()).orders.find((x) => x.id === o.id)!
     await user.click(screen.getByRole('button', { name: 'I arrived at pickup' }))
-    expect(await screen.findByText(/self-reported, demo/)).toBeInTheDocument()
+    expect(await screen.findByText(/self-reported/)).toBeInTheDocument()
     expect(screen.getByText(/proves nothing about where you were/)).toBeInTheDocument()
     const after = (await services.chill.load()).orders.find((x) => x.id === o.id)!
     expect(after.status).toBe(before.status)
@@ -220,7 +220,7 @@ describe('Chill Spot V2 operations lab and analytics', () => {
     // A flag leaves the order where it is.
     await user.type(
       within(ops).getByLabelText(/Note for “Needs attention” flag/),
-      'Milk may be short (simulated)',
+      'Milk may be short',
     )
     await user.click(
       within(row).getByRole('button', { name: new RegExp(`Flag ${o.displayNumber}`) }),
@@ -248,7 +248,7 @@ describe('Chill Spot V2 operations lab and analytics', () => {
     renderApp('/services/chill-spot')
     await heading('Chill Spot')
     await user.click(await screen.findByRole('tab', { name: 'Operations view' }))
-    expect(await screen.findByText(/Recorded in prototype/)).toBeInTheDocument()
+    expect(await screen.findByText(/Recorded in this app/)).toBeInTheDocument()
     expect(screen.getByText(/not minutes a student stood waiting/)).toBeInTheDocument()
     expect(screen.getAllByText('Not enough recorded').length).toBeGreaterThan(0)
     await user.click(screen.getByRole('tab', { name: 'Field observations' }))

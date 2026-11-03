@@ -125,7 +125,7 @@ const op = (
     {
       id: c.newId('op'),
       action,
-      actorLabel: 'Local demo simulator' as const,
+      actorLabel: 'Local operations view' as const,
       entityId,
       previous,
       next,
@@ -167,12 +167,12 @@ function validateNew(
     return fail('This resource’s status is unknown, so it cannot be booked.')
   if (!resource.hours) return fail('Opening hours were not provided, so no slots are offered.')
   const slot = findSlot(s, resource, i.date, i.start)
-  if (!slot) return fail('That is not one of the demo time slots.')
+  if (!slot) return fail('That is not one of the time slots.')
   if (i.participants !== undefined) {
     if (!Number.isInteger(i.participants) || i.participants < 1)
       return fail('Enter a whole number of participants of at least 1.')
     if (policy.participantMax !== undefined && i.participants > policy.participantMax)
-      return fail(`This demo allows up to ${policy.participantMax} participants.`)
+      return fail(`This allows up to ${policy.participantMax} participants.`)
   }
   const refusal = checkSlot({
     span: { date: i.date, start: slot.start, end: slot.end, endDate: slot.endDate },
@@ -195,7 +195,7 @@ function validateNew(
     return fail(`Bookings open up to ${policy.horizonDays} days ahead on this device.`)
   if (refusal === 'ownerLimit')
     return fail(
-      `This demo allows ${policy.maxActive} upcoming ${policy.maxActive === 1 ? 'booking' : 'bookings'} ${policy.limitGroup ? 'across the space services' : 'for this activity'} at a time. Cancel one first.`,
+      `This allows ${policy.maxActive} upcoming ${policy.maxActive === 1 ? 'booking' : 'bookings'} ${policy.limitGroup ? 'across the space services' : 'for this activity'} at a time. Cancel one first.`,
     )
   if (refusal === 'conflict') return fail('That slot is already reserved in this reference data.')
   return { ok: true, resource, end: slot.end, endDate: slot.endDate }
@@ -255,7 +255,7 @@ export function reserveSlot(
         i.profileId,
         reservation.id,
         ev,
-        'Reservation saved in CampusOS demo',
+        'Reservation saved in CampusOS',
         `${v.resource.label}, ${i.date} ${i.start}. A local reservation, not a campus booking.`,
         bookingPath(reservation.id),
       ),
@@ -363,7 +363,7 @@ export function processNoShow(
     return fail('Only a confirmed, not-yet-checked-in booking can be released as a no-show.')
   const grace = resource ? policyFor(s, resource).graceMinutes : 10
   if (nowMs < spanMs(r).start + grace * 60_000)
-    return fail(`The ${grace}-minute demo grace period has not ended.`)
+    return fail(`The ${grace}-minute grace period has not ended.`)
   const ev = makeAudit(
     r.id,
     'demoSimulator',
@@ -422,7 +422,7 @@ export function closeResource(
           status: 'closed' as const,
           closureNote: text,
           asOf: c.nowIso,
-          sourceLabel: 'Demo simulator report',
+          sourceLabel: 'Operations view report',
           provenance: simulatedProvenance(c.nowIso),
         }
       : x,
@@ -444,7 +444,7 @@ export function reopenResource(s: SportsStore, resourceId: string, c: Ctx): Chan
           status: 'open' as const,
           closureNote: undefined,
           asOf: c.nowIso,
-          sourceLabel: 'Demo simulator report',
+          sourceLabel: 'Operations view report',
           provenance: simulatedProvenance(c.nowIso),
         }
       : x,
@@ -473,7 +473,7 @@ export function resolveDisruption(
           r.ownerProfileId,
           r.id,
           ev,
-          'Demo disruption resolved',
+          'Disruption resolved',
           'Your booking stands as before.',
           bookingPath(r.id),
         ),
@@ -518,7 +518,7 @@ export function joinWaitlist(
   if (!policy.bookable || resource.bookable === false || !policy.allowWaitlist)
     return fail('A waitlist is not configured for this resource.')
   const slot = findSlot(s, resource, input.date, input.start)
-  if (!slot) return fail('That is not one of the demo time slots.')
+  if (!slot) return fail('That is not one of the time slots.')
   const open = s.waitlist.find(
     (w) =>
       w.profileId === input.profileId &&
@@ -654,7 +654,7 @@ export function issueOffer(
         next.profileId,
         next.id,
         ev,
-        'A demo slot offer is available',
+        'A slot offer is available',
         `${resource.label}, ${date} ${start}. Accept within ${s.config.offerLifetimeMinutes} minutes. It is not yours until you accept.`,
         WAITLIST_PATH,
         'important',
@@ -753,7 +753,7 @@ export function respondToOffer(
         profileId,
         reservation.id,
         ev,
-        'Reservation saved in CampusOS demo',
+        'Reservation saved in CampusOS',
         `${v.resource.label}, ${w.date} ${w.start}, from your accepted offer.`,
         bookingPath(reservation.id),
       ),
@@ -834,7 +834,7 @@ export function setOccupancy(
     ...(input.level ? { level: input.level } : {}),
     completeness: input.count === null ? 'unknown' : 'partial',
     asOf: c.nowIso,
-    sourceLabel: 'Demo simulator snapshot (not a live count)',
+    sourceLabel: 'Operations view snapshot (not a live count)',
     provenance: simulatedProvenance(c.nowIso),
   }
   const field = facilityId === LIBRARY_ID ? 'libraryOccupancy' : 'occupancy'
@@ -867,7 +867,7 @@ export function setEquipmentStatus(
           ...x,
           status,
           asOf: c.nowIso,
-          sourceLabel: 'Demo simulator report',
+          sourceLabel: 'Operations view report',
           provenance: simulatedProvenance(c.nowIso),
         }
       : x,
@@ -941,7 +941,7 @@ export function addDemoLoan(
   input: { profileId: string; bookId: string; dueDate: DateOnly; issuedOn?: DateOnly },
   c: Ctx,
 ): Change<Loan> {
-  if (!s.catalogue.some((b) => b.id === input.bookId)) return fail('That demo book was not found.')
+  if (!s.catalogue.some((b) => b.id === input.bookId)) return fail('That book was not found.')
   if (input.issuedOn && input.issuedOn > input.dueDate)
     return fail('The issue date must not be after the due date.')
   const loan: Loan = {
@@ -1010,7 +1010,7 @@ export function recordLoanReturn(
   )
 }
 
-/** The student's own note, kept apart from the (simulated) circulation data. */
+/** The student's own note, kept apart from the circulation data. */
 export function setLoanNote(
   s: SportsStore,
   profileId: string,
@@ -1051,7 +1051,7 @@ export function dueLoanNotices(s: SportsStore, nowMs: number, c: Ctx): Change<nu
         l.id,
         ev,
         'Library book due soon (local)',
-        `${book?.title ?? 'A demo book'} is due ${l.dueDate}. A date-only due date, so no time is implied. This is a demo record, not library data.`,
+        `${book?.title ?? 'A book'} is due ${l.dueDate}. A date-only due date, so no time is implied. This is a record, not library data.`,
         LOANS_PATH,
       ),
     )

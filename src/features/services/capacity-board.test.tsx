@@ -10,7 +10,7 @@ describe('Services capacity board', () => {
     const b = within(board)
     expect(b.getByRole('meter', { name: /Classrooms booked: \d of 6/ })).toBeInTheDocument()
     expect(b.getByRole('meter', { name: /Gym: \d+ of 20/ })).toBeInTheDocument()
-    expect(b.getByText(/Time Tax at stake: 53–69 min/)).toBeInTheDocument()
+    expect(b.getByText(/Time Tax at stake: 59–81 min/)).toBeInTheDocument()
     expect(b.getByText(/Time Tax · Lunch queue:/)).toBeInTheDocument()
     expect(b.getAllByText(/no wait has been measured yet/).length).toBeGreaterThan(0)
   })

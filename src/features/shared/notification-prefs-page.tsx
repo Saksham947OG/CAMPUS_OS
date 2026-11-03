@@ -43,7 +43,7 @@ export function NotificationPrefsPage() {
           </li>
         </ul>
         <p className="mt-2 text-xs text-ink-muted">
-          Which messages count as critical is a prototype default, not a campus policy.
+          Which messages count as critical is a default setting, not a campus policy.
         </p>
       </SectionCard>
       <SectionCard id="np-cats-h" title="Categories">

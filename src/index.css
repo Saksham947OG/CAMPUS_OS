@@ -87,3 +87,184 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Time Tax comparison bars settle once per change (design spec §13.2); reduced motion makes it instant. */
+.tt-bar {
+  transition: width 320ms var(--ease-standard);
+}
+
+/*
+ * Living interface (design spec §5, §15). Depth has meaning: the page is the stable base, navigation floats
+ * above it, a preview belongs to its trigger. Only decorative objects drift; controls and reading text stay put.
+ */
+@layer base {
+  body {
+    background-image: radial-gradient(
+      1100px 460px at 88% -8%,
+      color-mix(in srgb, var(--yellow-wash) 50%, transparent),
+      transparent
+    );
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  /* Hover response: a small lift on pointer devices only, a pressed state on every device. */
+  .lift {
+    transition:
+      transform var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .lift:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lift);
+    }
+  }
+  .lift:active,
+  .press:active {
+    transform: scale(0.985);
+  }
+  .press {
+    transition: transform 120ms var(--ease-standard);
+  }
+
+  /* Floating navigation: tinted glass with a readable solid fallback. */
+  .glass {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(16px) saturate(1.15);
+    backdrop-filter: blur(16px) saturate(1.15);
+    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    box-shadow: var(--shadow-shell);
+  }
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass {
+      background: var(--surface);
+    }
+  }
+  @media (forced-colors: active), (prefers-contrast: more) {
+    .glass {
+      background: var(--surface);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      border-color: var(--border-strong);
+    }
+  }
+
+  /* Ambient motion, inside illustrations only: 3–6 px, 7–12 s, different phases. */
+  .float-a {
+    animation: campus-float 9s ease-in-out infinite;
+  }
+  .float-b {
+    animation: campus-float 11s ease-in-out -4s infinite;
+  }
+  .drift-a {
+    animation: campus-drift 48s linear infinite alternate;
+  }
+
+  /* Booking ticket: notched sides, shadow drawn on a wrapper so the notch does not clip it. */
+  .ticket-wrap {
+    filter: drop-shadow(0 1px 1px rgb(32 44 48 / 0.12)) drop-shadow(0 8px 10px rgb(32 44 48 / 0.1));
+    transition:
+      transform var(--duration-fast) var(--ease-standard),
+      filter var(--duration-fast) var(--ease-standard);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .ticket-wrap:hover,
+    .ticket-wrap:focus-within {
+      transform: translateY(-3px);
+      filter: drop-shadow(0 2px 2px rgb(32 44 48 / 0.14))
+        drop-shadow(0 14px 16px rgb(32 44 48 / 0.16));
+    }
+  }
+  .ticket {
+    --notch: 9px;
+    -webkit-mask:
+      radial-gradient(circle var(--notch) at 0 var(--notch-y, 50%), transparent 97%, #000) left /
+        51% 100% no-repeat,
+      radial-gradient(circle var(--notch) at 100% var(--notch-y, 50%), transparent 97%, #000)
+        right / 51% 100% no-repeat;
+    mask:
+      radial-gradient(circle var(--notch) at 0 var(--notch-y, 50%), transparent 97%, #000) left /
+        51% 100% no-repeat,
+      radial-gradient(circle var(--notch) at 100% var(--notch-y, 50%), transparent 97%, #000)
+        right / 51% 100% no-repeat;
+  }
+
+  /* Sidebar selection pill travels between rows. */
+  .nav-pill {
+    transition:
+      transform var(--duration-base) var(--ease-standard),
+      height var(--duration-base) var(--ease-standard),
+      opacity var(--duration-fast) linear;
+  }
+}
+
+@keyframes campus-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+@keyframes campus-drift {
+  from {
+    transform: translateX(-6px);
+  }
+  to {
+    transform: translateX(10px);
+  }
+}
+
+/* Reduced motion: the OS setting or the app setting replaces travel, lift and drift with stable states. */
+@media (prefers-reduced-motion: reduce) {
+  .lift:hover,
+  .ticket-wrap:hover,
+  .ticket-wrap:focus-within {
+    transform: none;
+  }
+  .float-a,
+  .float-b,
+  .drift-a {
+    animation: none;
+  }
+}
+html[data-motion='reduced'] {
+  --duration-fast: 0.01ms;
+  --duration-base: 0.01ms;
+  --duration-slow: 0.01ms;
+}
+html[data-motion='reduced'] .lift:hover,
+html[data-motion='reduced'] .ticket-wrap:hover,
+html[data-motion='reduced'] .ticket-wrap:focus-within,
+html[data-motion='reduced'] .lift:active,
+html[data-motion='reduced'] .press:active {
+  transform: none;
+}
+html[data-motion='reduced'] .float-a,
+html[data-motion='reduced'] .float-b,
+html[data-motion='reduced'] .drift-a,
+html[data-motion='reduced'] .tt-bar {
+  animation: none;
+  transition: none;
+}
+
+/* Sidebar icons respond once on hover; the silhouette stays recognisable. */
+.nav-icon {
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  a:hover > .nav-icon {
+    transform: translateY(-2px) rotate(-5deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  a:hover > .nav-icon {
+    transform: none;
+  }
+}
+html[data-motion='reduced'] a:hover > .nav-icon {
+  transform: none;
+}

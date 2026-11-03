@@ -53,7 +53,7 @@ export function QueuePanel({
           Café status
         </h2>
         <span className="rounded-full border border-border-strong bg-surface px-2.5 py-0.5 text-xs font-semibold text-ink">
-          Local · simulated data
+          Local data
         </span>
       </div>
 
@@ -115,8 +115,8 @@ export function QueuePanel({
         </Tile>
       </ul>
       <p className="mt-3 text-xs text-ink-muted">
-        Sample figures from a local demonstration, not a live view of any café. Hours not provided.
-        No ready-time estimate is given.
+        Figures from this app’s records, not a live view of any café. Hours not provided. No
+        ready-time estimate is given.
       </p>
     </section>
   )

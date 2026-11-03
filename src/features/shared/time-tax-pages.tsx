@@ -1,5 +1,6 @@
 import { useServices } from '@/app/services'
 import { ProcessTimeTax } from '../sources/process-time-tax'
+import { CollaborationFriction, TimeTaxCompare } from './time-tax-visuals'
 import { useState } from 'react'
 import { Field, inputClass } from '@/components/form-kit'
 import { PageHeader } from '@/components/page-header'
@@ -89,6 +90,8 @@ export function TimeTaxPage() {
         />
         <SubNav label="Time Tax sections" items={tabs} current="overview" />
         <ProcessTimeTax />
+        <TimeTaxCompare />
+        <CollaborationFriction />
       </article>
     )
   return <LegacyTimeTaxPage />

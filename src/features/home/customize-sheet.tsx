@@ -176,10 +176,7 @@ export function CustomizeSheet({ open, onOpenChange, ctx }: Props) {
       label: 'Quick actions',
       content: (
         <div className="flex flex-col gap-3">
-          <p className="text-sm text-ink-muted">
-            Choose exactly four different destinations. Ones marked “Coming later” open an honest
-            placeholder page.
-          </p>
+          <p className="text-sm text-ink-muted">Choose exactly four different destinations.</p>
           <ol className="flex flex-col gap-2">
             {prefs.quickActions.map((id, i) => (
               <li key={i} className="flex items-center gap-2">

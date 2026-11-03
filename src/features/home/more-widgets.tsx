@@ -43,7 +43,7 @@ import type { HomeCtx } from './home-context'
 
 const icon = 'size-4 text-teal-strong'
 
-/** H-W05: active records owned by other modules: sample bookings and the profile's demo café orders. */
+/** H-W05: active records owned by other modules: sample bookings and the profile's café orders. */
 export function ActivityWidget({ ctx }: { ctx: HomeCtx }) {
   const { myOrders } = useChill()
   const ess = useEssState((x) => x.ess)
@@ -77,7 +77,7 @@ export function ActivityWidget({ ctx }: { ctx: HomeCtx }) {
         <span className="block text-ink-muted">{e.when}</span>
         {e.type === 'Café order' ? (
           <span className="mt-1 block text-xs font-medium text-teal-strong">
-            Track order · demo, not a real café
+            Track order · not a real café
           </span>
         ) : e.type === 'Laundry load' ||
           e.type === 'Parcel' ||

@@ -52,7 +52,7 @@ export function DemoOpsPanel({ café }: { café: ChillStore }) {
     const r = await fn()
     if (r.ok) {
       setMessage(done)
-      toast.notify('info', `${done} (simulated)`)
+      toast.notify('info', `${done}`)
     } else setMessage(r.error?.message ?? 'That could not be done.')
   }
 
@@ -70,7 +70,7 @@ export function DemoOpsPanel({ café }: { café: ChillStore }) {
       data-testid="demo-ops"
     >
       <h2 id="ops-h" className="flex items-center gap-2 text-base font-semibold text-ink">
-        <FlaskConical className="size-4" aria-hidden="true" /> Demo operations · local simulator
+        <FlaskConical className="size-4" aria-hidden="true" /> Operations · local simulator
       </h2>
       <p className="mt-1 text-sm text-ink">
         For presentations only. This is <strong>not</strong> the real café, a staff login or a live
@@ -236,7 +236,7 @@ export function DemoOpsPanel({ café }: { café: ChillStore }) {
           </label>
           <details className="text-sm text-ink">
             <summary className="min-h-11 cursor-pointer py-2 font-medium">
-              Manual demo script (nothing here runs by itself)
+              Manual script (nothing here runs by itself)
             </summary>
             <ol className="mt-1 list-decimal pl-5">
               <li>
@@ -455,8 +455,7 @@ export function DemoOpsPanel({ café }: { café: ChillStore }) {
         ))}
       </ol>
       <p className="mt-3 text-xs text-ink-muted">
-        Data coverage: recorded orders only, all demonstration data. The counter line is a separate
-        manual report.
+        Data coverage: recorded orders only. The counter line is a separate manual report.
       </p>
     </section>
   )

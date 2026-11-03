@@ -9,7 +9,7 @@ export interface GradeScale {
 }
 
 export const DEMO_SCALE: GradeScale = {
-  label: 'Demo 10-point scale (not a college rule)',
+  label: '10-point scale (not a college rule)',
   points: { O: 10, 'A+': 9, A: 8, 'B+': 7, B: 6, C: 5, P: 4, F: 0 },
 }
 export const maxPoints = (s: GradeScale) => Math.max(...Object.values(s.points))

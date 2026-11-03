@@ -64,6 +64,7 @@ export function createDataStore(services: Services): DataStore {
   services.community.subscribe(reloadActive)
   services.classrooms.subscribe(reloadActive)
   services.meetings.subscribe(reloadActive)
+  services.workspace.subscribe(reloadActive)
 
   return store
 }

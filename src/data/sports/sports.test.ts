@@ -89,7 +89,7 @@ describe('booking engine (SP-T05 … SP-T13)', () => {
       end: '13:00',
     })
     expect(r.reservation.provenance.dataMode).toBe('userCreated')
-    const n = (await env.notes(A)).filter((x) => x.title === 'Reservation saved in CampusOS demo')
+    const n = (await env.notes(A)).filter((x) => x.title === 'Reservation saved in CampusOS')
     expect(n).toHaveLength(1)
     expect(n[0]!.href).toBe(`/bookings/my/${r.reservation.id}`)
   })
@@ -161,7 +161,7 @@ describe('booking engine (SP-T05 … SP-T13)', () => {
     const store = await env.repo.load()
     expect(store.reservations[0]!.state).toBe('cancelled')
     expect(store.operations.map((o) => o.action)).toEqual(['cancelForClosure', 'closeResource'])
-    expect(store.operations.every((o) => o.actorLabel === 'Local demo simulator')).toBe(true)
+    expect(store.operations.every((o) => o.actorLabel === 'Local operations view')).toBe(true)
   })
 
   it('SP-T11: cancelling frees the slot and never claims the court is empty', async () => {
@@ -276,9 +276,9 @@ describe('badminton partner, waitlist and no-show (SP-T15 … SP-T20)', () => {
     const offered = await env.ok(env.repo.issueOffer('DEMO-COURT-1', TODAY, t('12:00')))
     expect(offered.id).toBe(wb.entry.id) // earliest sequence, not C
     expect((await env.repo.issueOffer('DEMO-COURT-1', TODAY, t('12:00'))).ok).toBe(false) // one open offer
-    expect(
-      (await env.notes(B)).find((x) => x.title === 'A demo slot offer is available')!.body,
-    ).toMatch(/not yours until you accept/)
+    expect((await env.notes(B)).find((x) => x.title === 'A slot offer is available')!.body).toMatch(
+      /not yours until you accept/,
+    )
     expect((await env.repo.load()).reservations.filter((r) => r.ownerProfileId === B)).toEqual([]) // not granted yet
     expect((await env.repo.respondToOffer(C, wb.entry.id, true)).ok).toBe(false) // not theirs
     const accepted = await env.ok(env.repo.respondToOffer(B, wb.entry.id, true))

@@ -12,6 +12,7 @@ export const HOME_WIDGET_IDS = [
   'freePockets',
   'campusPulse',
   'timeTax',
+  'workspace',
 ] as const
 export type HomeWidgetId = (typeof HOME_WIDGET_IDS)[number]
 
@@ -34,7 +35,7 @@ export const HOME_PRESETS: Record<
 > = {
   balanced: {
     label: 'Balanced Campus',
-    description: 'All nine optional widgets.',
+    description: 'All ten optional widgets.',
     visible: [
       'upNext',
       'deadlines',
@@ -45,12 +46,21 @@ export const HOME_PRESETS: Record<
       'freePockets',
       'campusPulse',
       'timeTax',
+      'workspace',
     ],
   },
   academic: {
     label: 'Academic Focus',
     description: 'Up Next, deadlines, quick actions, tasks, Free Pockets and activity.',
-    visible: ['upNext', 'deadlines', 'quickActions', 'myTasks', 'freePockets', 'activity'],
+    visible: [
+      'upNext',
+      'deadlines',
+      'quickActions',
+      'myTasks',
+      'freePockets',
+      'activity',
+      'workspace',
+    ],
   },
   campusLife: {
     label: 'Campus Life',
@@ -79,6 +89,7 @@ export const DEFAULT_ZONE: Record<HomeWidgetId, 1 | 2 | 3> = {
   freePockets: 2,
   campusPulse: 3,
   timeTax: 3,
+  workspace: 2,
 }
 
 export const DEFAULT_ORDER: readonly HomeWidgetId[] = [
@@ -92,6 +103,7 @@ export const DEFAULT_ORDER: readonly HomeWidgetId[] = [
   'freePockets',
   'campusPulse',
   'timeTax',
+  'workspace',
 ]
 
 export const DEFAULT_QUICK_ACTIONS = ['chill-spot', 'laundry', 'bookings', 'mess'] as const
@@ -144,6 +156,16 @@ export function layoutForPreset(preset: HomePresetId): WidgetLayout[] {
     order,
     size: 'standard' as const,
   }))
+}
+
+/**
+ * Layouts saved before a widget existed do not list it. It is added back hidden-by-default only when the
+ * saved layout predates it, so an older saved layout keeps its own choices and the new card can be switched on.
+ */
+export function withMissingWidgets(widgets: readonly WidgetLayout[]): WidgetLayout[] {
+  const have = new Set(widgets.map((w) => w.id))
+  const missing = layoutForPreset('balanced').filter((w) => !have.has(w.id))
+  return [...widgets, ...missing.map((w, i) => ({ ...w, visible: true, order: 50 + i }))]
 }
 
 export const defaultHomePrefs = (): HomePrefs => ({

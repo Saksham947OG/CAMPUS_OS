@@ -31,7 +31,7 @@ function ResetEssentials() {
           const c = await confirm({
             title: 'Reset the Campus Essentials local records?',
             description:
-              'This removes laundry loads, the demo visit, machine reservations, mess check-ins and feedback, the illustrative fee and parcels for every persona. Home, Calendar, Chill Spot and your other data are not touched.',
+              'This removes laundry loads, the visit, machine reservations, mess check-ins and feedback, the illustrative fee and parcels for every persona. Home, Calendar, Chill Spot and your other data are not touched.',
             confirmLabel: 'Reset Essentials records',
             danger: true,
           })
@@ -137,7 +137,7 @@ export function LaundryOps() {
                       }
                     : {}),
                 }),
-              'Visit announcement recorded (simulated).',
+              'Visit announcement recorded.',
             )
           }
         >
@@ -182,7 +182,7 @@ export function LaundryOps() {
                       onClick={() =>
                         void act(
                           () => repo.advanceLoad(l.id, next),
-                          `Marked “${loadStageChip[next]}” (simulated).`,
+                          `Marked “${loadStageChip[next]}”.`,
                         )
                       }
                     >
@@ -316,15 +316,9 @@ function MachineRow({ m }: { m: Machine }) {
   const { repo } = useEss()
   const { act } = useAction()
   const op = (s: Machine['operationalStatus']) =>
-    act(
-      () => repo.setMachineStatus(m.id, { operationalStatus: s }),
-      `${m.label}: ${s} (simulated).`,
-    )
+    act(() => repo.setMachineStatus(m.id, { operationalStatus: s }), `${m.label}: ${s}.`)
   const ph = (s: Machine['physicalStatus']) =>
-    act(
-      () => repo.setMachineStatus(m.id, { physicalStatus: s }),
-      `${m.label}: physically ${s} (simulated).`,
-    )
+    act(() => repo.setMachineStatus(m.id, { physicalStatus: s }), `${m.label}: physically ${s}.`)
   return (
     <li className="rounded-md border border-border bg-surface p-3">
       <p className="font-medium">{m.label}</p>
@@ -483,7 +477,7 @@ export function MessOps() {
     <OpsCard id="ops-mess-h" title="Local Operations: mess" message={message}>
       <fieldset>
         <legend className="mb-1 text-sm font-semibold">
-          Busy indicator (a manual demo report, not a count)
+          Busy indicator (a manual report, not a count)
         </legend>
         <div className="flex flex-wrap gap-1.5">
           {(['quiet', 'moderate', 'busy', 'unknown'] as const).map((s) => (
@@ -492,7 +486,7 @@ export function MessOps() {
               variant="outline"
               className="min-h-11 capitalize"
               aria-pressed={ess.messBusy?.state === s}
-              onClick={() => void act(() => repo.setBusyReport(s), `Reported ${s} (simulated).`)}
+              onClick={() => void act(() => repo.setBusyReport(s), `Reported ${s}.`)}
             >
               {s}
             </Button>
@@ -513,7 +507,7 @@ export function MessOps() {
                 ...(late.trim() ? { lateFee: late.trim() } : {}),
                 ...(url ? { authorizedFormUrl: url } : {}),
               }),
-            'Fee details entered (simulated). Nothing was invented: only what you typed is shown.',
+            'Fee details entered. Nothing was invented: only what you typed is shown.',
           )
         }}
       >
@@ -629,7 +623,7 @@ export function ParcelOps() {
                 ...(point.trim() ? { collectionPoint: point.trim() } : {}),
                 ...(loggedAt ? { loggedAt } : {}),
               }),
-            `Parcel logged for ${nameOf(recipient)} (simulated).`,
+            `Parcel logged for ${nameOf(recipient)}.`,
           )
         }}
       >
@@ -717,10 +711,7 @@ export function ParcelOps() {
                     size="sm"
                     className="min-h-11"
                     onClick={() =>
-                      void act(
-                        () => repo.recordParcelCollected(p.id),
-                        'Handover recorded (simulated).',
-                      )
+                      void act(() => repo.recordParcelCollected(p.id), 'Handover recorded.')
                     }
                   >
                     Record collected

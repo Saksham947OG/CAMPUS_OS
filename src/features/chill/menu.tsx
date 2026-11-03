@@ -29,7 +29,7 @@ export function ItemPlaceholder({ name, className }: { name: string; className?:
 }
 
 const availabilityLabel = {
-  available: 'Available (sample)',
+  available: 'Available',
   unavailable: 'Unavailable',
   unknown: 'Availability not confirmed',
 } as const

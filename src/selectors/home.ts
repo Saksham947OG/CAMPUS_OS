@@ -188,7 +188,7 @@ export interface ActivityEntry {
   mode: DataMode
   href: string
   active: boolean
-  /** True when the record comes from the local demo simulator rather than a source system. */
+  /** True when the record comes from the local operations view rather than a source system. */
   simulated?: boolean
 }
 
@@ -212,14 +212,14 @@ export function activityEntries(
       status:
         b.status === 'cancelled'
           ? b.provenance.dataMode === 'demoSeed'
-            ? 'Cancelled (sample)'
+            ? 'Cancelled'
             : 'Cancelled'
           : past
             ? b.provenance.dataMode === 'demoSeed'
-              ? 'Past (sample)'
+              ? 'Past'
               : 'Past'
             : b.provenance.dataMode === 'demoSeed'
-              ? 'Booked (sample record)'
+              ? 'Booked'
               : 'Reserved (local reservation)',
       when: b.endDate
         ? `${formatDateShort(b.date)}, ${formatTime(b.start)} → ${formatDateShort(b.endDate)}, ${formatTime(b.end)}`

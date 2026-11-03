@@ -36,14 +36,14 @@ describe('Campus Mail', () => {
     const user = userEvent.setup()
     renderApp('/notifications/mail')
     await heading('Campus Mail')
-    expect(screen.getByText(/Saved on this device · simulated mail/)).toBeInTheDocument()
+    expect(screen.getAllByText(/Saved on this device/).length).toBeGreaterThan(0)
     expect(screen.getByTestId('mail-status')).toHaveTextContent(
-      /demo\.student\.a@bms-demo\.invalid.*Saved on this device.*not applicable/,
+      /student\.a@bms\.invalid.*Saved on this device.*not applicable/,
     )
-    expect(screen.getByText('BMS Weekly Update (Demo)')).toBeInTheDocument()
+    expect(screen.getByText('BMS Weekly Update')).toBeInTheDocument()
     await user.click(screen.getByRole('tab', { name: 'Student Life' }))
-    expect(screen.queryByText('BMS Weekly Update (Demo)')).not.toBeInTheDocument()
-    expect(screen.getByText('Club Applications Open (Demo)')).toBeInTheDocument()
+    expect(screen.queryByText('BMS Weekly Update')).not.toBeInTheDocument()
+    expect(screen.getByText('Club Applications Open')).toBeInTheDocument()
     await user.click(screen.getByRole('tab', { name: 'All mail' }))
     await user.type(screen.getByLabelText('Search subject, sender or text'), 'zzz')
     expect(await screen.findByText('No message matches.')).toBeInTheDocument()
@@ -59,7 +59,7 @@ describe('Campus Mail', () => {
     await user.click(
       within(lab).getByRole('button', { name: 'Receive Revised Quiz Seating Email' }),
     )
-    expect(await screen.findByText('Quiz Seating — Revised (Demo)')).toBeInTheDocument()
+    expect(await screen.findByText('Quiz Seating — Revised')).toBeInTheDocument()
     expect((await screen.findByTestId('push-preview')).textContent).toMatch(
       /Quiz seating has been updated — open CampusOS/,
     )
@@ -84,7 +84,7 @@ describe('Campus Mail', () => {
     expect(await screen.findByText('CR5, row 3, column 2')).toBeInTheDocument()
     expect(screen.getByText(/not an official allotment/)).toBeInTheDocument()
     await user.click(screen.getByRole('link', { name: 'View the original mail' }))
-    await heading('Quiz Seating — Revised (Demo)')
+    await heading('Quiz Seating — Revised')
     const pipe = within(screen.getByTestId('pipeline'))
     for (const s of ['received', 'classified', 'extracted', 'identity', 'seat', 'alert'])
       expect(pipe.getAllByText(s, { exact: false }).length).toBeGreaterThan(0)
@@ -122,13 +122,13 @@ describe('Campus Mail', () => {
         name: 'Receive Revised Quiz Seating Email',
       }),
     )
-    await screen.findByText('Quiz Seating — Revised (Demo)')
+    await screen.findByText('Quiz Seating — Revised')
     await user.click(await screen.findByRole('button', { name: /^Persona:/i }))
     await user.click(await screen.findByRole('menuitemradio', { name: /Reference Student B/ }))
     await router.navigate('/notifications/mail')
     await heading('Campus Mail')
-    expect(await screen.findByText('BMS Weekly Update (Demo)')).toBeInTheDocument()
-    expect(screen.queryByText('Quiz Seating — Revised (Demo)')).not.toBeInTheDocument()
+    expect(await screen.findByText('BMS Weekly Update')).toBeInTheDocument()
+    expect(screen.queryByText('Quiz Seating — Revised')).not.toBeInTheDocument()
     await router.navigate('/')
     await screen.findByRole('heading', { level: 1 })
     expect(screen.queryByTestId('urgent-signal')).not.toBeInTheDocument()

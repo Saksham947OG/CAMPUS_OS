@@ -99,7 +99,7 @@ function LiveMeter({ load }: { load: FacilityLoad }) {
         <span className={cn('font-semibold', t.text)}>{t.label}</span>
       </p>
       <p className="text-xs text-ink-muted">
-        {load.simulated ? 'Simulated headcount' : 'From the recorded class and booking schedule'}
+        {load.simulated ? 'Estimated headcount' : 'From the recorded class and booking schedule'}
       </p>
     </div>
   )
@@ -130,8 +130,8 @@ export function CapacityBoard() {
         How full is campus, and what does a wait cost?
       </h2>
       <p className="mt-1 text-sm text-ink-muted">
-        {CAPACITY_SOURCE}. Capacity is a reference figure. The live bars are a visible simulation
-        (classrooms use the recorded schedule), not a measured headcount.
+        {CAPACITY_SOURCE}. Capacity is a reference figure. The live bars are an estimate (classrooms
+        use the recorded schedule), not a measured headcount.
       </p>
       {composite ? (
         <p className="mt-3 rounded-md bg-teal-tint p-3 text-sm text-ink">

@@ -152,9 +152,8 @@ export function ribbon(s: ClassroomStore, roomId: string, date: DateOnly, profil
 const REFUSAL: Record<string, string> = {
   invalid: 'The end must be after the start.',
   past: 'That time has already passed.',
-  beyondHorizon: 'That is further ahead than the demo allows.',
-  ownerLimit:
-    'You already hold the most reservations or requests the demo allows. Cancel one first.',
+  beyondHorizon: 'That is further ahead than the allows.',
+  ownerLimit: 'You already hold the most reservations or requests the allows. Cancel one first.',
   conflict: 'That time overlaps something already recorded for this room.',
 }
 
@@ -207,7 +206,7 @@ export function submitReservation(
   if (status.kind === 'unknown') {
     if (!input.asVerificationRequest)
       return fail(
-        'The demo schedule does not cover that time, so it cannot be confirmed. Send it as a request for verification instead.',
+        'The schedule does not cover that time, so it cannot be confirmed. Send it as a request for verification instead.',
       )
     state = 'pendingApproval'
     needsVerification = true
@@ -401,7 +400,7 @@ export function reschedule(
   if (status.kind !== 'available')
     return fail(
       status.kind === 'unknown'
-        ? 'The demo schedule does not cover that time.'
+        ? 'The schedule does not cover that time.'
         : 'That time is already taken or blocked.',
     )
   const state: Reservation['state'] =
@@ -448,7 +447,7 @@ export function closeRoom(
     date: span.date,
     start: span.start,
     end: span.end,
-    label: label.trim() || 'Closed (demo maintenance)',
+    label: label.trim() || 'Closed (maintenance)',
     provenance: {
       dataMode: 'simulated',
       verification: 'notApplicable',

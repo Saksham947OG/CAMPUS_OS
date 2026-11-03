@@ -35,6 +35,7 @@ export const widgetName: Record<HomeWidgetId, string> = {
   freePockets: 'Free Pockets',
   campusPulse: 'Campus Pulse',
   timeTax: 'Time Tax snapshot',
+  workspace: 'Workspace',
 }
 
 export const zoneName: Record<Zone, string> = {

@@ -206,7 +206,7 @@ export function ingest(
     stage(
       'classified',
       'done',
-      `Rule-based category: ${category}.${trusted ? '' : ' Sender is not on the demo allowlist.'}`,
+      `Rule-based category: ${category}.${trusted ? '' : ' Sender is not on the allowlist.'}`,
       c,
     ),
   ]

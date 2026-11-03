@@ -267,6 +267,8 @@ export function ProcessTimeTax({
   const all = personaEvidence(profileId)
   const rows = service ? all.filter((r) => r.service === service) : all
   const composite = !service ? compositeRange(all) : null
+  const collab = composite ? compositeRange(all.filter((r) => r.id === 'collaboration')) : null
+  const rest = composite ? compositeRange(all.filter((r) => r.id !== 'collaboration')) : null
   const relevant = sourceGaps.filter((g) => !service || g.service === service)
   if (!rows.length) return null
   return (
@@ -294,6 +296,14 @@ export function ProcessTimeTax({
           <strong>{rangeText(composite)} potential reduction</strong> across this persona’s{' '}
           {all.filter((r) => r.includeInComposite).length} selected processes. Reported baselines
           and planning assumptions; potential reduction, not measured savings.
+          {collab ? (
+            <>
+              {' '}
+              Of this, <strong>{rangeText(collab)}</strong> is cross-collaboration (finding the
+              latest decision, owner, time and file across separate platforms) and{' '}
+              <strong>{rangeText(rest)}</strong> is queues, trips and rooms.
+            </>
+          ) : null}
         </p>
       ) : null}
       {!compact ? (

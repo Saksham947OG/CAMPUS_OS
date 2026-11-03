@@ -92,7 +92,7 @@ export function BookingsHubPage() {
         {card(
           '/bookings/sports?activity=tableTennis',
           'Table Tennis',
-          'Reserve a table in short demo slots.',
+          'Reserve a table in short slots.',
           <Volleyball className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
@@ -104,7 +104,7 @@ export function BookingsHubPage() {
         {card(
           '/bookings/sports?activity=snooker',
           'Snooker',
-          'Two tables: reserve a specific one, or let the demo pick an available table.',
+          'Two tables: reserve a specific one, or let CampusOS pick an available table.',
           <Target className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
@@ -134,7 +134,7 @@ export function BookingsHubPage() {
         {card(
           '/bookings/chill-zone',
           'Chill Zone',
-          'Midnight-aware demo coordination for three placeholder celebration spots.',
+          'Midnight-aware coordination for three celebration spots.',
           <PartyPopper className="size-5 text-coffee" aria-hidden="true" />,
         )}
       </ul>
@@ -287,7 +287,7 @@ export function ResourcePage() {
           </h1>
           <Pill tone={r.status === 'open' ? 'plain' : 'warn'}>
             {r.status === 'open'
-              ? 'Open (demo report)'
+              ? 'Open (report)'
               : r.status === 'closed'
                 ? 'Closed'
                 : 'Status unknown'}
@@ -334,7 +334,7 @@ export function ResourcePage() {
           </dd>
         </dl>
         <p className="mt-2 text-xs text-ink-muted">
-          All values are demo defaults, not campus policy. Published availability is not verified
+          All values are defaults, not campus policy. Published availability is not verified
           vacancy.
         </p>
       </SectionCard>

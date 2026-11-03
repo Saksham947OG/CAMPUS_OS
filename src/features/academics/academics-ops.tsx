@@ -113,7 +113,7 @@ export function AcademicsOps() {
                     <Button
                       size="sm"
                       className="min-h-11"
-                      onClick={() => go('accept', 'Accepted (simulated).')}
+                      onClick={() => go('accept', 'Accepted.')}
                     >
                       Accept
                     </Button>
@@ -121,7 +121,7 @@ export function AcademicsOps() {
                       size="sm"
                       variant="outline"
                       className="min-h-11"
-                      onClick={() => go('reject', 'Declined (simulated).')}
+                      onClick={() => go('reject', 'Declined.')}
                     >
                       Decline
                     </Button>
@@ -130,7 +130,7 @@ export function AcademicsOps() {
                       variant="outline"
                       className="min-h-11"
                       disabled={!alt}
-                      onClick={() => go('propose', 'Alternative proposed (simulated).')}
+                      onClick={() => go('propose', 'Alternative proposed.')}
                     >
                       Propose alternative
                     </Button>
@@ -140,7 +140,7 @@ export function AcademicsOps() {
                   <Button
                     size="sm"
                     className="min-h-11"
-                    onClick={() => go('confirmAlternative', 'Alternative confirmed (simulated).')}
+                    onClick={() => go('confirmAlternative', 'Alternative confirmed.')}
                   >
                     Confirm alternative
                   </Button>
@@ -151,7 +151,7 @@ export function AcademicsOps() {
                       size="sm"
                       variant="outline"
                       className="min-h-11"
-                      onClick={() => go('complete', 'Marked completed (simulated).')}
+                      onClick={() => go('complete', 'Marked completed.')}
                     >
                       Mark completed
                     </Button>
@@ -159,7 +159,7 @@ export function AcademicsOps() {
                       size="sm"
                       variant="outline"
                       className="min-h-11"
-                      onClick={() => go('cancel', 'Cancelled (simulated).')}
+                      onClick={() => go('cancel', 'Cancelled.')}
                     >
                       Cancel
                     </Button>
@@ -170,7 +170,7 @@ export function AcademicsOps() {
                     size="sm"
                     variant="outline"
                     className="min-h-11"
-                    onClick={() => go('cancel', 'Cancelled (simulated).')}
+                    onClick={() => go('cancel', 'Cancelled.')}
                   >
                     Confirm cancellation
                   </Button>
@@ -221,7 +221,7 @@ export function AcademicsOps() {
               onClick={() =>
                 void act(
                   () => repo.simulateInvite(i.id, 'feedbackRequested', i.statusVersion),
-                  'Feedback requested (simulated).',
+                  'Feedback requested.',
                 )
               }
             >

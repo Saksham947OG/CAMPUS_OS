@@ -11,6 +11,7 @@ import {
 } from './more-widgets'
 import type { HomeCtx } from './home-context'
 import { ScheduleWidget } from './schedule-widget'
+import { WorkspaceWidget } from '../workspace/home-widget'
 
 export interface WidgetDef {
   /** Human name used by the customize panel and live announcements. */
@@ -30,4 +31,5 @@ export const homeWidgets: Partial<Record<HomeWidgetId, WidgetDef>> = {
   freePockets: { title: 'My Free Pockets', render: (ctx) => <FreePocketsWidget ctx={ctx} /> },
   campusPulse: { title: 'Campus Pulse', render: (ctx) => <CampusPulseWidget ctx={ctx} /> },
   timeTax: { title: 'Time Tax snapshot', render: (ctx) => <TimeTaxWidget ctx={ctx} /> },
+  workspace: { title: 'Workspace', render: () => <WorkspaceWidget /> },
 }

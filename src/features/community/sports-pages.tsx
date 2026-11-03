@@ -59,7 +59,7 @@ export function SportsPage() {
       <PageHeader
         title="Sports & Teams"
         description="Fixtures, teams and player sign-ups. Registering a team does not book a court, and no real committee sees anything here."
-        badge={<Pill tone="demo">Local · simulated committee</Pill>}
+        badge={<Pill tone="demo">Local · committee</Pill>}
       />
       <SubNav label="Community sections" items={communityTabs} current="sports" />
       <p>
@@ -282,7 +282,7 @@ export function SportsPage() {
             </Field>
             <Field
               label="Maximum roster"
-              hint={`Left blank, the demo setting of ${community.config.defaultMaxRoster} is used. The real limit is unknown.`}
+              hint={`Left blank, the setting of ${community.config.defaultMaxRoster} is used. The real limit is unknown.`}
             >
               {(a) => (
                 <input
@@ -495,11 +495,11 @@ export function TeamPage() {
                   onClick={() =>
                     void act(
                       () => repo.submitTeam(me, t.id),
-                      'Submitted for demo approval. No real committee received it.',
+                      'Submitted for approval. No real committee received it.',
                     )
                   }
                 >
-                  Submit for demo approval
+                  Submit for approval
                 </Button>
               </>
             ) : null}

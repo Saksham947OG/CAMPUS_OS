@@ -210,8 +210,8 @@ describe('Campus Mail: the one-hour exam alert', () => {
     const clash = await e.ok<{ emailId: string; alerted: boolean }>(
       e.repo.receive(A, {
         messageId: 'demo-msg-clash',
-        from: 'exams@bms-demo.invalid',
-        subject: 'Quiz Seating (Demo)',
+        from: 'exams@bms.invalid',
+        subject: 'Quiz Seating',
         body: 'Exam: DEMO-OPS101 Quiz 1\nRevision: 2\nStudent: DEMO-BMS-001\nRoom: CR6\nColumn: 1\nRow: 1\n',
       }),
     )
@@ -256,13 +256,13 @@ describe('Campus Mail: the one-hour exam alert', () => {
     const e = setup()
     await e.send(A, 'seat-v1')
     expect(inboxFor(await e.repo.load(), B).map((m) => m.subject)).toEqual([
-      'BMS Weekly Update (Demo)',
-      'Club Applications Open (Demo)',
+      'BMS Weekly Update',
+      'Club Applications Open',
     ])
     await e.repo.resetAll()
     expect(inboxFor(await e.repo.load(), A).map((m) => m.subject)).toEqual([
-      'BMS Weekly Update (Demo)',
-      'Club Applications Open (Demo)',
+      'BMS Weekly Update',
+      'Club Applications Open',
     ])
   })
 })

@@ -121,9 +121,9 @@ export const MEETING_STATUSES = [
 export type MeetingStatus = (typeof MEETING_STATUSES)[number]
 
 export const meetingStatusLabel: Record<MeetingStatus, string> = {
-  requested: 'Awaiting demo response',
-  alternativeProposed: 'Alternative time proposed (simulated)',
-  alternativeAccepted: 'You accepted the alternative; awaiting demo confirmation',
+  requested: 'Awaiting response',
+  alternativeProposed: 'Alternative time proposed',
+  alternativeAccepted: 'You accepted the alternative; awaiting confirmation',
   acceptedDemo: 'Accepted locally (not an official appointment)',
   rejectedDemo: 'Declined locally',
   withdrawn: 'Withdrawn',
@@ -211,7 +211,7 @@ export const inviteStatusLabel: Record<InviteStatus, string> = {
   sent: 'Sent locally (nothing was delivered)',
   accepted: 'Accepted locally (simulated mentor)',
   declined: 'Declined locally',
-  feedbackRequested: 'Feedback requested (simulated)',
+  feedbackRequested: 'Feedback requested',
   withdrawn: 'Withdrawn',
 }
 export const INVITE_ACTIVE: readonly InviteStatus[] = ['sent', 'accepted', 'feedbackRequested']

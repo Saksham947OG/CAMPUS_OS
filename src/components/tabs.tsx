@@ -46,7 +46,7 @@ export function Tabs<Id extends string>({
         tabIndex={-1}
         aria-label={label}
         onKeyDown={onKeyDown}
-        className="flex gap-1 border-b border-border"
+        className="flex gap-1 overflow-x-auto border-b border-border"
       >
         {tabs.map((t) => (
           <button
@@ -62,7 +62,7 @@ export function Tabs<Id extends string>({
             tabIndex={t.id === active.id ? 0 : -1}
             onClick={() => onChange(t.id)}
             className={cn(
-              'min-h-11 flex-1 border-b-4 px-2 text-sm font-medium text-ink',
+              'min-h-11 flex-1 border-b-4 px-3 text-sm font-medium whitespace-nowrap text-ink',
               t.id === active.id ? 'border-teal font-semibold' : 'border-transparent hover:bg-mist',
             )}
           >

@@ -49,7 +49,7 @@ export function LostFoundPage() {
     <article className="flex max-w-5xl flex-col gap-4">
       <PageHeader
         title="Lost & Found"
-        description="Report something lost or found. Reports here are samples and your own; nothing is sent to anyone."
+        description="Report something lost or found. Reports here are your own; nothing is sent to anyone."
         badge={<Pill tone="demo">Local · not a campus lost-property office</Pill>}
       />
       <SubNav label="Community sections" items={communityTabs} current="lost-found" />
@@ -194,7 +194,7 @@ export function LostFoundPage() {
                     {r.area ?? 'area not provided'}
                   </span>
                   <span className="text-xs text-ink-muted">
-                    Recorded {formatDateShort(r.createdAt.slice(0, 10) as DateOnly)} · demo sample
+                    Recorded {formatDateShort(r.createdAt.slice(0, 10) as DateOnly)} · sample
                   </span>
                   <span>
                     <Pill tone={r.status === 'published' ? 'plain' : 'warn'}>
@@ -290,8 +290,8 @@ export function ReportNewPage() {
         Back to Lost & Found
       </Link>
       <p role="note" className="rounded-md border border-border-strong bg-mist p-3 text-sm">
-        Do not type a real ID number, phone number or exact room. This prototype keeps what you
-        enter as plain text in this browser only.
+        Do not type a real ID number, phone number or exact room. This app keeps what you enter as
+        plain text in this browser only.
       </p>
       <form
         className="flex flex-col gap-3"

@@ -245,8 +245,8 @@ export const ownLoans = (s: SportsStore, profileId: string) =>
     .map((l) => ({ loan: l, book: bookOf(s, l.bookId) }))
 
 export const bookStatusLabel: Record<'availableSnapshot' | 'onLoanSnapshot' | 'unknown', string> = {
-  availableSnapshot: 'Available in a demo snapshot (not guaranteed on the shelf)',
-  onLoanSnapshot: 'On loan in a demo snapshot',
+  availableSnapshot: 'Available in a snapshot (not guaranteed on the shelf)',
+  onLoanSnapshot: 'On loan in a snapshot',
   unknown: 'Status unknown',
 }
 

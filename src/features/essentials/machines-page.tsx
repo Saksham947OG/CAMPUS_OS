@@ -36,7 +36,7 @@ function MachineCard({
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="font-semibold text-ink">{m.label}</span>
-        <Pill tone="demo">Illustrative data</Pill>
+        <Pill tone="demo">Planning data</Pill>
       </div>
       <p className="text-sm text-ink-muted">{m.location}</p>
       <p className="mt-1 text-sm">
@@ -207,9 +207,9 @@ export function MachinesPage() {
         <p>
           {ess.rules.maxActivePerStudent} upcoming booking at a time · {ess.rules.graceMinutes}
           -minute grace period · up to {ess.rules.horizonDays} days ahead · {ess.rules.slotMinutes}
-          -minute slots · {ess.rules.cycleMinutes}-minute sample wash cycle. These are sample values
-          you can change in the simulator; real rules have not been supplied. Collisions are checked
-          only in this browser’s data, not across devices.
+          -minute slots · {ess.rules.cycleMinutes}-minute assumed wash cycle. These are default
+          values that can be changed in the operations view; real rules have not been supplied.
+          Collisions are checked only in this browser’s data, not across devices.
         </p>
       </SectionCard>
 

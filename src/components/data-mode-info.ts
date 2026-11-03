@@ -31,6 +31,6 @@ export const dataModeInfo: Record<
     label: 'Local activity',
     icon: TestTube,
     tone: 'bg-mist',
-    meaning: 'The result of a visible demonstration action. Nothing outside this app acted on it.',
+    meaning: 'The result of a visible action. Nothing outside this app acted on it.',
   },
 }

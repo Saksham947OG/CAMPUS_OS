@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { useConfirm } from '@/components/confirm-context'
+import { BookingTicket } from '@/components/booking-ticket'
 import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { reservationStateLabel } from '@/domain/sports'
@@ -21,31 +22,33 @@ import { bookPathFor, bookingTabs } from './sports-nav'
 
 function Row({ b }: { b: BookingSummary }) {
   return (
-    <li className="rounded-lg border border-border bg-surface p-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="font-semibold text-ink">
-          {b.title} · {formatDateShort(b.date)}, {formatTime(b.start)}–{formatTime(b.end)}
-        </span>
-        <span className="flex gap-1.5">
-          <Pill>{b.stateLabel}</Pill>
-          {b.disrupted ? <Pill tone="warn">May be affected</Pill> : null}
-        </span>
-      </div>
-      <p className="text-xs text-ink-muted">
-        {b.kind === 'machine'
-          ? 'Washing machine reservation (managed under Laundry)'
-          : 'Demo sports reservation'}
-      </p>
-      <div className="mt-2 flex flex-wrap gap-2">
-        <Button asChild size="sm" variant="outline" className="min-h-11">
-          <Link to={b.href}>{b.kind === 'machine' ? 'Manage under Laundry' : 'Open booking'}</Link>
-        </Button>
-        {!b.active && b.activity && bookPathFor[b.activity] ? (
-          <Button asChild size="sm" variant="ghost" className="min-h-11">
-            <Link to={bookPathFor[b.activity]!}>Book again</Link>
+    <li>
+      <BookingTicket
+        title={b.title}
+        day={formatDateShort(b.date)}
+        time={`${formatTime(b.start)}–${formatTime(b.end)}`}
+        place={
+          b.kind === 'machine' ? 'Washing machine, managed under Laundry' : 'Sports reservation'
+        }
+        status={b.disrupted ? `${b.stateLabel}, may be affected` : b.stateLabel}
+        source="Saved on this device"
+        category={b.kind === 'machine' ? 'booking' : 'sports'}
+        to={b.href}
+        tone={b.disrupted ? 'warn' : b.active ? 'good' : 'muted'}
+      >
+        <div className="mt-1 flex flex-wrap gap-2">
+          <Button asChild size="sm" variant="outline" className="min-h-11">
+            <Link to={b.href}>
+              {b.kind === 'machine' ? 'Manage under Laundry' : 'Open booking'}
+            </Link>
           </Button>
-        ) : null}
-      </div>
+          {!b.active && b.activity && bookPathFor[b.activity] ? (
+            <Button asChild size="sm" variant="ghost" className="min-h-11">
+              <Link to={bookPathFor[b.activity]!}>Book again</Link>
+            </Button>
+          ) : null}
+        </div>
+      </BookingTicket>
     </li>
   )
 }
@@ -63,7 +66,7 @@ export function MyBookingsPage() {
       {list.length === 0 ? (
         <Empty>{empty}</Empty>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-4">
           {list.map((b) => (
             <Row key={b.id} b={b} />
           ))}
@@ -157,7 +160,7 @@ export function BookingDetailPage() {
           </p>
           <p className="mt-1">
             Next steps: keep the booking and check before you go, cancel it yourself, or wait for
-            the demo simulator to resolve or cancel it.
+            the operations view to resolve or cancel it.
           </p>
         </div>
       ) : null}
@@ -315,7 +318,7 @@ export function WaitlistPage() {
                   </div>
                   {pos ? (
                     <p className="text-sm text-ink-muted">
-                      Position {pos.position} of {pos.of} recorded demo entries. This is not a
+                      Position {pos.position} of {pos.of} recorded entries. This is not a
                       campus-wide rank.
                     </p>
                   ) : null}

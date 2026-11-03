@@ -95,7 +95,7 @@ export function CampusAssistant() {
                   Campus AI
                 </h2>
                 <p className="text-xs text-ink-muted">
-                  Demo assistant · uses recorded CampusOS data · not a language model
+                  Assistant · uses recorded CampusOS data · not a language model
                 </p>
               </div>
             </div>

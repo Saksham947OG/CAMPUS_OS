@@ -222,9 +222,7 @@ export function ClassroomsPage() {
               <p className="text-xs text-ink-muted">
                 {r.capacity ? `Up to ${r.capacity} people` : 'Capacity not provided'} ·{' '}
                 {r.features?.join(', ') ?? 'equipment not provided'} ·{' '}
-                {r.bookingMode === 'approval'
-                  ? 'requests need a (simulated) review'
-                  : 'instant local booking'}
+                {r.bookingMode === 'approval' ? 'requests need a review' : 'instant local booking'}
               </p>
               <ol
                 aria-label={`${r.displayName} availability`}

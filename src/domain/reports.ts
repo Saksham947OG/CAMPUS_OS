@@ -19,10 +19,10 @@ export const REPORT_STATUSES = [
 ] as const
 export const reportStatusLabel: Record<(typeof REPORT_STATUSES)[number], string> = {
   RECEIVED: 'Recorded on this device',
-  TRIAGED: 'Looked at (simulated)',
-  IN_PROGRESS: 'Being worked on (simulated)',
-  RESOLVED: 'Marked resolved (simulated)',
-  WONT_FIX: 'Not planned (simulated)',
+  TRIAGED: 'Looked at',
+  IN_PROGRESS: 'Being worked on',
+  RESOLVED: 'Marked resolved',
+  WONT_FIX: 'Not planned',
 }
 
 export const issueSchema = z.object({

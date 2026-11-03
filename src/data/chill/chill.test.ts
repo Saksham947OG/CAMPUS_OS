@@ -418,7 +418,7 @@ describe('CH-AT-12 … CH-AT-17 recorded queue', () => {
     expect(snap.counter.text).not.toMatch(/\b0\b/)
     await env.repo.setCounterObservation(0, 'reportedComplete')
     snap = queueSnapshot(await env.repo.load(), env.nowMs())
-    expect(snap.counter.text).toMatch(/^0 people last reported at counter · Demo · /)
+    expect(snap.counter.text).toMatch(/^0 people last reported at counter · /)
   })
 
   it('CH-AT-17: progressing orders never changes the separately reported counter line', async () => {
@@ -437,7 +437,7 @@ describe('CH-AT-12 … CH-AT-17 recorded queue', () => {
     const env = setup()
     const s = queueSnapshot(await env.repo.load(), env.nowMs())
     expect(s.counter.text).toMatch(/^6 people/)
-    expect(s.preparation.text).toBe('4 recorded unfinished orders · Demo')
+    expect(s.preparation.text).toBe('4 recorded unfinished orders')
     expect(s.pickup.text).toBe('1 recorded order ready for pickup')
     expect(s.preparation.caveat).toMatch(/walk-in preparation work may be missing/)
   })
@@ -551,7 +551,7 @@ describe('CH-AT-23 / CH-AT-24 / CH-AT-25 notifications, reload, isolation', () =
     const list = await notes(env, 'demo-student-a')
     expect(list.map((n) => n.title).reverse()).toEqual([
       'Local order request submitted',
-      'Demo café accepted your order',
+      'Café accepted your order',
       'Local order is being prepared',
       'Local order ready for pickup',
     ])

@@ -7,6 +7,11 @@ export const appStateSchema = z.object({
   showDemoOps: z.boolean().optional(),
   /** Appearance choice. Missing means "system". Presentation only: it never changes data. */
   theme: z.enum(['system', 'light', 'dark']).optional(),
+  /** Display preferences (design spec §16): remembered on this device, presentation only. */
+  motion: z.enum(['system', 'reduced']).optional(),
+  sidebarCompact: z.boolean().optional(),
+  /** Route ids pinned in the sidebar, in the order the person chose. */
+  pins: z.array(z.string().min(1)).max(6).optional(),
 })
 export type AppState = z.infer<typeof appStateSchema>
 

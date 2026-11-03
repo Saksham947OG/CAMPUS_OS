@@ -19,6 +19,7 @@ export function withCampusSources(base: StorageAdapter): StorageAdapter {
       return base.mode
     },
     onModeChange: (listener) => base.onModeChange(listener),
+    onExternalChange: (listener) => base.onExternalChange(listener),
     read<T>(key: string, schema: ZodType<T>): ReadResult<T> {
       const saved = base.read(key, schema)
       const homeProfile = /^campusos:home:v1:(.+)$/.exec(key)?.[1]

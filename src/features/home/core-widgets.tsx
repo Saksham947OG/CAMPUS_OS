@@ -1,12 +1,4 @@
-import {
-  AlertCircle,
-  ArrowRight,
-  CalendarClock,
-  CheckCircle2,
-  Clock,
-  Hourglass,
-  Zap,
-} from 'lucide-react'
+import { AlertCircle, CalendarClock, CheckCircle2, Clock, Hourglass, Zap } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { CategoryIcon } from '@/components/category-icon'
@@ -303,10 +295,6 @@ export function QuickActionsWidget({ ctx }: { ctx: HomeCtx }) {
           A shortcut was replaced because its destination is no longer available.
         </p>
       ) : null}
-      <p className="mt-2 flex items-center gap-1 text-xs text-ink-muted">
-        <ArrowRight className="size-3" aria-hidden="true" /> Shortcuts marked “Coming later” open an
-        honest placeholder page.
-      </p>
     </HomeCard>
   )
 }

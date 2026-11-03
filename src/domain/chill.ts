@@ -84,9 +84,9 @@ export const handlingNoteSchema = z.object({
 })
 export type HandlingNote = z.infer<typeof handlingNoteSchema>
 export const handlingLabel: Record<(typeof HANDLING_KINDS)[number], string> = {
-  parallel_station: 'Prepared on a separate station (simulated)',
-  item_ready_in_batch: 'Item was ready in a batch (simulated)',
-  operator_exception: 'Operator exception (simulated)',
+  parallel_station: 'Prepared on a separate station',
+  item_ready_in_batch: 'Item was ready in a batch',
+  operator_exception: 'Operator exception',
   other: 'Other reason',
 }
 

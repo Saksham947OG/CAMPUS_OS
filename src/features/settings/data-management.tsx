@@ -80,12 +80,13 @@ export function ResetDemo() {
             <li>events, recurring events and occurrence changes you created</li>
             <li>tasks, checklists, focus blocks and birthday reminders you created or edited</li>
             <li>your reminder settings and reminder inbox</li>
-            <li>demo café orders, carts and the simulated café state</li>
+            <li>café orders, carts and the simulated café state</li>
             <li>Sports bookings, waitlists, gym check-ins and equipment reports</li>
             <li>Leave requests, complaints and teaching-aid reports, with their histories</li>
             <li>Simulated Campus Mail messages and the seats they produced</li>
             <li>App issue reports you filed</li>
             <li>Group meetings, invitations and time polls</li>
+            <li>Workspace notes, projects, tasks, comments and the starter content</li>
             <li>Classroom reservations, requests and simulated closures</li>
             <li>
               Lost &amp; Found reports and claims, followed clubs, sports teams and join requests
@@ -122,6 +123,7 @@ export function ResetDemo() {
       services.mail,
       services.meetings,
       services.reports,
+      services.workspace,
     )
     demoProfiles.forEach((p) => services.observations.reset(p.id))
     toast.notify('success', 'Reference data was reset on this device.')

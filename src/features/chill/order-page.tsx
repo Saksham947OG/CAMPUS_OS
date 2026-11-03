@@ -142,7 +142,7 @@ export function ChillOrderPage() {
         </div>
         {order.status === 'pending' || order.status === 'queued' || order.status === 'preparing' ? (
           <p className="mt-2 text-xs text-ink-muted">
-            No ready time is estimated. Status changes only when the demo café records them.
+            No ready time is estimated. Status changes only when the café records them.
           </p>
         ) : null}
       </section>
@@ -220,7 +220,7 @@ export function ChillOrderPage() {
               <time dateTime={order.studentReportedArrivalAt}>
                 {formatInstant(order.studentReportedArrivalAt)}
               </time>{' '}
-              (self-reported, demo).
+              (self-reported).
             </p>
           ) : (
             <Button variant="outline" className="mt-2 min-h-11" onClick={() => void markArrival()}>

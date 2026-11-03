@@ -29,7 +29,7 @@ export function MentorshipPage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Mentorship"
-        description="Create a project group and invite a simulated mentor. An invitation is never an agreement to mentor."
+        description="Create a project group and invite a mentor. An invitation is never an agreement to mentor."
         badge={<Pill tone="demo">Local · nothing delivered to any professor</Pill>}
       />
       <SubNav label="Academics sections" items={academicsTabs} current="mentorship" />
@@ -299,9 +299,7 @@ export function GroupPage() {
                   </Pill>
                 </div>
                 <p className="text-sm">Your note: {i.note}</p>
-                {i.feedback ? (
-                  <p className="text-sm">Sample feedback (simulated): {i.feedback}</p>
-                ) : null}
+                {i.feedback ? <p className="text-sm">Sample feedback: {i.feedback}</p> : null}
                 {i.status === 'accepted' ? (
                   <Link
                     to={`/academics/faculty/appointments/new?actor=${i.facultyId}&group=${g.id}`}

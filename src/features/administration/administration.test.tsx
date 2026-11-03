@@ -118,7 +118,7 @@ describe('leave journey (AD-AT-03 … AD-AT-11, AD-AT-34)', () => {
     expect(await screen.findByText(/Saved on this device as leave-/)).toHaveTextContent(
       'It has not been sent to anyone',
     )
-    expect(screen.getByText('Submitted to demo', { selector: 'span' })).toBeInTheDocument()
+    expect(screen.getByText('Submitted', { selector: 'span' })).toBeInTheDocument()
   })
 
   it('AD-AT-05: an invalid interval blocks the request, keeps what was typed and creates nothing', async () => {
@@ -184,7 +184,7 @@ describe('leave journey (AD-AT-03 … AD-AT-11, AD-AT-34)', () => {
     await user.type(screen.getByLabelText('Reason'), 'Family visit, back by 5 pm')
     await user.click(screen.getByRole('button', { name: 'Review request' }))
     await user.click(await screen.findByRole('button', { name: 'Submit new revision' }))
-    await many('Resubmitted to demo')
+    await many('Resubmitted')
     expect(screen.getByText(/2 revisions are kept/)).toBeInTheDocument()
     expect(screen.getByText(/“Add the return time”/)).toBeInTheDocument() // the earlier reason stays in the timeline
 
@@ -254,9 +254,7 @@ describe('leave journey (AD-AT-03 … AD-AT-11, AD-AT-34)', () => {
       screen.getByLabelText('Supporting proof (optional)'),
       new File(['x'], 'sample-note.pdf', { type: 'application/pdf' }),
     )
-    expect(
-      await screen.findByText(/sample-note.pdf · 1 KB · demo descriptor only/),
-    ).toBeInTheDocument()
+    expect(await screen.findByText(/sample-note.pdf · 1 KB · descriptor only/)).toBeInTheDocument()
   })
 })
 
@@ -279,7 +277,7 @@ describe('complaints and teaching aids (AD-AT-15 … AD-AT-26)', () => {
     await user.type(screen.getByLabelText('Location (optional)'), 'Sample Block')
     await user.type(screen.getByLabelText('Description'), 'Tap keeps dripping')
     await user.click(screen.getByLabelText('Urgent (my view)'))
-    await user.dblClick(screen.getByRole('button', { name: 'Submit demo ticket' }))
+    await user.dblClick(screen.getByRole('button', { name: 'Submit ticket' }))
     await waitFor(async () => expect((await services.admin.load()).tickets).toHaveLength(1))
     const tk = (await services.admin.load()).tickets[0]!
     expect(tk).toMatchObject({
@@ -316,7 +314,7 @@ describe('complaints and teaching aids (AD-AT-15 … AD-AT-26)', () => {
       screen.getByLabelText('Photo (optional)'),
       new File(['x'], 'light.png', { type: 'image/png' }),
     )
-    expect(await screen.findByText(/light.png · 1 KB · demo descriptor only/)).toBeInTheDocument()
+    expect(await screen.findByText(/light.png · 1 KB · descriptor only/)).toBeInTheDocument()
   })
 
   it('AD-AT-19 / AD-AT-20 / AD-AT-21: a resolved ticket is reopened with a reason on the same ticket, and its history stays', async () => {
@@ -328,7 +326,7 @@ describe('complaints and teaching aids (AD-AT-15 … AD-AT-26)', () => {
       await services.admin.ticketAct(id, a, 'demoMaintenance')
     await router.navigate(`/administration/complaints/${id}`)
     await heading('Plumbing ticket')
-    await many('Marked resolved (simulated)')
+    await many('Marked resolved')
     expect(screen.getByText(/Please confirm it is sorted, or reopen it/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'It is not fixed: reopen' }))
     await user.click(screen.getByRole('button', { name: 'Reopen ticket' }))
@@ -408,7 +406,7 @@ describe('complaints and teaching aids (AD-AT-15 … AD-AT-26)', () => {
     ).toBeInTheDocument()
     expect(screen.getByText(/nothing is merged for you/)).toBeInTheDocument()
     await user.type(screen.getByLabelText('Description'), 'Another tap')
-    await user.click(screen.getByRole('button', { name: 'Submit demo ticket' }))
+    await user.click(screen.getByRole('button', { name: 'Submit ticket' }))
     await waitFor(async () => expect((await services.admin.load()).tickets).toHaveLength(2))
   })
 })
@@ -470,12 +468,12 @@ describe('requests, privacy and integration (AD-AT-27 … AD-AT-33)', () => {
     await screen.findByRole('region', { name: 'My activity' })
     const activity = screen.getByRole('region', { name: 'My activity' })
     expect(await within(activity).findByText(/Personal request, Thu, 5 Nov/)).toBeInTheDocument()
-    expect(within(activity).getAllByText(/Under review \(simulated\)/).length).toBeGreaterThan(0)
+    expect(within(activity).getAllByText(/Under review/).length).toBeGreaterThan(0)
     expect(within(activity).getAllByText(/Personal request, Thu, 5 Nov/)).toHaveLength(1)
     await router.navigate('/notifications')
     await heading('Notifications')
-    const link = await screen.findByRole('link', { name: 'Open: Demo review started' })
-    expect(screen.getAllByRole('link', { name: /Open: Demo review started/ })).toHaveLength(1)
+    const link = await screen.findByRole('link', { name: 'Open: Review started' })
+    expect(screen.getAllByRole('link', { name: /Open: Review started/ })).toHaveLength(1)
     expect(link).toHaveAttribute('href', `/administration/requests/${id}`)
     await user.click(link)
     await heading('Personal request') // forwarded to the canonical leave record
@@ -494,7 +492,7 @@ describe('requests, privacy and integration (AD-AT-27 … AD-AT-33)', () => {
     a.unmount()
     renderApp('/administration/leave', { services: first.services })
     await heading('Leave and out-time')
-    expect(await screen.findByText(/Under review \(simulated\)/)).toBeInTheDocument()
+    expect(await screen.findByText(/Under review/)).toBeInTheDocument()
   })
 
   it('AD-AT-33: view filters never delete, and Reset reference data clears only through its own confirmed step', async () => {
@@ -527,7 +525,7 @@ describe('requests, privacy and integration (AD-AT-27 … AD-AT-33)', () => {
     const item = (await screen.findAllByRole('listitem')).find((li) =>
       /Personal request/.test(li.textContent ?? ''),
     )!
-    expect(item).toHaveTextContent('Submitted to demo')
+    expect(item).toHaveTextContent('Submitted')
     await act(async () => {})
   })
 })

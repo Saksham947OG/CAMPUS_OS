@@ -54,8 +54,8 @@ function TicketList({ kind, current }: { kind: 'complaint' | 'teachingAid'; curr
         title={isTeaching ? 'Classroom equipment' : 'Complaint tracker'}
         description={
           isTeaching
-            ? 'Report a faulty projector, microphone, air conditioner or smartboard and follow a simulated repair. It uses the same ticket engine as facility complaints.'
-            : 'Report a facility issue and follow a simulated response. A ticket here is a record in this app only.'
+            ? 'Report a faulty projector, microphone, air conditioner or smartboard and follow the repair. It uses the same ticket engine as facility complaints.'
+            : 'Report a facility issue and follow the response. A ticket here is a record in this app only.'
         }
         badge={<Pill tone="demo">Local · not a real work order</Pill>}
       />
@@ -391,7 +391,7 @@ function NewTicketPage({ kind }: { kind: 'complaint' | 'teachingAid' }) {
           ) : null}
           <div>
             <Button type="submit" className="min-h-11" disabled={busy}>
-              {isTeaching ? 'Submit equipment report' : 'Submit demo ticket'}
+              {isTeaching ? 'Submit equipment report' : 'Submit ticket'}
             </Button>
           </div>
         </form>
@@ -494,8 +494,7 @@ export function TicketDetailPage() {
           role="alert"
           className="rounded-md border border-border-strong bg-coffee-tint p-3 text-sm"
         >
-          <strong>Marked resolved (simulated).</strong> Please confirm it is sorted, or reopen it if
-          it is not.
+          <strong>Marked resolved.</strong> Please confirm it is sorted, or reopen it if it is not.
         </p>
       ) : null}
 
@@ -559,7 +558,7 @@ export function TicketDetailPage() {
           <dt className="text-ink-muted">Response time</dt>
           <dd>
             {t.demoTargetHours
-              ? `Demo target: ${t.demoTargetHours} hours (not an SLA)`
+              ? `Target: ${t.demoTargetHours} hours (not an SLA)`
               : 'No response target has been provided. CampusOS shows no SLA.'}
           </dd>
           <dt className="text-ink-muted">Photos</dt>
@@ -586,8 +585,8 @@ export function TicketDetailPage() {
         </dl>
         {solveMinutes !== null ? (
           <p className="mt-2 text-xs text-ink-muted">
-            Demo timing: marked resolved {solveMinutes} minutes after it was reported. This comes
-            from simulator clicks, not from any campus performance.
+            Timing: marked resolved {solveMinutes} minutes after it was reported. This comes from
+            simulator clicks, not from any campus performance.
           </p>
         ) : null}
       </SectionCard>

@@ -13,18 +13,18 @@ import { cn } from '@/lib/utils'
 import { mobileMoreRoutes, mobilePrimaryRoutes, statusLabel } from '../routes'
 
 const tabClass =
-  'flex min-h-14 flex-col items-center justify-center gap-0.5 px-1 text-[11px] font-medium text-ink'
+  'press flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-2xl px-1 text-[11px] font-medium text-ink'
 
-/** Bottom navigation, <768px: Home · Calendar · Services · More (COS-HOME-001 §3.3, DEC-019). */
+/** Floating bottom navigation, <768px: Home · Calendar · Services · Workspace · More (design spec §17). */
 export function MobileNav() {
   const [moreOpen, setMoreOpen] = useState(false)
 
   return (
     <nav
       aria-label="Main navigation, mobile"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="glass fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[var(--z-nav)] rounded-[22px] p-1 md:hidden"
     >
-      <ul className="grid grid-cols-4">
+      <ul className="grid grid-cols-5">
         {mobilePrimaryRoutes.map((route) => {
           const Icon = route.icon
           return (
@@ -33,11 +33,7 @@ export function MobileNav() {
                 to={route.path}
                 end={route.path === '/'}
                 className={({ isActive }) =>
-                  cn(
-                    tabClass,
-                    'border-t-4',
-                    isActive ? 'border-teal bg-teal-tint font-semibold' : 'border-transparent',
-                  )
+                  cn(tabClass, isActive ? 'bg-teal-tint font-semibold' : 'hover:bg-mist/70')
                 }
               >
                 <Icon className="size-5" aria-hidden="true" />
@@ -49,10 +45,7 @@ export function MobileNav() {
         <li>
           <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
             <SheetTrigger asChild>
-              <button
-                type="button"
-                className={cn(tabClass, 'w-full border-t-4 border-transparent')}
-              >
+              <button type="button" className={cn(tabClass, 'w-full hover:bg-mist/70')}>
                 <Ellipsis className="size-5" aria-hidden="true" />
                 <span>More</span>
               </button>
@@ -60,10 +53,7 @@ export function MobileNav() {
             <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto rounded-t-lg">
               <SheetHeader>
                 <SheetTitle>More</SheetTitle>
-                <SheetDescription>
-                  Pages marked “Coming later” are not part of the current build and show no live
-                  data.
-                </SheetDescription>
+                <SheetDescription>More places in CampusOS.</SheetDescription>
               </SheetHeader>
               <ul className="flex flex-col gap-1 px-4 pb-6">
                 {mobileMoreRoutes.map((route) => {

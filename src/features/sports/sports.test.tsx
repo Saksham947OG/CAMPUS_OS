@@ -178,7 +178,7 @@ describe('badminton journey (SP-T05 … SP-T07, SP-T15, SP-T26 … SP-T28)', () 
     renderApp('/notifications', { services: first.services })
     await heading('Notifications')
     expect(
-      await screen.findAllByRole('link', { name: /Open: Reservation saved in CampusOS demo/ }),
+      await screen.findAllByRole('link', { name: /Open: Reservation saved in CampusOS/ }),
     ).toHaveLength(1)
     expect(
       screen.getAllByRole('link', { name: /Open: Your local booking was cancelled/ }),
@@ -356,7 +356,7 @@ describe('simulator and time (SP-T18, SP-T20, SP-T29, SP-T30)', () => {
     await waitFor(async () =>
       expect((await services.sports.load()).waitlist[0]!.state).toBe('offered'),
     )
-    expect((await services.sports.load()).operations[0]!.actorLabel).toBe('Local demo simulator')
+    expect((await services.sports.load()).operations[0]!.actorLabel).toBe('Local operations view')
   })
 
   it('SP-T29: every Time Tax scenario is labelled illustrative and shows a signed result', async () => {
@@ -404,8 +404,10 @@ describe('simulator and time (SP-T18, SP-T20, SP-T29, SP-T30)', () => {
     })
     await services.ess.reserve(A, 'machine-1', TODAY, '12:00', 'm')
     await heading('My bookings')
-    expect(await screen.findByText(/Demo badminton court 1 · /)).toBeInTheDocument()
-    expect(await screen.findByText(/Sample washer 1 · /)).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { name: 'Demo badminton court 1' }),
+    ).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Sample washer 1' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Manage under Laundry' })).toHaveAttribute(
       'href',
       '/services/laundry/machines',

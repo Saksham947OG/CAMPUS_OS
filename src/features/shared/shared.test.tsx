@@ -83,7 +83,7 @@ describe('notification center', () => {
     await heading('Notifications')
     expect(await screen.findByText(/1 standard or optional message is hidden/)).toBeInTheDocument()
     expect(
-      screen.queryByRole('link', { name: /Ticket recorded in CampusOS demo/ }),
+      screen.queryByRole('link', { name: /Ticket recorded in CampusOS/ }),
     ).not.toBeInTheDocument() // standard, muted
     expect(
       screen.getByRole('link', { name: /Open: Your exam seating changed/ }),
@@ -92,7 +92,7 @@ describe('notification center', () => {
     await user.click(await screen.findByRole('button', { name: 'Show every category again' }))
     await router.navigate('/notifications')
     expect(
-      await screen.findByRole('link', { name: /Open: Ticket recorded in CampusOS demo/ }),
+      await screen.findByRole('link', { name: /Open: Ticket recorded in CampusOS/ }),
     ).toBeInTheDocument()
   })
 })
@@ -138,7 +138,7 @@ describe('exam pages', () => {
     await user.click(within(ops).getByRole('button', { name: 'Add a contradicting allocation' }))
     await router.navigate('/academics/exams/exam-1')
     expect(await screen.findByRole('alert')).toHaveTextContent('Needs verification')
-    expect(screen.getByRole('main').textContent).not.toMatch(/Demo Hall 7|Demo Hall 9/)
+    expect(screen.getByRole('main').textContent).not.toMatch(/Demo Hall 7|Hall 9/)
     await router.navigate('/academics/exams')
     await screen.findByTestId('demo-ops')
     const row = (await screen.findAllByRole('listitem')).find((li) =>

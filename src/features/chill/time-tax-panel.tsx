@@ -130,7 +130,7 @@ function OperationsView() {
       <h2 className="flex items-center gap-2 text-base font-semibold text-ink">
         Operations view
         <span className="rounded-full border border-border-strong bg-mist px-2 py-0.5 text-xs font-semibold">
-          Recorded in prototype · reference data
+          Recorded in this app · reference data
         </span>
       </h2>
       <p className="mt-1 text-sm text-ink-muted">

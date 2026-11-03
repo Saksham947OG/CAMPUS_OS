@@ -172,7 +172,7 @@ describe('leave (AD-AT-03 … AD-AT-15)', () => {
     const leave = await sendLeave(env)
     for (const action of ['startReview', 'approve', 'reject', 'requestChanges'] as const) {
       const r = await env.repo.leaveAct(leave.id, action, 'student', { reason: 'x' })
-      expect(!r.ok && r.error.message).toMatch(/different demo role/)
+      expect(!r.ok && r.error.message).toMatch(/different role/)
     }
     expect((await env.repo.leaveAct(leave.id, 'approve', 'demoGate')).ok).toBe(false) // wrong simulated role too
     expect((await env.repo.load()).leaves[0]!.status).toBe('submitted')
@@ -192,7 +192,7 @@ describe('leave (AD-AT-03 … AD-AT-15)', () => {
       from: 'submitted',
       to: 'underReview',
     })
-    expect((await env.notes(A)).filter((n) => n.title === 'Demo review started')).toHaveLength(1)
+    expect((await env.notes(A)).filter((n) => n.title === 'Review started')).toHaveLength(1)
   })
 
   it('AD-AT-08: a rejection needs and records a reason, and a rejected request can never reach a gate event', async () => {
@@ -220,9 +220,9 @@ describe('leave (AD-AT-03 … AD-AT-15)', () => {
     await env.ok(approverAct(env, leave.id, 'startReview'))
     expect((await approverAct(env, leave.id, 'requestChanges')).ok).toBe(false) // reason required
     await env.ok(approverAct(env, leave.id, 'requestChanges', { reason: 'Add the return time' }))
-    expect(
-      (await env.notes(A)).find((n) => n.title === 'Changes requested (simulated)')!.body,
-    ).toBe('Add the return time')
+    expect((await env.notes(A)).find((n) => n.title === 'Changes requested')!.body).toBe(
+      'Add the return time',
+    )
     expect((await env.repo.reviseLeave(B, leave.id, leaveInput())).ok).toBe(false) // not theirs
     await env.ok(
       env.repo.reviseLeave(
@@ -433,7 +433,7 @@ describe('complaints and teaching aids (AD-AT-16 … AD-AT-26)', () => {
     expect(noLoc.location).toBeUndefined()
     expect((await env.repo.submitTicket(A, ticketInput({ description: ' ' }), 'x')).ok).toBe(false)
     expect(
-      (await env.notes(A)).filter((n) => n.title === 'Ticket recorded in CampusOS demo'),
+      (await env.notes(A)).filter((n) => n.title === 'Ticket recorded in CampusOS'),
     ).toHaveLength(2)
   })
 
@@ -463,7 +463,7 @@ describe('complaints and teaching aids (AD-AT-16 … AD-AT-26)', () => {
     expect((await maint(env, ticket.id, 'start')).ok).toBe(false) // not assigned yet
     expect((await maint(env, ticket.id, 'resolve')).ok).toBe(false)
     expect((await maint(env, ticket.id, 'close')).ok).toBe(false) // submitted → closed is not allowed
-    await env.ok(maint(env, ticket.id, 'assign', { team: 'Demo facilities team A' }))
+    await env.ok(maint(env, ticket.id, 'assign', { team: 'Facilities team A' }))
     await env.ok(maint(env, ticket.id, 'awaitParts'))
     expect((await maint(env, ticket.id, 'resolve')).ok).toBe(false) // must resume first
     await env.ok(maint(env, ticket.id, 'resume'))
@@ -479,11 +479,9 @@ describe('complaints and teaching aids (AD-AT-16 … AD-AT-26)', () => {
       ['resolve', 'demoMaintenance'],
     ])
     expect(t.statusVersion).toBe(5)
-    expect(ticketStatusLabel.resolvedInDemo).toBe('Marked resolved (simulated)')
+    expect(ticketStatusLabel.resolvedInDemo).toBe('Marked resolved')
     expect((await maint(env, ticket.id, 'assign')).ok).toBe(false)
-    expect(
-      (await env.notes(A)).filter((n) => n.title === 'Demo ticket awaiting parts'),
-    ).toHaveLength(1)
+    expect((await env.notes(A)).filter((n) => n.title === 'Ticket awaiting parts')).toHaveLength(1)
   })
 
   it('AD-AT-20 / AD-AT-21: a resolved ticket is reopened on the same id with a reason, and nothing earlier is lost', async () => {
@@ -516,7 +514,7 @@ describe('complaints and teaching aids (AD-AT-16 … AD-AT-26)', () => {
     const ticket = await sendTicket(env)
     for (const action of ['assign', 'start', 'awaitParts', 'resume', 'resolve', 'close'] as const) {
       const r = await env.repo.ticketAct(ticket.id, action, 'student', { profileId: A })
-      expect(!r.ok && r.error.message).toMatch(/different demo role/)
+      expect(!r.ok && r.error.message).toMatch(/different role/)
     }
     expect((await env.repo.ticketAct(ticket.id, 'resolve', 'demoApprover')).ok).toBe(false)
     expect((await env.repo.load()).tickets[0]!.status).toBe('submitted')

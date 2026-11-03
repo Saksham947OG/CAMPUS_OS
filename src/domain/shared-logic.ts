@@ -59,7 +59,7 @@ export function changeSeat(
     version,
     updatedAt: c.nowIso,
     needsVerification: false,
-    sourceLabel: 'Fictional demo seat (not an official allotment)',
+    sourceLabel: 'Fictional seat (not an official allotment)',
     provenance: simulatedProvenance(c.nowIso),
     history: [...(base?.history ?? []), { version, at: c.nowIso, ...fields }],
   }
@@ -81,7 +81,7 @@ export function changeSeat(
 }
 
 /**
- * A seat that arrived by (simulated) email. It is versioned like any other change and carries where it
+ * A seat that arrived by email. It is versioned like any other change and carries where it
  * came from, but it sends NO message of its own: the mail module sends the single alert, so the student
  * is never told twice about one change.
  */
@@ -135,11 +135,11 @@ export function injectSeatConflict(
   const rival: SeatAllocation = {
     ...mine,
     id: c.newId('seat'),
-    hall: 'Demo Hall 9',
+    hall: 'Hall 9',
     row: '9',
     column: '9',
     needsVerification: true,
-    history: [{ version: mine.version, at: c.nowIso, hall: 'Demo Hall 9', row: '9', column: '9' }],
+    history: [{ version: mine.version, at: c.nowIso, hall: 'Hall 9', row: '9', column: '9' }],
   }
   return ok(
     {

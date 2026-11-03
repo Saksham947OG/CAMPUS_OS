@@ -59,7 +59,7 @@ export function answer(raw: string, c: AssistantContext): Answer {
   )
     return {
       text: 'I can’t book, approve, cancel or send anything for you. Those happen on their own screens, where you review and confirm them.',
-      source: 'Demo assistant',
+      source: 'CampusOS assistant',
       link: { to: '/bookings/classrooms', label: 'Open Classrooms to book yourself' },
     }
   // Honest framing questions come first, so "is this real?" is never answered with a schedule.
@@ -70,8 +70,8 @@ export function answer(raw: string, c: AssistantContext): Answer {
     )
   )
     return {
-      text: 'CampusOS is an academic demonstration. Information is sample data or created in this browser; it is not an official campus system or a live service feed.',
-      source: 'Demo labels',
+      text: 'CampusOS is a student planning tool. Information comes from supplied campus documents or is created in this browser; it is not an official campus system or a live service feed.',
+      source: 'Labels',
       link: { to: '/settings#data-labels', label: 'View data labels' },
     }
   if (has(q, /\bcapacity\b|how many (people|students|persons)|\bfit\b|at a time|how big/)) {
@@ -172,20 +172,20 @@ export function answer(raw: string, c: AssistantContext): Answer {
     if (!rec)
       return {
         text: 'No grades are recorded for this profile, so I can’t calculate.',
-        source: 'Demo grade records',
+        source: 'Grade records',
       }
     const q0 = quality(rec.past.flatMap((s) => s.courses))
     if (!q0.ok || q0.value.credits === 0)
-      return { text: 'No finalized credits are recorded.', source: 'Demo grade records' }
+      return { text: 'No finalized credits are recorded.', source: 'Grade records' }
     const credits = rec.current.courses.reduce((a, x) => a + x.credits, 0)
     const r = requiredSgpa(target, q0.value.points / q0.value.credits, q0.value.credits, credits)
     if (!r.ok) return { text: r.reason, source: 'Shared GPA calculator' }
     return {
       text:
         r.value.feasibility === 'notAchievable'
-          ? `A CGPA of ${target} is not achievable with ${credits} credits on the demo scale.`
-          : `About ${r.value.required.toFixed(2)} SGPA over ${credits} credits would reach a CGPA of ${target} (demo scale, arithmetic only).`,
-      source: 'Shared GPA calculator · demo grade scale',
+          ? `A CGPA of ${target} is not achievable with ${credits} credits on the scale.`
+          : `About ${r.value.required.toFixed(2)} SGPA over ${credits} credits would reach a CGPA of ${target} (scale, arithmetic only).`,
+      source: 'Shared GPA calculator · grade scale',
       link: { to: '/academics/grades', label: 'Open Grades & GPA' },
     }
   }
@@ -201,7 +201,7 @@ export function answer(raw: string, c: AssistantContext): Answer {
     if (!p.ok) return { text: p.reason, source: 'Shared attendance calculator' }
     const after = ((100 * first.attended) / (first.held + 1)).toFixed(1)
     return {
-      text: `${first.code}: ${p.value.current?.toFixed(1)}% now against a demo target of ${Math.round(first.target * 100)}%. Missing the next session would make it ${after}%. ${p.value.meetsTarget ? 'It meets the configured target today.' : 'It is below the target today.'} Attendance is not exam eligibility.`,
+      text: `${first.code}: ${p.value.current?.toFixed(1)}% now against a target of ${Math.round(first.target * 100)}%. Missing the next session would make it ${after}%. ${p.value.meetsTarget ? 'It meets the configured target today.' : 'It is below the target today.'} Attendance is not exam eligibility.`,
       source: 'Shared attendance calculator · self-reported counts',
       link: { to: '/academics/attendance', label: 'Open Attendance planner' },
     }
@@ -248,31 +248,31 @@ export function answer(raw: string, c: AssistantContext): Answer {
     !has(q, /fixture|team/)
   )
     return {
-      text: 'Bookings holds the local demonstration flows for sports, study spaces and classrooms. Availability and confirmations there are not live campus data.',
+      text: 'Bookings holds the reservations for sports, study spaces and classrooms. Availability and confirmations there are not live campus data.',
       source: 'Bookings (local)',
       link: { to: '/bookings', label: 'Open Bookings' },
     }
   if (has(q, /laundry|parcel|cafe|café|chill spot|\bservices?\b/))
     return {
-      text: 'Campus Services brings together Chill Spot, Laundry, Mess and Parcels. Each uses clearly labelled demo records, not provider or courier integrations.',
+      text: 'Campus Services brings together Chill Spot, Laundry, Mess and Parcels. Each uses clearly labelled records, not provider or courier integrations.',
       source: 'Services (local)',
       link: { to: '/services', label: 'Open Campus Services' },
     }
   if (has(q, /course|faculty|mentor|academic|professor/))
     return {
-      text: 'Academics includes course material, exams, faculty meeting requests, grades and attendance planners and mentorship as local demonstration workflows.',
+      text: 'Academics includes course material, exams, faculty meeting requests, grades and attendance planners and mentorship as planning workflows.',
       source: 'Academics (local)',
       link: { to: '/academics', label: 'Open Academics' },
     }
   if (has(q, /club|community|lost|found|fixture|committee/))
     return {
-      text: 'Community includes demonstration flows for clubs, Lost & Found and sports teams and fixtures.',
+      text: 'Community includes clubs, Lost & Found and sports teams and fixtures.',
       source: 'Community (local)',
       link: { to: '/community', label: 'Open Community' },
     }
   if (has(q, /administration|complaint|report|leave|ticket|track/))
     return {
-      text: `${c.openRequests ?? 0} open request${c.openRequests === 1 ? '' : 's'} are recorded for you. Statuses come from the demo simulator, not a real office.`,
+      text: `${c.openRequests ?? 0} open request${c.openRequests === 1 ? '' : 's'} are recorded for you. Statuses come from the operations view, not a real office.`,
       source: 'Your requests',
       link: { to: '/administration/requests', label: 'Open My requests' },
     }
@@ -284,6 +284,6 @@ export function answer(raw: string, c: AssistantContext): Answer {
     }
   return {
     text: 'I can’t answer that yet. I can help with finding a group time, your next exam and seat, bookings, SGPA targets, attendance, your requests and the menu.',
-    source: 'Demo assistant',
+    source: 'CampusOS assistant',
   }
 }

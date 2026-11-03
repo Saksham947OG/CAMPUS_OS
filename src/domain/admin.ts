@@ -19,9 +19,9 @@ export type ActorType = (typeof ACTOR_TYPES)[number]
 
 export const actorLabel: Record<ActorType, string> = {
   student: 'You',
-  demoApprover: 'Demo Approver (simulated)',
-  demoMaintenance: 'Demo Maintenance (simulated)',
-  demoGate: 'Demo Gate (simulated)',
+  demoApprover: 'Approver',
+  demoMaintenance: 'Maintenance',
+  demoGate: 'Gate',
 }
 
 /** Append-only. Nothing here is ever edited after the fact. */
@@ -74,10 +74,10 @@ export type LeaveStatus = (typeof LEAVE_STATUSES)[number]
 
 /** Exact wording from the spec. "Approved" never appears without its demo caveat. */
 export const leaveStatusLabel: Record<LeaveStatus, string> = {
-  submitted: 'Submitted to demo',
-  underReview: 'Under review (simulated)',
-  changesRequested: 'Changes requested (simulated)',
-  resubmitted: 'Resubmitted to demo',
+  submitted: 'Submitted',
+  underReview: 'Under review',
+  changesRequested: 'Changes requested',
+  resubmitted: 'Resubmitted',
   approvedInDemo: 'Approved locally — NOT A VALID GATE PASS',
   rejected: 'Rejected locally',
   withdrawn: 'Withdrawn',
@@ -191,10 +191,10 @@ export type TicketStatus = (typeof TICKET_STATUSES)[number]
 
 export const ticketStatusLabel: Record<TicketStatus, string> = {
   submitted: 'Submitted',
-  assigned: 'Assigned (simulated)',
-  inProgress: 'In progress (simulated)',
-  awaitingParts: 'Awaiting parts (simulated)',
-  resolvedInDemo: 'Marked resolved (simulated)',
+  assigned: 'Assigned',
+  inProgress: 'In progress',
+  awaitingParts: 'Awaiting parts',
+  resolvedInDemo: 'Marked resolved',
   reopened: 'Reopened',
   closedInDemo: 'Closed (local)',
   cancelledByReporter: 'Cancelled',
@@ -269,9 +269,5 @@ export type AdminStore = z.infer<typeof adminStoreSchema>
 export const defaultAdminConfig = (): AdminConfig => ({
   gateEnabled: true,
   cancelUntilWorkStarts: true,
-  teams: [
-    'Demo facilities team A',
-    'Demo facilities team B',
-    'Demo IT and classroom equipment team',
-  ],
+  teams: ['Facilities team A', 'Facilities team B', 'IT and classroom equipment team'],
 })

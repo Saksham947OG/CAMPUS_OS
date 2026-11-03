@@ -1,7 +1,7 @@
 import type { MailStore, SourceEmail } from '@/domain/mail'
 import { isoFromMs } from '@/lib/time'
 
-const FROM = 'bulletin@bms-demo.invalid'
+const FROM = 'bulletin@bms.invalid'
 
 /**
  * The starting Campus Mail scenario. Every address is on a reserved `.invalid` domain, so nothing
@@ -47,7 +47,7 @@ export function initialMailStore(nowMs: number): MailStore {
   return {
     schemaVersion: 1,
     config: {
-      trustedSenders: ['exams@bms-demo.invalid', 'office@bms-demo.invalid', FROM],
+      trustedSenders: ['exams@bms.invalid', 'office@bms.invalid', FROM],
       urgentWithinHours: 24,
     },
     studentKeys: { 'demo-student-a': 'DEMO-BMS-001', 'demo-student-b': 'DEMO-BMS-002' },
@@ -57,42 +57,42 @@ export function initialMailStore(nowMs: number): MailStore {
         id: 'conn-demo-student-a',
         ownerProfileId: 'demo-student-a',
         mode: 'PERSONAL',
-        accountAlias: 'demo.student.a@bms-demo.invalid',
+        accountAlias: 'student.a@bms.invalid',
         state: 'DEMO',
       },
       {
         id: 'conn-demo-student-b',
         ownerProfileId: 'demo-student-b',
         mode: 'PERSONAL',
-        accountAlias: 'demo.student.b@bms-demo.invalid',
+        accountAlias: 'demo.student.b@bms.invalid',
         state: 'DEMO',
       },
       {
         id: 'conn-demo-student-empty',
         ownerProfileId: 'demo-student-empty',
         mode: 'PERSONAL',
-        accountAlias: 'demo.student.c@bms-demo.invalid',
+        accountAlias: 'demo.student.c@bms.invalid',
         state: 'DEMO',
       },
       {
         id: 'conn-broadcast',
         ownerProfileId: null,
         mode: 'AUTHORIZED_BROADCAST',
-        accountAlias: 'bulletin@bms-demo.invalid',
+        accountAlias: 'bulletin@bms.invalid',
         state: 'DEMO',
       },
     ],
     emails: [
       seed(
         'seed-weekly',
-        'BMS Weekly Update (Demo)',
+        'BMS Weekly Update',
         'A sample weekly bulletin. Nothing in it is real.\n\nThis week: sample lecture notes, a sample reading list.',
         'ACADEMIC',
         100,
       ),
       seed(
         'seed-clubs',
-        'Club Applications Open (Demo)',
+        'Club Applications Open',
         'A sample announcement that club applications are open. No link is provided on this device.',
         'CLUB',
         1500,

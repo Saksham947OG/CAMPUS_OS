@@ -61,9 +61,7 @@ describe('Report an issue', () => {
     await router.navigate('/help/report')
     await heading('Report an issue')
     const ops = await screen.findByTestId('demo-ops')
-    await user.click(
-      await within(ops).findByRole('button', { name: 'Marked resolved (simulated)' }),
-    )
+    await user.click(await within(ops).findByRole('button', { name: 'Marked resolved' }))
     await waitFor(async () =>
       expect((await services.reports.load()).issues[0]!.status).toBe('RESOLVED'),
     )

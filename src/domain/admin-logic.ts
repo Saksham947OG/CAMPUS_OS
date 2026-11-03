@@ -252,7 +252,7 @@ export function reviseLeave(
       ev,
       'Local request saved',
       afterApproval
-        ? 'Your change needs a new demo review. The earlier demo approval no longer applies.'
+        ? 'Your change needs a new review. The earlier approval no longer applies.'
         : 'Your updated request is stored on this device.',
     ),
   ])
@@ -318,7 +318,7 @@ export function leaveAct(
   opts: { expectedRevision?: number; expectedVersion?: number; reason?: string } = {},
 ): Change<LeaveRequest> {
   if (actor !== LEAVE_ACTOR[action])
-    return fail('That step belongs to a different demo role, not to you.')
+    return fail('That step belongs to a different role, not to you.')
   const l = findLeave(s, id)
   if (!l) return fail('That request was not found.')
   if (
@@ -337,7 +337,7 @@ export function leaveAct(
       if (l.status !== 'submitted' && l.status !== 'resubmitted')
         return fail('Only a submitted request can start review.')
       to = 'underReview'
-      title = 'Demo review started'
+      title = 'Review started'
       body = 'A simulated approver started reviewing your request.'
       break
     case 'requestChanges':
@@ -345,7 +345,7 @@ export function leaveAct(
         return fail('Changes can be requested only while a request is under review.')
       if (!reason) return fail('A reason is required when requesting changes.')
       to = 'changesRequested'
-      title = 'Changes requested (simulated)'
+      title = 'Changes requested'
       body = reason
       break
     case 'approve':
@@ -379,7 +379,7 @@ export function leaveAct(
       break
     case 'logDeparture':
       if (!s.config.gateEnabled)
-        return fail('Demo gate actions are switched off in the planning policy.')
+        return fail('Gate actions are switched off in the planning policy.')
       if (l.status !== 'approvedInDemo' || !l.decision || l.decision.revision !== l.revision)
         return fail(
           'A departure can be logged only for a request approved on this device for its current revision.',
@@ -391,7 +391,7 @@ export function leaveAct(
       break
     case 'logReturn':
       if (!s.config.gateEnabled)
-        return fail('Demo gate actions are switched off in the planning policy.')
+        return fail('Gate actions are switched off in the planning policy.')
       if (l.status !== 'gateDepartureLogged' || !l.gate.departedAt)
         return fail('A return can be logged only after a departure was logged on this device.')
       to = 'gateReturnLogged'
@@ -502,7 +502,7 @@ export function submitTicket(
       input.profileId,
       id,
       ev,
-      'Ticket recorded in CampusOS demo',
+      'Ticket recorded in CampusOS',
       'It is stored in this on this device only. Nobody at the campus has received it, and no response time is promised.',
     ),
   ])
@@ -547,7 +547,7 @@ export function ticketAct(
   } = {},
 ): Change<Ticket> {
   if (!TICKET_ACTOR[action].includes(actor))
-    return fail('That step belongs to a different demo role, not to you.')
+    return fail('That step belongs to a different role, not to you.')
   const t = findTicket(s, id)
   if (!t) return fail('That ticket was not found.')
   if (actor === 'student' && t.ownerProfileId !== opts.profileId)
@@ -600,7 +600,7 @@ export function ticketAct(
       if (opts.demoPriority) patch.demoPriority = opts.demoPriority
       if (opts.demoTargetHours) patch.demoTargetHours = opts.demoTargetHours
       title = 'Assignment simulated'
-      body = `Demo assignment: ${patch.teamLabel}. This is not a real team or a promise of a visit.`
+      body = `Assignment: ${patch.teamLabel}. This is not a real team or a promise of a visit.`
       break
     case 'start':
       if (t.status !== 'assigned' && t.status !== 'reopened')
@@ -613,7 +613,7 @@ export function ticketAct(
       if (t.status !== 'assigned' && t.status !== 'inProgress')
         return fail('Parts can be awaited only once a ticket is assigned or in progress.')
       to = 'awaitingParts'
-      title = 'Demo ticket awaiting parts'
+      title = 'Ticket awaiting parts'
       body = 'Simulated: the ticket is waiting for parts.'
       break
     case 'resume':

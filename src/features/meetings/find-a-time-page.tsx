@@ -347,8 +347,8 @@ export function FindATimePage() {
       <SectionCard id="ft-sugg-h" title="2. Best times">
         <p className="text-xs text-ink-muted">
           Based on recorded schedules. A person with no recorded timetable is never treated as free.
-          Ranking uses demo weights (optional guests 40%, preference 25%, small idle gaps 20%, room
-          match 15%), not validated ones.
+          Ranking uses weights (optional guests 40%, preference 25%, small idle gaps 20%, room match
+          15%), not validated ones.
         </p>
         {people.length === 0 ? (
           <div className="mt-2">
@@ -451,9 +451,7 @@ export function FindATimePage() {
                     {statusText(s).label} ·{' '}
                     {r.capacity ? `Up to ${r.capacity} people` : 'Capacity not provided'}
                     {groupSize ? ' (unverified for your group size)' : ''} ·{' '}
-                    {r.bookingMode === 'approval'
-                      ? 'needs a (simulated) review'
-                      : 'instant local booking'}
+                    {r.bookingMode === 'approval' ? 'needs a review' : 'instant local booking'}
                   </span>
                 </span>
                 <Button

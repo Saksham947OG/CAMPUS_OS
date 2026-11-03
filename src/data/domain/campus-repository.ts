@@ -21,6 +21,7 @@ import {
   type Audience,
   type BirthdayReminder,
   type CalendarEvent,
+  type Deadline,
   type FocusBlock,
   type OccurrenceException,
   type PersonalTask,
@@ -84,6 +85,8 @@ export interface CampusRepositoryOptions {
   newId: (prefix: string) => string
   /** Read-only bookings owned by another module (e.g. machine reservations), merged in so a record exists once. */
   extraBookings?: (profileId: string) => BookingRef[]
+  /** Read-only deadlines owned by other modules (Workspace team tasks). */
+  extraDeadlines?: (profileId: string) => Deadline[]
 }
 
 export const domainStorageKey = (profileId: string) =>
@@ -233,7 +236,10 @@ export function createCampusRepository(options: CampusRepositoryOptions): Campus
         ),
         ...user.exceptions,
       ],
-      deadlines: visible(keepValid(seed.deadlines, deadlineSchema, 'deadline', warnings)),
+      deadlines: [
+        ...visible(keepValid(seed.deadlines, deadlineSchema, 'deadline', warnings)),
+        ...(options.extraDeadlines?.(profileId) ?? []),
+      ],
       tasks: [...seedTasks, ...user.tasks],
       focusBlocks: user.focusBlocks,
       birthdays: [...birthdaysSeed, ...user.birthdays],

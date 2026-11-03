@@ -126,8 +126,8 @@ export const CLAIM_STATUSES = [
 export type ClaimStatus = (typeof CLAIM_STATUSES)[number]
 export const claimStatusLabel: Record<ClaimStatus, string> = {
   requested: 'Requested (not yet reviewed)',
-  reviewPending: 'Under demo review',
-  demoApproved: 'Approved locally (simulated)',
+  reviewPending: 'Under review',
+  demoApproved: 'Approved locally',
   demoRejected: 'Not approved locally',
   withdrawn: 'Withdrawn',
 }
@@ -216,7 +216,7 @@ export type TeamStatus = (typeof TEAM_STATUSES)[number]
 export const teamStatusLabel: Record<TeamStatus, string> = {
   recruiting: 'Recruiting',
   rosterClosed: 'Roster closed',
-  submitted: 'Submitted for demo approval',
+  submitted: 'Submitted for approval',
   approvedDemo: 'Approved locally (simulated committee)',
   declinedDemo: 'Declined locally',
   withdrawn: 'Cancelled by captain',

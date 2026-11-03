@@ -129,10 +129,10 @@ describe('faculty meetings', () => {
     await heading('New faculty meeting request')
     await user.click(screen.getByRole('button', { name: 'Record request locally' }))
     expect(await screen.findByRole('alert')).toHaveTextContent(/Choose a published window/)
-    await user.selectOptions(screen.getByLabelText('Published sample window'), 'av-a-1')
+    await user.selectOptions(screen.getByLabelText('Published window'), 'av-a-1')
     await user.click(screen.getByRole('button', { name: 'Record request locally' }))
     await heading(/Meeting with Demo Faculty A/)
-    expect(await screen.findByText('Awaiting demo response')).toBeInTheDocument()
+    expect(await screen.findByText('Awaiting response')).toBeInTheDocument()
     expect(screen.getByText(/No email, push or message was sent/)).toBeInTheDocument()
     expect((await services.academics.load()).meetings).toHaveLength(1)
     expect(services.academics.bookingRefs(A)).toHaveLength(0)
@@ -174,7 +174,7 @@ describe('faculty meetings', () => {
     ).toBeGreaterThan(0)
     await router.navigate('/calendar?view=agenda&date=2026-11-04')
     expect(
-      (await screen.findAllByText(/Meeting with Demo Faculty A \(demo, not official\)/)).length,
+      (await screen.findAllByText(/Meeting with Demo Faculty A \(not official\)/)).length,
     ).toBeGreaterThan(0)
     // One canonical record: the profile's data holds exactly one entry for it.
     const data = await services.campus.load(A)
@@ -217,7 +217,7 @@ describe('faculty meetings', () => {
     ).toBeInTheDocument()
     await user.click(screen.getByRole('link', { name: 'Request an appointment' }))
     await heading('New BMS Office request')
-    await user.selectOptions(screen.getByLabelText('Published sample window'), 'av-o-1')
+    await user.selectOptions(screen.getByLabelText('Published window'), 'av-o-1')
     await user.click(screen.getByRole('button', { name: 'Record request locally' }))
     await heading(/Meeting with Demo BMS Office/)
   })

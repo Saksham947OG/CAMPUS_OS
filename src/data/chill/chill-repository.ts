@@ -126,7 +126,7 @@ export function notificationFor(
       }
     case 'queued':
       return {
-        title: 'Demo café accepted your order',
+        title: 'Café accepted your order',
         body: `${n} is in the preparation queue.`,
         significance: 'standard',
       }
@@ -439,12 +439,9 @@ export function createChillRepository(options: ChillRepositoryOptions): ChillRep
             metric: 'counterPeople',
             numericValue,
             asOf: nowIso(),
-            sourceLabel: 'Reported in the local demo (not a live count)',
+            sourceLabel: 'Reported on this device (not a live count)',
             coverage: numericValue === null ? 'unknown' : coverage,
-            provenance: simulatedProvenance(
-              nowIso(),
-              'Reported in the local demo (not a live count)',
-            ),
+            provenance: simulatedProvenance(nowIso(), 'Reported on this device (not a live count)'),
           },
         },
       }))
@@ -461,11 +458,11 @@ export function createChillRepository(options: ChillRepositoryOptions): ChillRep
             numericValue: null,
             reportedState: state,
             asOf: nowIso(),
-            sourceLabel: 'Reported in the local demo (not a live report)',
+            sourceLabel: 'Reported on this device (not a live report)',
             coverage: state === 'unknown' ? 'unknown' : 'reportedComplete',
             provenance: simulatedProvenance(
               nowIso(),
-              'Reported in the local demo (not a live report)',
+              'Reported on this device (not a live report)',
             ),
           },
         },

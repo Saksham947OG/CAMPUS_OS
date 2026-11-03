@@ -22,8 +22,11 @@ export function busyOf(
     .filter(isTimed)
     .filter((i) => i.blocksTime && !isCancelled(i) && i.recordId !== ignoreRecordId)
     .map((i) => ({ start: instantMs(i.date, i.time.start), end: instantMs(i.date, i.time.end) }))
-  // A recorded timetable is what makes someone plannable. A few personal events do not.
-  const recorded = data.series.length > 0
+  // A recorded timetable is what makes someone plannable: recurring classes, or a supplied schedule made of
+  // dated timed events (the source-backed personas). A few personal events do not.
+  const recorded =
+    data.series.length > 0 ||
+    data.events.some((e) => e.provenance.dataMode === 'provided' && e.timing.kind === 'timed')
   return { busy, coverage: recorded ? 'known' : 'unknown' }
 }
 

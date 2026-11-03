@@ -13,6 +13,7 @@ import { ClassroomStateContext, createClassroomStateStore } from './classrooms-s
 import { CommunityStateContext, createCommunityStateStore } from './community-store'
 import { SharedStateContext, createSharedStateStore } from './shared-store'
 import { SportsStateContext, createSportsStateStore } from './sports-store'
+import { WorkspaceStateContext, createWorkspaceStateStore } from './workspace-store'
 import { EssWatcher } from './ess-watcher'
 import { createDataStore, DataStoreContext } from './data-store'
 import { createServices, ServicesContext, type Services } from './services'
@@ -31,6 +32,7 @@ export function AppProviders({ children, services }: { children: ReactNode; serv
   const [classroomStore] = useState(() => createClassroomStateStore(resolved))
   const [mailStore] = useState(() => createMailStateStore(resolved))
   const [meetingStore] = useState(() => createMeetingStateStore(resolved))
+  const [workspaceStore] = useState(() => createWorkspaceStateStore(resolved))
 
   useEffect(() => {
     void store.getState().init()
@@ -44,6 +46,7 @@ export function AppProviders({ children, services }: { children: ReactNode; serv
     void classroomStore.getState().refresh()
     void mailStore.getState().refresh()
     void meetingStore.getState().refresh()
+    void workspaceStore.getState().refresh()
   }, [
     store,
     chillStore,
@@ -56,6 +59,7 @@ export function AppProviders({ children, services }: { children: ReactNode; serv
     classroomStore,
     mailStore,
     meetingStore,
+    workspaceStore,
   ])
 
   // Keep the data store in step with the active persona.
@@ -84,14 +88,16 @@ export function AppProviders({ children, services }: { children: ReactNode; serv
                         <ClassroomStateContext.Provider value={classroomStore}>
                           <MailStateContext.Provider value={mailStore}>
                             <MeetingStateContext.Provider value={meetingStore}>
-                              <TooltipProvider delayDuration={300}>
-                                <Toaster>
-                                  <ConfirmProvider>
-                                    <EssWatcher />
-                                    {children}
-                                  </ConfirmProvider>
-                                </Toaster>
-                              </TooltipProvider>
+                              <WorkspaceStateContext.Provider value={workspaceStore}>
+                                <TooltipProvider delayDuration={300}>
+                                  <Toaster>
+                                    <ConfirmProvider>
+                                      <EssWatcher />
+                                      {children}
+                                    </ConfirmProvider>
+                                  </Toaster>
+                                </TooltipProvider>
+                              </WorkspaceStateContext.Provider>
                             </MeetingStateContext.Provider>
                           </MailStateContext.Provider>
                         </ClassroomStateContext.Provider>

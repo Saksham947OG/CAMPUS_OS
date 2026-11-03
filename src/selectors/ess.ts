@@ -91,8 +91,8 @@ export const operationalText: Record<Machine['operationalStatus'], string> = {
   unknown: 'Working status unknown',
 }
 export const physicalText: Record<Machine['physicalStatus'], string> = {
-  available: 'Reported free (demo report)',
-  occupied: 'Reported in use (demo report)',
+  available: 'Reported free (report)',
+  occupied: 'Reported in use (report)',
   unknown: 'Physical status unknown',
 }
 
@@ -184,7 +184,7 @@ export function messOccupancy(s: EssStore, nowMs: number) {
     text:
       s.messOptIn.length === 0
         ? 'No one has joined self-reporting, so there is no sample to show.'
-        : `${fresh} ${fresh === 1 ? 'person has' : 'people have'} self-reported being in the mess (sample of ${s.messOptIn.length} demo ${s.messOptIn.length === 1 ? 'profile' : 'profiles'}).`,
+        : `${fresh} ${fresh === 1 ? 'person has' : 'people have'} self-reported being in the mess (a self-reported sample of ${s.messOptIn.length} ${s.messOptIn.length === 1 ? 'profile' : 'profiles'}).`,
     caveat:
       'Self-reported sample from personas only. Not actual occupied seats, not a live count, and capacity is unknown, so no percentage or free-seat number is shown.',
   }

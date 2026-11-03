@@ -24,8 +24,8 @@ export function UrgentSignalBanner() {
       data-testid="urgent-signal"
     >
       <p className="flex items-center gap-2 text-sm font-semibold text-ink">
-        <AlertTriangle className="size-4" aria-hidden="true" /> Urgent campus signal · simulated
-        email, not an official allotment
+        <AlertTriangle className="size-4" aria-hidden="true" /> Urgent campus signal email, not an
+        official allotment
       </p>
       <p className="mt-1 text-lg font-semibold text-ink">
         {sig.examName}: {sig.seat}

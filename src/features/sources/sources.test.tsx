@@ -18,7 +18,7 @@ it('renders the source-backed dashboard and switches all three personalized view
   expect(
     await screen.findByRole('heading', { level: 1, name: /Ananya Sharma/ }),
   ).toBeInTheDocument()
-  expect(await screen.findByText(/53–69 min/)).toBeInTheDocument()
+  expect((await screen.findAllByText(/59–81 min/)).length).toBeGreaterThan(0)
   await user.click(screen.getByRole('button', { name: /^Persona:/ }))
   await user.click(screen.getByRole('menuitemradio', { name: /Abeer Sethi/ }))
   expect(await screen.findByRole('heading', { level: 1, name: /Abeer Sethi/ })).toBeInTheDocument()

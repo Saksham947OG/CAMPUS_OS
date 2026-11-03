@@ -312,7 +312,7 @@ describe('checkout, order and pickup (CH2-AT-11 … CH2-AT-20)', () => {
     expect(await e.bad(e.repo.operatorTransition(o.id, 'rejected', 'Sold out'))).toBeTruthy()
     expect(await e.bad(e.repo.flagException(o.id, '  '))).toMatch(/what needs attention/)
     const before = recordedBacklog((await e.repo.load()).orders).unfinished
-    const flagged = await e.ok(e.repo.flagException(o.id, 'Item may be sold out (simulated)'))
+    const flagged = await e.ok(e.repo.flagException(o.id, 'Item may be sold out'))
     expect(flagged.order.status).toBe('queued')
     expect(flagged.order.exceptionFlag).toMatchObject({
       kind: 'needsAttention',

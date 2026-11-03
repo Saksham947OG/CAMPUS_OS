@@ -184,7 +184,7 @@ export function createCommunityRepository(o: CommunityRepositoryOptions): Commun
         refs.push({
           id: e.id,
           ownerProfileId: profileId,
-          resource: `${e.title} (${club?.name ?? 'club'}, demo event)`,
+          resource: `${e.title} (${club?.name ?? 'club'}, event)`,
           date: e.date,
           start: e.start,
           end: e.end,
@@ -202,7 +202,7 @@ export function createCommunityRepository(o: CommunityRepositoryOptions): Commun
         refs.push({
           id: f.id,
           ownerProfileId: profileId,
-          resource: `${f.title} (demo fixture)`,
+          resource: `${f.title} (fixture)`,
           date: f.date,
           start: f.start,
           end: f.end,

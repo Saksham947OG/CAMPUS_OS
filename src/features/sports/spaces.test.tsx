@@ -31,7 +31,7 @@ describe('hub and library (SR-AT-01, SR-AT-03, SR-AT-05, SR-AT-09)', () => {
     const user = userEvent.setup()
     renderApp('/bookings/library')
     await heading('Library')
-    expect(await screen.findByText(/Demo hours · not supplied by the campus/)).toBeInTheDocument()
+    expect(await screen.findByText(/Hours · not supplied by the campus/)).toBeInTheDocument()
     expect(
       screen.getByText(/Unknown. No occupancy snapshot has been recorded./),
     ).toBeInTheDocument()
@@ -69,7 +69,7 @@ describe('hub and library (SR-AT-01, SR-AT-03, SR-AT-05, SR-AT-09)', () => {
     expect(screen.queryByText(/Demo Book One/)).not.toBeInTheDocument()
     await user.clear(screen.getByLabelText('Search titles and authors'))
     await user.type(screen.getByLabelText('Search titles and authors'), 'zzzz')
-    expect(await screen.findByText(/No demo book matches/)).toBeInTheDocument()
+    expect(await screen.findByText(/No book matches/)).toBeInTheDocument()
   })
 
   it('SR-AT-10 / SR-AT-11: loans show a date-only due date with no fine, and another profile sees nothing', async () => {
@@ -94,7 +94,7 @@ describe('hub and library (SR-AT-01, SR-AT-03, SR-AT-05, SR-AT-09)', () => {
     })
     expect(await screen.findByText(/date only: no time is implied/)).toBeInTheDocument()
     const body = screen.getByRole('main').textContent ?? ''
-    expect(body).toMatch(/Not recorded as returned. Only the demo simulator can record a return/)
+    expect(body).toMatch(/Not recorded as returned. Only the operations view can record a return/)
     expect(body).not.toMatch(/fine of|overdue fee|late fee|returned successfully|\bpaid\b/i)
     expect(screen.queryByRole('button', { name: /return/i })).not.toBeInTheDocument() // a student cannot certify a return
     expect(body).not.toMatch(/Demo Book Two/)
@@ -239,7 +239,7 @@ describe('integration and honesty (SR-AT-23, SR-AT-24, SR-AT-27, SR-AT-31, SR-AT
     a.unmount()
     renderApp('/bookings/my', { services: first.services })
     await heading('My bookings')
-    expect(await screen.findByText(/Demo music room · /)).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Demo music room' })).toBeInTheDocument()
   })
 
   it('SR-AT-31: every space Time Tax scenario is hypothetical, shows its formula, and never goes below zero', async () => {

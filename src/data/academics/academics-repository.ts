@@ -152,7 +152,7 @@ export function createAcademicsRepository(o: AcademicsRepositoryOptions): Academ
           return {
             id: m.id,
             ownerProfileId: m.ownerProfileId,
-            resource: `Meeting with ${who} (demo, not official)`,
+            resource: `Meeting with ${who} (not official)`,
             date: m.date,
             start: m.start,
             end: m.end,

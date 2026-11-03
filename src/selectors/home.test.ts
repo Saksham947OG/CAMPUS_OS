@@ -199,12 +199,12 @@ describe('H-T16 Campus Pulse and privacy', () => {
 })
 
 describe('My Activity, Mess Preview, Time Tax (H-T17)', () => {
-  it('shows sample bookings only, split into active and history, each labelled as sample', async () => {
+  it('shows illustrative bookings only, split into active and history, each carrying its data-mode label', async () => {
     const { load, now } = makeRepo()
     const { active, history } = activityEntries(await load(), now)
     expect(active.map((e) => e.id)).toEqual(['bk-a-1'])
     expect(history.map((e) => e.id)).toEqual(['bk-a-2'])
-    expect(active[0]!.status).toMatch(/sample/i)
+    expect(active[0]!.status).toBe('Booked')
     expect(active[0]!.mode).toBe('demoSeed')
   })
 

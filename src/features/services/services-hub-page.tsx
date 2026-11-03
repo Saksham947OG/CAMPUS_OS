@@ -2,6 +2,7 @@ import { Coffee } from 'lucide-react'
 import { Link } from 'react-router'
 import { CapacityBoard } from './capacity-board'
 import { PageHeader } from '@/components/page-header'
+import { ServiceArt } from '@/components/service-art'
 import { RouteStatusBadge } from '@/components/status-badge'
 import { routeById, routes } from '@/app/routes'
 
@@ -22,14 +23,17 @@ export function ServicesHubPage() {
             <li key={r.id}>
               <Link
                 to={r.path}
-                className="flex h-full flex-col gap-1 rounded-lg border border-border bg-surface p-4 shadow-card hover:bg-mist"
+                className="lift flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface shadow-card"
               >
-                <span className="flex items-center gap-2 text-base font-semibold text-ink">
-                  <Icon className="size-5 text-coffee" aria-hidden="true" /> {r.label}
-                </span>
-                <span className="text-sm text-ink-muted">{r.summary}</span>
-                <span className="mt-1">
-                  <RouteStatusBadge status={r.status} />
+                <ServiceArt id={r.id} />
+                <span className="flex flex-1 flex-col gap-1 p-4">
+                  <span className="flex items-center gap-2 text-base font-semibold text-ink">
+                    <Icon className="size-5 text-coffee" aria-hidden="true" /> {r.label}
+                  </span>
+                  <span className="text-sm text-ink-muted">{r.summary}</span>
+                  <span className="mt-1">
+                    <RouteStatusBadge status={r.status} />
+                  </span>
                 </span>
               </Link>
             </li>
@@ -40,9 +44,8 @@ export function ServicesHubPage() {
         <CapacityBoard />
       </div>
       <p className="mt-4 max-w-3xl text-sm text-ink-muted">
-        Services use supplied campus information and clearly labelled planning assumptions. Other
-        campus services (bookings, academics, administration and the rest) are not part of this
-        prototype yet.
+        Services use supplied campus information and clearly labelled planning assumptions.
+        Bookings, academics, administration and the rest are in their own sections.
       </p>
     </article>
   )

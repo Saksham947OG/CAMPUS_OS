@@ -251,7 +251,7 @@ export type FaultReport = z.infer<typeof faultReportSchema>
 export const demoOperationSchema = z.object({
   id,
   action: z.string().min(1).max(60),
-  actorLabel: z.literal('Local demo simulator'),
+  actorLabel: z.literal('Local operations view'),
   entityId: id,
   previous: z.string().max(200),
   next: z.string().max(200),

@@ -14,6 +14,13 @@ function applyTheme(theme: ThemeChoice) {
   else document.documentElement.dataset.theme = theme
 }
 
+/** Applies the motion choice to the document so the CSS can calm decorative movement. */
+function applyMotion(motion: 'system' | 'reduced') {
+  if (typeof document === 'undefined') return
+  if (motion === 'system') delete document.documentElement.dataset.motion
+  else document.documentElement.dataset.motion = 'reduced'
+}
+
 export type AppStatus = 'loading' | 'ready' | 'error'
 
 export interface AppStoreState {
@@ -28,6 +35,20 @@ export interface AppStoreState {
   /** Appearance only. Persisted on this device. */
   theme: ThemeChoice
   setTheme(theme: ThemeChoice): void
+  /** Reduce decorative movement (hover lift, drifting illustrations) even when the device allows it. */
+  motion: 'system' | 'reduced'
+  setMotion(motion: 'system' | 'reduced'): void
+  sidebarCompact: boolean
+  setSidebarCompact(compact: boolean): void
+  /** Route ids pinned in the sidebar. Their order is the person's, never inferred. */
+  pins: readonly string[]
+  setPins(pins: readonly string[]): void
+  /** Workspace focus mode: the shell recedes so the page fills the window. Not remembered between visits. */
+  focusMode: boolean
+  setFocusMode(on: boolean): void
+  /** The floating command panel (Ctrl/⌘ K). */
+  commandOpen: boolean
+  setCommandOpen(on: boolean): void
   init(): Promise<void>
   /** Switches the active persona. Returns false if the id is unknown. */
   setActiveProfile(id: string): boolean
@@ -46,6 +67,9 @@ export function createAppStore(services: Services): AppStore {
       activeProfileId: s.activeProfileId,
       showDemoOps: s.showDemoOps,
       theme: s.theme,
+      motion: s.motion,
+      sidebarCompact: s.sidebarCompact,
+      pins: [...s.pins],
     })
   }
 
@@ -56,6 +80,31 @@ export function createAppStore(services: Services): AppStore {
     storageMode: services.storage.mode,
     showDemoOps: false,
     theme: 'system',
+    motion: 'system',
+    sidebarCompact: false,
+    pins: [],
+    focusMode: false,
+    commandOpen: false,
+    setCommandOpen(commandOpen) {
+      set({ commandOpen })
+    },
+
+    setMotion(motion) {
+      set({ motion })
+      applyMotion(motion)
+      persist()
+    },
+    setSidebarCompact(sidebarCompact) {
+      set({ sidebarCompact })
+      persist()
+    },
+    setPins(pins) {
+      set({ pins: pins.slice(0, 6) })
+      persist()
+    },
+    setFocusMode(focusMode) {
+      set({ focusMode })
+    },
 
     setShowDemoOps(on) {
       set({ showDemoOps: on })
@@ -89,9 +138,13 @@ export function createAppStore(services: Services): AppStore {
           activeProfileId: active,
           showDemoOps: saved?.showDemoOps === true,
           theme: saved?.theme ?? 'system',
+          motion: saved?.motion ?? 'system',
+          sidebarCompact: saved?.sidebarCompact === true,
+          pins: saved?.pins ?? [],
           storageMode: services.storage.mode,
         })
         applyTheme(saved?.theme ?? 'system')
+        applyMotion(saved?.motion ?? 'system')
       } catch (error) {
         set({
           status: 'error',

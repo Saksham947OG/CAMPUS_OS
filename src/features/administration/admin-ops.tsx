@@ -17,9 +17,9 @@ import { useAdmin } from './admin-hooks'
 
 const nameOf = (id: string) => demoProfiles.find((p) => p.id === id)?.displayName ?? id
 const ROLES: { id: ActorType; label: string }[] = [
-  { id: 'demoApprover', label: 'Demo Approver' },
-  { id: 'demoMaintenance', label: 'Demo Maintenance' },
-  { id: 'demoGate', label: 'Demo Gate' },
+  { id: 'demoApprover', label: 'Approver' },
+  { id: 'demoMaintenance', label: 'Maintenance' },
+  { id: 'demoGate', label: 'Gate' },
 ]
 
 /**
@@ -69,8 +69,8 @@ export function AdminOps() {
         ))}
       </fieldset>
       <p className="text-xs text-ink-muted">
-        Acting as <strong>{ROLES.find((r) => r.id === role)!.label} (simulated)</strong>. No real
-        person, team or office is involved.
+        Acting as <strong>{ROLES.find((r) => r.id === role)!.label}</strong>. No real person, team
+        or office is involved.
       </p>
 
       {role === 'demoApprover' ? (
@@ -97,7 +97,7 @@ export function AdminOps() {
                       onClick={() =>
                         void act(
                           () => repo.leaveAct(l.id, 'startReview', 'demoApprover', seen),
-                          'Review started (simulated).',
+                          'Review started.',
                         )
                       }
                     >
@@ -117,7 +117,7 @@ export function AdminOps() {
                                 ...seen,
                                 reason: why(l.id),
                               }),
-                            'Approved locally (simulated). Not a valid gate pass.',
+                            'Approved locally. Not a valid gate pass.',
                           )
                         }
                       >
@@ -134,7 +134,7 @@ export function AdminOps() {
                                 ...seen,
                                 reason: why(l.id),
                               }),
-                            'Changes requested (simulated).',
+                            'Changes requested.',
                           )
                         }
                       >
@@ -151,7 +151,7 @@ export function AdminOps() {
                                 ...seen,
                                 reason: why(l.id),
                               }),
-                            'Rejected locally (simulated).',
+                            'Rejected locally.',
                           )
                         }
                       >
@@ -176,13 +176,11 @@ export function AdminOps() {
               onChange={(e) =>
                 void act(
                   () => repo.setPolicy({ gateEnabled: e.target.checked }),
-                  e.target.checked
-                    ? 'Demo gate actions switched on.'
-                    : 'Demo gate actions switched off.',
+                  e.target.checked ? 'Gate actions switched on.' : 'Gate actions switched off.',
                 )
               }
             />
-            Demo gate verification is on (a planning policy, not a campus rule)
+            Gate verification is on (a planning policy, not a campus rule)
           </label>
           <ul className="flex flex-col gap-2">
             {admin.leaves.filter((l) =>
@@ -212,7 +210,7 @@ export function AdminOps() {
                               expectedRevision: l.revision,
                               expectedVersion: l.statusVersion,
                             }),
-                          'Departure logged (simulated).',
+                          'Departure logged.',
                         )
                       }
                     >
@@ -229,7 +227,7 @@ export function AdminOps() {
                               expectedRevision: l.revision,
                               expectedVersion: l.statusVersion,
                             }),
-                          'Return logged (simulated).',
+                          'Return logged.',
                         )
                       }
                     >
@@ -272,7 +270,7 @@ export function AdminOps() {
                 <div className="mt-1 flex flex-wrap items-end gap-2">
                   {t.status === 'submitted' || t.status === 'reopened' ? (
                     <>
-                      <Field label="Demo team">
+                      <Field label="Team">
                         {(a) => (
                           <select
                             {...a}
@@ -289,7 +287,7 @@ export function AdminOps() {
                           </select>
                         )}
                       </Field>
-                      <Field label="Demo priority">
+                      <Field label="Priority">
                         {(a) => (
                           <select
                             {...a}
@@ -308,7 +306,7 @@ export function AdminOps() {
                           </select>
                         )}
                       </Field>
-                      <Field label="Demo target, hours (not an SLA)">
+                      <Field label="Target, hours (not an SLA)">
                         {(a) => (
                           <input
                             {...a}
@@ -340,7 +338,7 @@ export function AdminOps() {
                       size="sm"
                       variant="outline"
                       className="min-h-11"
-                      onClick={() => step('start', 'Work started (simulated).')}
+                      onClick={() => step('start', 'Work started.')}
                     >
                       Start work
                     </Button>
@@ -350,7 +348,7 @@ export function AdminOps() {
                       size="sm"
                       variant="outline"
                       className="min-h-11"
-                      onClick={() => step('awaitParts', 'Awaiting parts (simulated).')}
+                      onClick={() => step('awaitParts', 'Awaiting parts.')}
                     >
                       Await parts
                     </Button>
@@ -360,7 +358,7 @@ export function AdminOps() {
                       size="sm"
                       variant="outline"
                       className="min-h-11"
-                      onClick={() => step('resume', 'Work resumed (simulated).')}
+                      onClick={() => step('resume', 'Work resumed.')}
                     >
                       Resume
                     </Button>
@@ -369,7 +367,7 @@ export function AdminOps() {
                     <Button
                       size="sm"
                       className="min-h-11"
-                      onClick={() => step('resolve', 'Marked resolved (simulated).')}
+                      onClick={() => step('resolve', 'Marked resolved.')}
                     >
                       Mark resolved
                     </Button>
@@ -379,7 +377,7 @@ export function AdminOps() {
                       size="sm"
                       variant="outline"
                       className="min-h-11"
-                      onClick={() => step('close', 'Closed (simulated).')}
+                      onClick={() => step('close', 'Closed.')}
                     >
                       Close ticket
                     </Button>

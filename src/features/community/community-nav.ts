@@ -9,7 +9,7 @@ export const communityTabs = [
 export const clubStatusLabel = {
   requested: 'Request recorded (not sent to anyone)',
   alternativeProposed: 'Alternative time proposed (simulated club representative)',
-  alternativeAccepted: 'You accepted the alternative; awaiting demo confirmation',
+  alternativeAccepted: 'You accepted the alternative; awaiting confirmation',
   acceptedDemo: 'Accepted locally (simulated club representative)',
   rejectedDemo: 'Declined locally',
   withdrawn: 'Withdrawn',

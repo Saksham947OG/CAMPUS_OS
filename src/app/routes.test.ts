@@ -105,10 +105,18 @@ describe('route registry', () => {
         'parcels',
         'services',
         'settings',
+        'search',
         'sources',
         'time-tax',
         'time-tax-observations',
         'time-tax-scenarios',
+        'workspace',
+        'workspace-canvas',
+        'workspace-capture',
+        'workspace-knowledge',
+        'workspace-page',
+        'workspace-project',
+        'workspace-space',
       ].sort(),
     )
     expect(routes.filter((r) => r.status === 'devStub')).toEqual([])
@@ -121,8 +129,13 @@ describe('route registry', () => {
     expect(routes.find((r) => r.id === 'calendar')?.registryRefs).toContain('COS-CAL-001')
   })
 
-  it('uses the Home spec bottom nav: Home, Calendar, Services + More (DEC-019)', () => {
-    expect(mobilePrimaryRoutes.map((r) => r.id)).toEqual(['home', 'calendar', 'services'])
+  it('uses the bottom nav: Home, Calendar, Services, Workspace + More (design spec §17, supersedes DEC-019)', () => {
+    expect(mobilePrimaryRoutes.map((r) => r.id)).toEqual([
+      'home',
+      'calendar',
+      'services',
+      'workspace',
+    ])
     expect(mobileMoreRoutes.map((r) => r.id)).toEqual(
       expect.arrayContaining(['bookings', 'academics', 'administration', 'community', 'time-tax']),
     )

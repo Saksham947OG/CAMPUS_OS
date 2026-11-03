@@ -29,7 +29,7 @@ import { useSports } from './sports-hooks'
 import { SportsOps } from './sports-ops'
 import { bookingTabs } from './sports-nav'
 
-const BADGE = <Pill tone="demo">Illustrative data</Pill>
+const BADGE = <Pill tone="demo">Planning data</Pill>
 
 const libraryTabs = [
   { id: 'overview', label: 'Overview and study spaces', to: '/bookings/library' },
@@ -42,7 +42,7 @@ function LibraryHeader({ current, title = 'Library' }: { current: string; title?
     <>
       <PageHeader
         title={title}
-        description="Study-room reservations and a labelled illustrative catalogue. No real library system is connected, and the hours, rooms and books here are fictional."
+        description="Study-room reservations and a labelled illustrative catalogue. No real library system is connected, and the hours, rooms and books here are planning data, not campus records."
         badge={BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="library" />
@@ -64,7 +64,7 @@ export function LibraryPage() {
       <SectionCard
         id="lib-over-h"
         title="Overview"
-        action={<Pill tone="demo">Demo hours · not supplied by the campus</Pill>}
+        action={<Pill tone="demo">Hours · not supplied by the campus</Pill>}
       >
         <p>
           <strong>Published hours:</strong> {v.hours ? `${v.hours} (local)` : 'Hours not supplied'}
@@ -175,11 +175,11 @@ export function LibraryBooksPage() {
         role="note"
         className="rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm"
       >
-        <strong>Catalogue not connected.</strong> The titles below are a fictional illustrative
-        catalogue so you can see how search works. They are not the real library’s books, and no
-        status here is live or guaranteed on the shelf.
+        <strong>Catalogue not connected.</strong> The titles below are an illustrative catalogue so
+        you can see how search works. They are not the real library’s books, and no status here is
+        live or guaranteed on the shelf.
       </p>
-      <SectionCard id="books-h" title={`Demo catalogue (${found.length})`}>
+      <SectionCard id="books-h" title={`Catalogue (${found.length})`}>
         <Field label="Search titles and authors">
           {(a) => (
             <input
@@ -192,7 +192,7 @@ export function LibraryBooksPage() {
           )}
         </Field>
         {found.length === 0 ? (
-          <Empty>No demo book matches “{q}”.</Empty>
+          <Empty>No book matches “{q}”.</Empty>
         ) : (
           <ul className="mt-3 flex flex-col gap-2">
             {found.map((b) => (
@@ -238,7 +238,7 @@ export function LibraryLoansPage() {
           <ul className="flex flex-col gap-2">
             {mine.map(({ loan, book }) => (
               <li key={loan.id} className="rounded-md border border-border p-3">
-                <p className="font-semibold">{book?.title ?? 'Demo book'}</p>
+                <p className="font-semibold">{book?.title ?? 'Book'}</p>
                 <p className="text-sm">
                   Due {formatDateShort(loan.dueDate)}{' '}
                   <span className="text-ink-muted">(date only: no time is implied)</span>
@@ -246,7 +246,7 @@ export function LibraryLoansPage() {
                 <p className="text-sm text-ink-muted">
                   {loan.returnedOn
                     ? `Return recorded on this device on ${formatDateShort(loan.returnedOn)}.`
-                    : 'Not recorded as returned. Only the demo simulator can record a return.'}
+                    : 'Not recorded as returned. Only the operations view can record a return.'}
                 </p>
                 <p className="text-xs text-ink-muted">{loan.provenance.sourceLabel}</p>
                 <form
@@ -353,7 +353,7 @@ export function ChillZonePage() {
     <article className="flex max-w-4xl flex-col gap-4">
       <PageHeader
         title="Chill Zone"
-        description="Coordinate midnight celebration spots on this device. The three spots are illustrative placeholders, and a demo slot is not a campus allocation."
+        description="Coordinate midnight celebration spots on this device. The three spots are illustrative spots, and a slot is not a campus allocation."
         badge={BADGE}
       />
       <SubNav label="Bookings sections" items={bookingTabs} current="chill" />
@@ -361,9 +361,9 @@ export function ChillZonePage() {
         role="note"
         className="rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm"
       >
-        <strong>Demo coordination only.</strong> Real celebration spots work first-come-first-served
-        and CampusOS cannot change campus access rules or guarantee exclusive use. Reserved here
-        never means allocated by the college.
+        <strong>Coordination only.</strong> Real celebration spots work first-come-first-served and
+        CampusOS cannot change campus access rules or guarantee exclusive use. Reserved here never
+        means allocated by the college.
       </p>
       <ul className="grid gap-2 sm:grid-cols-3">
         {spots.map((r) => (

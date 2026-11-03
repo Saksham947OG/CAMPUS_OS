@@ -173,7 +173,7 @@ export function studentReportCollected(
 }
 
 const STAGE_NOTICE: Partial<Record<LoadStage, [string, string, Notice['significance']]>> = {
-  received: ['Demo provider recorded your load', 'Receipt recorded on this device.', 'standard'],
+  received: ['Provider recorded your load', 'Receipt recorded on this device.', 'standard'],
   readyForCollection: [
     'Your laundry is ready (local)',
     'The local provider scenario marked it ready for collection.',
@@ -368,7 +368,7 @@ export function announceVisit(
     ...(store.visit?.arrivedAt && input.status !== 'cancelled'
       ? { arrivedAt: store.visit.arrivedAt }
       : {}),
-    sourceLabel: 'Demo simulator (not a real provider schedule)',
+    sourceLabel: 'Operations view (not a real provider schedule)',
     asOf: c.nowIso,
     version,
     provenance: simulatedProvenance(c.nowIso),
@@ -384,7 +384,7 @@ export function announceVisit(
         ev,
         'SS Laundry visit update (local)',
         input.status === 'cancelled'
-          ? 'The demo visit was cancelled.'
+          ? 'The visit was cancelled.'
           : `Visit ${input.status}${input.date ? ` for ${input.date}` : ''}. Individual loads are separate.`,
         VISIT_HREF,
       ),
@@ -436,7 +436,7 @@ export function reserveMachine(
         : 'This machine’s working status is unknown, so it cannot be booked.',
     )
   const slot = slotsForDay(store.rules.slotMinutes).find((s) => s.start === input.start)
-  if (!slot) return fail('That is not one of the demo time slots.')
+  if (!slot) return fail('That is not one of the time slots.')
   const refusal = checkSlot({
     span: { date: input.date, start: slot.start, end: slot.end },
     nowMs: input.nowMs,
@@ -456,7 +456,7 @@ export function reserveMachine(
     return fail(`Bookings open up to ${store.rules.horizonDays} days ahead on this device.`)
   if (refusal === 'ownerLimit')
     return fail(
-      `This demo allows ${store.rules.maxActivePerStudent} upcoming machine booking at a time. Cancel or finish your current one first.`,
+      `This allows ${store.rules.maxActivePerStudent} upcoming machine booking at a time. Cancel or finish your current one first.`,
     )
   if (refusal === 'conflict') return fail('That slot is already reserved in this reference data.')
   const id = c.newId('res')
@@ -516,7 +516,8 @@ export function actOnReservation(
   const studentOnly =
     action === 'cancel' || action === 'checkIn' || action === 'startCycle' || action === 'finish'
   if (studentOnly && actor !== 'student') return fail('Only the student can do that.')
-  if (!studentOnly && actor !== 'demoSimulator') return fail('Only the demo simulator can do that.')
+  if (!studentOnly && actor !== 'demoSimulator')
+    return fail('Only the operations view can do that.')
 
   let to: Reservation['state']
   let patch: Partial<Reservation> = {}
@@ -547,7 +548,7 @@ export function actOnReservation(
     case 'noShow':
       if (r.state !== 'reserved') return fail('Only a still-reserved slot can be marked no-show.')
       if (opts.nowMs < resMs(r).start + store.rules.graceMinutes * 60_000)
-        return fail(`The ${store.rules.graceMinutes}-minute demo grace period has not ended.`)
+        return fail(`The ${store.rules.graceMinutes}-minute grace period has not ended.`)
       to = 'noShow'
       break
     case 'blockedByOutage':
@@ -619,7 +620,7 @@ export function setMachineStatus(
     ...m,
     ...patch,
     asOf: c.nowIso,
-    sourceLabel: 'Demo simulator report',
+    sourceLabel: 'Operations view report',
     provenance: simulatedProvenance(c.nowIso),
   }
   const notices: Notice[] = []
@@ -763,7 +764,7 @@ export function setBusyReport(
       messBusy: {
         state,
         asOf: c.nowIso,
-        sourceLabel: 'Demo simulator report (not a live count)',
+        sourceLabel: 'Operations view report (not a live count)',
         provenance: simulatedProvenance(c.nowIso),
       },
     },
@@ -827,7 +828,7 @@ export function logParcel(store: EssStore, input: LogParcelInput, c: Ctx): Chang
   const id = c.newId('parcel')
   const at = input.loggedAt ?? c.nowIso
   const ev: AuditEvent = {
-    ...audit(id, 'demoSimulator', 'logged', c, 'Logged by the demo operator'),
+    ...audit(id, 'demoSimulator', 'logged', c, 'Logged by the operator'),
     at,
   }
   const parcel: Parcel = {
@@ -842,7 +843,7 @@ export function logParcel(store: EssStore, input: LogParcelInput, c: Ctx): Chang
     updatedAt: c.nowIso,
     provenance: simulatedProvenance(
       c.nowIso,
-      'Logged by the local demo operator (stands in for a gate/office log)',
+      'Logged by the local operator (stands in for a gate/office log)',
     ),
     history: [ev],
   }
@@ -869,7 +870,7 @@ export function recordParcelCollected(store: EssStore, parcelId: string, c: Ctx)
   const p = store.parcels.find((x) => x.id === parcelId)
   if (!p) return fail('That parcel was not found.')
   if (p.state === 'collected') return fail('This parcel is already recorded as collected.')
-  const ev = audit(p.id, 'demoSimulator', 'collected', c, 'Handover recorded by the demo operator')
+  const ev = audit(p.id, 'demoSimulator', 'collected', c, 'Handover recorded by the operator')
   const next: Parcel = {
     ...p,
     state: 'collected',
@@ -971,7 +972,7 @@ export function dueParcelNotices(store: EssStore, nowMs: number, c: Ctx): Change
         p.id,
         ev,
         'Parcel still uncollected (local)',
-        `Logged ${Math.floor(parcelAgeHours(p, nowMs) / 24)} days ago. A demo reminder, not a campus rule.`,
+        `Logged ${Math.floor(parcelAgeHours(p, nowMs) / 24)} days ago. A reminder, not a campus rule.`,
         parcelPath(p.id),
         'important',
       ),

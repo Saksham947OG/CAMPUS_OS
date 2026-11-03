@@ -7,6 +7,8 @@ import { useReminderEngine } from '@/features/notifications/use-reminder-engine'
 import { useAppStore } from '../app-store'
 import { matchRoute } from '../routes'
 import { CampusAssistant } from '@/features/chat/campus-assistant'
+import { AlertStack } from '@/features/notifications/alert-stack'
+import { CommandPanel } from './command-panel'
 import { MobileNav } from './mobile-nav'
 import { Sidebar } from './sidebar'
 import { TopBar } from './top-bar'
@@ -47,6 +49,8 @@ function MainContent() {
 
 export function AppShell() {
   useReminderEngine()
+  const focusMode = useAppStore((s) => s.focusMode)
+  const setFocusMode = useAppStore((s) => s.setFocusMode)
   const { pathname } = useLocation()
   const mainRef = useRef<HTMLElement>(null)
   const firstRender = useRef(true)
@@ -73,9 +77,9 @@ export function AppShell() {
         >
           Skip to main content
         </a>
-        <Sidebar />
+        {focusMode ? null : <Sidebar />}
         <div className="flex min-w-0 flex-1 flex-col">
-          <TopBar />
+          {focusMode ? null : <TopBar />}
           <StorageNotice />
           <main
             id="main-content"
@@ -83,11 +87,23 @@ export function AppShell() {
             tabIndex={-1}
             className="mx-auto w-full max-w-[var(--content-max)] flex-1 px-4 pb-24 pt-6 outline-none md:px-6 md:pb-8 md:pt-8"
           >
-            <CampusLife />
+            {focusMode ? null : <CampusLife />}
             <MainContent />
           </main>
         </div>
-        <MobileNav />
+        {focusMode ? (
+          <button
+            type="button"
+            onClick={() => setFocusMode(false)}
+            className="glass press fixed top-3 right-3 z-[var(--z-nav)] min-h-11 rounded-full px-4 text-sm font-medium text-ink"
+          >
+            Exit focus mode
+          </button>
+        ) : (
+          <MobileNav />
+        )}
+        <CommandPanel />
+        <AlertStack />
         <CampusAssistant />
       </div>
     </CampusWorldProvider>

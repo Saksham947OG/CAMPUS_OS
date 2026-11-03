@@ -350,7 +350,7 @@ export function submitClaim(
       profileId,
       id,
       e,
-      'Demo claim recorded',
+      'Claim recorded',
       'Your answer is private. This is a request, not proof of ownership, and nobody has been contacted.',
       claimPath(id),
     ),
@@ -359,7 +359,7 @@ export function submitClaim(
       id,
       e,
       'Someone asked to claim the item you reported',
-      'A claim is waiting for demo review. Their answer is not shown here.',
+      'A claim is waiting for review. Their answer is not shown here.',
       reportPath(r.id),
     ),
   ])
@@ -383,7 +383,7 @@ export function withdrawClaim(
     history: [...cl.history, e],
   }
   return ok({ ...s, claims: s.claims.map((x) => (x.id === cl.id ? next : x)) }, next, [
-    tell(profileId, cl.id, e, 'Demo claim withdrawn', 'You withdrew this claim.', claimPath(cl.id)),
+    tell(profileId, cl.id, e, 'Claim withdrawn', 'You withdrew this claim.', claimPath(cl.id)),
   ])
 }
 
@@ -408,7 +408,7 @@ export function reviewClaim(
   if (action === 'startReview') {
     if (cl.status !== 'requested') return fail('Only a new claim can be moved into review.')
     to = 'reviewPending'
-    title = 'Demo claim is under review'
+    title = 'Claim is under review'
     body = 'A simulated reviewer is looking at your claim. This is not a real security decision.'
   } else if (action === 'approve') {
     if (cl.status !== 'reviewPending')
@@ -421,7 +421,7 @@ export function reviewClaim(
     )
       return fail('Another claim for this item is already approved.')
     to = 'demoApproved'
-    title = 'Demo claim approved (simulated)'
+    title = 'Claim approved'
     body =
       'Approved in the on this device only. It is not a legal or security finding. A separate handover step is still needed.'
   } else {
@@ -429,7 +429,7 @@ export function reviewClaim(
       return fail('This claim is already finished.')
     if (!reason) return fail('A reason is required when a claim is not approved.')
     to = 'demoRejected'
-    title = 'Demo claim not approved'
+    title = 'Claim not approved'
     body = `Not approved on this device: ${reason}`
   }
   const e = evt('demoReviewer', action, c, { from: cl.status, to, ...(reason ? { reason } : {}) })
@@ -469,7 +469,7 @@ export function reviewClaim(
           x.claimantProfileId,
           x.id,
           ev,
-          'Demo claim not approved',
+          'Claim not approved',
           'Another claim for this item was approved on this device. No details about it are shown.',
           claimPath(x.id),
           'important',
@@ -512,7 +512,7 @@ export function markReturned(s: CommunityStore, reportId: string, c: Ctx): Chang
       approved.claimantProfileId,
       r.id,
       e,
-      'Demo handover recorded',
+      'Handover recorded',
       'The item was marked returned on this device.',
       claimPath(approved.id),
       'important',
@@ -846,7 +846,7 @@ export function submitTeam(
   if (!t) return fail('That team was not found.')
   if (!canCaptain(t, actor)) return fail('Only the team captain can submit the team.')
   if (t.status !== 'rosterClosed')
-    return fail('Close the roster first, then submit the team for demo approval.')
+    return fail('Close the roster first, then submit the team for approval.')
   const next: Team = {
     ...t,
     status: 'submitted',
