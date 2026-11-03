@@ -39,6 +39,26 @@ describe('hub and information (SP-T01 … SP-T04)', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('every Bookings card carries an icon, so the hub reads as one set', async () => {
+    renderApp('/bookings')
+    await heading('Bookings')
+    const main = within(await screen.findByRole('main'))
+    const cards = main
+      .getAllByRole('link')
+      .filter(
+        (a) =>
+          a
+            .getAttribute('href')
+            ?.match(
+              /^\/bookings\/(gym|badminton|sports|library|music-room|classrooms|chill-zone)/,
+            ) &&
+          a.closest('li') &&
+          a.className.includes('shadow-card'),
+      )
+    expect(cards.length).toBe(10)
+    for (const c of cards) expect(c.querySelector('svg')).not.toBeNull()
+  })
+
   it('shows the owner-supplied capacity on the hub, the gym page and the Services table', async () => {
     renderApp('/bookings')
     await heading('Bookings')

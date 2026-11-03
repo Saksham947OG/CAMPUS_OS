@@ -19,6 +19,8 @@ export interface FacilityCapacity {
   people?: number
   /** The supplied figure is a range or marked "about". */
   approximate?: boolean
+  /** For a place counted in machines rather than people (the laundry). */
+  units?: number
   /** What `people` is counted per. */
   per: 'facility' | 'unit' | 'room'
 }
@@ -38,6 +40,7 @@ export const FACILITY_CAPACITY: readonly FacilityCapacity[] = [
     key: 'laundry',
     label: 'Laundry',
     text: '2 machines for about 60 students',
+    units: 2,
     approximate: true,
     per: 'facility',
   },

@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils'
 import { splitDay } from '@/selectors/day-layout'
 import type { CalendarItem } from '@/selectors/items'
 import { describeItem, itemFlags, itemTimeText } from '../describe'
+import { useFlag } from '../bottleneck-flags'
+import { FlagBadge } from '../flag-badge'
 
 interface RowProps {
   item: CalendarItem
@@ -15,12 +17,18 @@ interface RowProps {
 
 function AgendaRow({ item, selected, conflict, onSelect }: RowProps) {
   const flags = itemFlags(item)
+  const queue = useFlag(item.key)
   const cancelled = item.status === 'cancelled'
   return (
     <button
       type="button"
       onClick={() => onSelect(item)}
-      aria-label={describeItem(item, conflict ? 'overlaps another commitment' : undefined)}
+      aria-label={describeItem(
+        item,
+        [conflict ? 'overlaps another commitment' : '', queue?.summary ?? '']
+          .filter(Boolean)
+          .join('. ') || undefined,
+      )}
       aria-pressed={selected}
       className={cn(
         'grid w-full grid-cols-[6.5rem_1fr] gap-3 rounded-md border border-border bg-surface px-3 py-2 text-left hover:bg-mist',
@@ -44,6 +52,7 @@ function AgendaRow({ item, selected, conflict, onSelect }: RowProps) {
           {flags.length ? ` · ${flags.join(', ')}` : ''}
           {conflict ? ' · overlaps another commitment' : ''}
         </span>
+        {queue ? <FlagBadge flag={queue} withText className="mt-0.5" /> : null}
       </span>
     </button>
   )

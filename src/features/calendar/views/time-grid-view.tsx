@@ -17,6 +17,8 @@ import { layoutTimed, splitDay } from '@/selectors/day-layout'
 import type { CalendarItem } from '@/selectors/items'
 import { describeItem, itemTimeText } from '../describe'
 import { ItemChip } from '../item-chip'
+import { useFlags } from '../bottleneck-flags'
+import { FlagBadge } from '../flag-badge'
 import type { Meal } from '@/domain/records'
 
 export const HOUR_PX = 56
@@ -67,6 +69,7 @@ export function TimeGridView({
   onSelectItem,
   onCreateAt,
 }: Props) {
+  const flags = useFlags()
   const hours = Array.from({ length: hourEnd - hourStart }, (_, i) => hourStart + i)
   const height = hours.length * HOUR_PX
   const cols = `3.5rem repeat(${dates.length}, minmax(${dates.length > 1 ? '5rem' : '12rem'}, 1fr))`
@@ -239,7 +242,12 @@ export function TimeGridView({
                           }}
                           aria-label={describeItem(
                             item,
-                            conflictKeys.has(item.key) ? 'overlaps another commitment' : undefined,
+                            [
+                              conflictKeys.has(item.key) ? 'overlaps another commitment' : '',
+                              flags.get(item.key)?.summary ?? '',
+                            ]
+                              .filter(Boolean)
+                              .join('. ') || undefined,
                           )}
                           aria-pressed={item.key === selectedKey}
                           style={{
@@ -269,6 +277,7 @@ export function TimeGridView({
                             >
                               {item.title}
                             </span>
+                            {flags.get(item.key) ? <FlagBadge flag={flags.get(item.key)!} /> : null}
                             {item.verification === 'tentative' ? (
                               <CircleHelp className="size-3 shrink-0" aria-hidden="true" />
                             ) : null}

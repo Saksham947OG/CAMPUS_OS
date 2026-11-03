@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { z } from 'zod'
-import { renderApp } from '@/test/render-app'
+import { makeServices, renderApp } from '@/test/render-app'
 import { clearViewport, setViewport } from '@/test/viewport'
 
 // FIXED_NOW = Monday 2 Nov 2026, 10:00 IST. Section 1 has Course A on Mon/Wed 09:00.
@@ -36,6 +36,25 @@ describe('Calendar page', () => {
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Hide panel' }))
     expect(screen.queryByRole('complementary', { name: 'Calendar side panel' })).toBeNull()
+  })
+
+  it('shows the bottleneck strip, and says so when no wait baseline applies (demo data has none)', async () => {
+    renderApp(`/calendar?view=agenda&date=${MON}`)
+    const strip = await screen.findByRole('region', { name: 'Biggest bottleneck of the day' })
+    expect(within(strip).getByText(/No queue-prone process/)).toBeInTheDocument()
+    expect(within(strip).getByText(/not a live queue/)).toBeInTheDocument()
+  })
+
+  it('flags queue-prone items inside the calendar itself and in the strip for a source-backed persona', async () => {
+    const { services } = makeServices({ sourceData: true })
+    renderApp('/calendar?view=agenda&date=2026-11-03', { services })
+    const strip = await screen.findByRole('region', { name: 'Biggest bottleneck of the day' })
+    expect(await within(strip).findByText(/Typical wait/)).toBeInTheDocument()
+    expect(within(strip).getByRole('button', { name: 'Show in calendar' })).toBeInTheDocument()
+    const lunch = (
+      await screen.findAllByRole('button', { name: /Lunch at the mess.*typically 20–30 min/ })
+    )[0]
+    expect(lunch).toHaveAccessibleName(/Likely queue/)
   })
 
   it('C-T01: the same source item appears in Month, Week, Day and Agenda for one date', async () => {

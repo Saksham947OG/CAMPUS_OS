@@ -4,6 +4,8 @@ import { categoryColorVar } from '@/domain/categories'
 import { cn } from '@/lib/utils'
 import type { CalendarItem } from '@/selectors/items'
 import { describeItem, itemShortTime } from './describe'
+import { useFlag } from './bottleneck-flags'
+import { FlagBadge } from './flag-badge'
 
 interface ChipProps {
   item: CalendarItem
@@ -24,6 +26,7 @@ export function ItemChip({
   showTime = true,
   className,
 }: ChipProps) {
+  const flag = useFlag(item.key)
   const time = showTime ? itemShortTime(item) : null
   const cancelled = item.status === 'cancelled'
   const done = item.taskState === 'personallyCompleted'
@@ -34,7 +37,12 @@ export function ItemChip({
         e.stopPropagation()
         onSelect(item)
       }}
-      aria-label={describeItem(item, conflict ? 'overlaps another commitment' : undefined)}
+      aria-label={describeItem(
+        item,
+        [conflict ? 'overlaps another commitment' : '', flag?.summary ?? '']
+          .filter(Boolean)
+          .join('. ') || undefined,
+      )}
       aria-pressed={selected}
       style={{ borderLeftColor: `var(${categoryColorVar[item.category]})` }}
       className={cn(
@@ -53,6 +61,7 @@ export function ItemChip({
       {cancelled ? (
         <span className="shrink-0 text-[10px] font-semibold uppercase">Cancelled</span>
       ) : null}
+      {flag ? <FlagBadge flag={flag} /> : null}
       {item.status === 'rescheduled' ? (
         <MoveRight className="size-3 shrink-0" aria-hidden="true" />
       ) : null}

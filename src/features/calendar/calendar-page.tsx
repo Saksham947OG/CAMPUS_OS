@@ -57,6 +57,8 @@ import { DetailsPanel } from './details-panel'
 import { FiltersPanel } from './filters-panel'
 import { CalendarToolbar } from './toolbar'
 import { AgendaView, DayItemList } from './views/agenda-view'
+import { BottleneckFlagsProvider, useBottleneckFlags } from './bottleneck-flags'
+import { DayBottleneck } from './day-bottleneck'
 import { DayStrip } from './views/day-strip'
 import { MonthView } from './views/month-view'
 import { TimeGridView, type DiningBand } from './views/time-grid-view'
@@ -154,6 +156,8 @@ export function CalendarPage() {
       ? []
       : applyFilters(dayAll, filters, revealed))
   const dayVisibleFull = applyFilters(dayAll, filters, revealed)
+  const flagged = useMemo(() => [...visible, ...dayAll], [visible, dayAll])
+  const flags = useBottleneckFlags(flagged)
 
   const wl = useMemo(() => {
     const w = weekDates(date)
@@ -316,187 +320,223 @@ export function CalendarPage() {
   )
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <h1 id="page-title" className="font-display text-3xl font-semibold tracking-tight text-ink">
-          Calendar
-        </h1>
-        {route.status !== 'live' ? <RouteStatusBadge status={route.status} /> : null}
-        {isXl ? (
-          <div className="ml-auto flex gap-2">
-            {is2xl ? (
+    <BottleneckFlagsProvider value={flags}>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <h1
+            id="page-title"
+            className="font-display text-3xl font-semibold tracking-tight text-ink"
+          >
+            Calendar
+          </h1>
+          {route.status !== 'live' ? <RouteStatusBadge status={route.status} /> : null}
+          {isXl ? (
+            <div className="ml-auto flex gap-2">
+              {is2xl ? (
+                <Button
+                  variant="ghost"
+                  className="min-h-11 gap-2"
+                  onClick={() =>
+                    void cal.update((p) => ({ ...p, railCollapsed: !p.railCollapsed }))
+                  }
+                  aria-pressed={!prefs.railCollapsed}
+                >
+                  {prefs.railCollapsed ? (
+                    <PanelLeftOpen aria-hidden="true" />
+                  ) : (
+                    <PanelLeftClose aria-hidden="true" />
+                  )}
+                  {prefs.railCollapsed ? 'Show filters' : 'Hide filters'}
+                </Button>
+              ) : null}
               <Button
                 variant="ghost"
                 className="min-h-11 gap-2"
-                onClick={() => void cal.update((p) => ({ ...p, railCollapsed: !p.railCollapsed }))}
-                aria-pressed={!prefs.railCollapsed}
+                onClick={() =>
+                  inspectorVisible
+                    ? closeInspector()
+                    : go({ panel: selectedItem ? 'details' : 'context' }, true)
+                }
+                aria-pressed={inspectorVisible}
               >
-                {prefs.railCollapsed ? (
-                  <PanelLeftOpen aria-hidden="true" />
+                {inspectorVisible ? (
+                  <PanelRightClose aria-hidden="true" />
                 ) : (
-                  <PanelLeftClose aria-hidden="true" />
+                  <PanelRightOpen aria-hidden="true" />
                 )}
-                {prefs.railCollapsed ? 'Show filters' : 'Hide filters'}
+                {inspectorVisible ? 'Hide panel' : 'Details & tasks'}
               </Button>
-            ) : null}
-            <Button
-              variant="ghost"
-              className="min-h-11 gap-2"
-              onClick={() =>
-                inspectorVisible
-                  ? closeInspector()
-                  : go({ panel: selectedItem ? 'details' : 'context' }, true)
-              }
-              aria-pressed={inspectorVisible}
-            >
-              {inspectorVisible ? (
-                <PanelRightClose aria-hidden="true" />
-              ) : (
-                <PanelRightOpen aria-hidden="true" />
-              )}
-              {inspectorVisible ? 'Hide panel' : 'Details & tasks'}
-            </Button>
-          </div>
-        ) : null}
-      </div>
+            </div>
+          ) : null}
+        </div>
 
-      {data.importWarnings.length > 0 ? (
-        <output className="block rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm text-ink">
-          <p className="font-semibold">Some records were not shown</p>
-          <ul className="mt-1 list-disc pl-5">
-            {data.importWarnings.map((w) => (
-              <li key={w}>{w}</li>
-            ))}
-          </ul>
-        </output>
-      ) : null}
-
-      <div className="flex items-start gap-4">
-        {is2xl && !prefs.railCollapsed ? (
-          <aside
-            aria-label="Layers and filters"
-            className="sticky top-20 max-h-[calc(100dvh-6rem)] w-64 shrink-0 overflow-y-auto rounded-lg border border-border bg-surface p-4"
-          >
-            <h2 className="mb-3 text-sm font-semibold text-ink">Layers &amp; filters</h2>
-            {filtersPanel}
-          </aside>
-        ) : null}
-
-        <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <CalendarToolbar
-            view={view}
-            rangeLabel={rangeLabel}
-            search={search}
-            activeFilters={activeFilterCount(filters, defaultFilters())}
-            showFiltersButton={!is2xl}
-            showPanelButton={!isXl}
-            onView={(v) => {
-              void cal.update((p) => ({ ...p, view: v }))
-              go({ view: v })
-            }}
-            onPrev={() => go({ date: stepDate(view, date, -1) })}
-            onNext={() => go({ date: stepDate(view, date, 1) })}
-            onToday={() => go({ date: now.today })}
-            onSearch={setSearch}
-            onOpenFilters={() => setFiltersOpen(true)}
-            onOpenPanel={() => go({ panel: selectedItem ? 'details' : 'context' }, true)}
-            addMenu={
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="min-h-11 gap-1.5">
-                    <Plus aria-hidden="true" /> Add
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-60">
-                  <DropdownMenuItem
-                    className="min-h-11"
-                    onSelect={() => openEditor({ kind: 'event', prefill: { date } })}
-                  >
-                    Personal event
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="min-h-11"
-                    onSelect={() => openEditor({ kind: 'task' })}
-                  >
-                    Personal task
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="min-h-11"
-                    onSelect={() => openEditor({ kind: 'focus', prefill: { date } })}
-                  >
-                    Study / focus block
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="min-h-11"
-                    onSelect={() => openEditor({ kind: 'birthday' })}
-                  >
-                    Birthday reminder
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            }
-          />
-
-          <output className="sr-only" aria-live="polite">
-            {visible.length} {visible.length === 1 ? 'item' : 'items'} shown for {rangeLabel}
-            {allItems.length !== visible.length
-              ? `, ${allItems.length - visible.length} hidden by filters`
-              : ''}
+        {data.importWarnings.length > 0 ? (
+          <output className="block rounded-md border border-border-strong bg-terracotta-tint p-3 text-sm text-ink">
+            <p className="font-semibold">Some records were not shown</p>
+            <ul className="mt-1 list-disc pl-5">
+              {data.importWarnings.map((w) => (
+                <li key={w}>{w}</li>
+              ))}
+            </ul>
           </output>
+        ) : null}
 
-          {view === 'month' ? (
-            <>
-              <MonthView
-                anchor={date}
+        <div className="flex items-start gap-4">
+          {is2xl && !prefs.railCollapsed ? (
+            <aside
+              aria-label="Layers and filters"
+              className="sticky top-20 max-h-[calc(100dvh-6rem)] w-64 shrink-0 overflow-y-auto rounded-lg border border-border bg-surface p-4"
+            >
+              <h2 className="mb-3 text-sm font-semibold text-ink">Layers &amp; filters</h2>
+              {filtersPanel}
+            </aside>
+          ) : null}
+
+          <div className="flex min-w-0 flex-1 flex-col gap-4">
+            <CalendarToolbar
+              view={view}
+              rangeLabel={rangeLabel}
+              search={search}
+              activeFilters={activeFilterCount(filters, defaultFilters())}
+              showFiltersButton={!is2xl}
+              showPanelButton={!isXl}
+              onView={(v) => {
+                void cal.update((p) => ({ ...p, view: v }))
+                go({ view: v })
+              }}
+              onPrev={() => go({ date: stepDate(view, date, -1) })}
+              onNext={() => go({ date: stepDate(view, date, 1) })}
+              onToday={() => go({ date: now.today })}
+              onSearch={setSearch}
+              onOpenFilters={() => setFiltersOpen(true)}
+              onOpenPanel={() => go({ panel: selectedItem ? 'details' : 'context' }, true)}
+              addMenu={
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="min-h-11 gap-1.5">
+                      <Plus aria-hidden="true" /> Add
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-60">
+                    <DropdownMenuItem
+                      className="min-h-11"
+                      onSelect={() => openEditor({ kind: 'event', prefill: { date } })}
+                    >
+                      Personal event
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="min-h-11"
+                      onSelect={() => openEditor({ kind: 'task' })}
+                    >
+                      Personal task
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="min-h-11"
+                      onSelect={() => openEditor({ kind: 'focus', prefill: { date } })}
+                    >
+                      Study / focus block
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="min-h-11"
+                      onSelect={() => openEditor({ kind: 'birthday' })}
+                    >
+                      Birthday reminder
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              }
+            />
+
+            <DayBottleneck
+              date={date}
+              today={now.today}
+              items={dayVisibleFull}
+              onSelectItem={onSelectItem}
+            />
+
+            <output className="sr-only" aria-live="polite">
+              {visible.length} {visible.length === 1 ? 'item' : 'items'} shown for {rangeLabel}
+              {allItems.length !== visible.length
+                ? `, ${allItems.length - visible.length} hidden by filters`
+                : ''}
+            </output>
+
+            {view === 'month' ? (
+              <>
+                <MonthView
+                  anchor={date}
+                  today={now.today}
+                  selectedDate={date}
+                  selectedKey={selectedItem?.key}
+                  itemsByDate={itemsByDate}
+                  conflictKeys={conflictKeys}
+                  onSelectDate={onSelectDate}
+                  onSelectItem={onSelectItem}
+                  onShowDay={(d) => go({ date: d, event: undefined, panel: 'context' })}
+                />
+                {!isMd ? (
+                  <DayItemList
+                    date={date}
+                    items={dayVisible}
+                    selectedKey={selectedItem?.key}
+                    conflictKeys={conflictKeys}
+                    onSelectItem={onSelectItem}
+                    emptyMessage="Nothing is scheduled in the available records for this date."
+                  />
+                ) : null}
+              </>
+            ) : null}
+
+            {view === 'week' && isMd ? (
+              <TimeGridView
+                dates={weekDates(date)}
                 today={now.today}
+                nowMinutes={now.minutes}
                 selectedDate={date}
                 selectedKey={selectedItem?.key}
                 itemsByDate={itemsByDate}
                 conflictKeys={conflictKeys}
+                {...stageHours}
+                dining={dining}
+                label={`Week of ${formatRangeLabel(range.from, range.to)}`}
                 onSelectDate={onSelectDate}
                 onSelectItem={onSelectItem}
-                onShowDay={(d) => go({ date: d, event: undefined, panel: 'context' })}
+                onCreateAt={(d, start) =>
+                  openEditor({ kind: 'event', prefill: { date: d, start } })
+                }
               />
-              {!isMd ? (
-                <DayItemList
-                  date={date}
-                  items={dayVisible}
-                  selectedKey={selectedItem?.key}
-                  conflictKeys={conflictKeys}
-                  onSelectItem={onSelectItem}
-                  emptyMessage="Nothing is scheduled in the available records for this date."
+            ) : null}
+
+            {view === 'week' && !isMd ? (
+              <>
+                <DayStrip
+                  dates={weekDates(date)}
+                  today={now.today}
+                  selectedDate={date}
+                  counts={weekCounts}
+                  onSelectDate={onSelectDate}
                 />
-              ) : null}
-            </>
-          ) : null}
+                <TimeGridView
+                  dates={[date]}
+                  today={now.today}
+                  nowMinutes={now.minutes}
+                  selectedDate={date}
+                  selectedKey={selectedItem?.key}
+                  itemsByDate={itemsByDate}
+                  conflictKeys={conflictKeys}
+                  {...stageHours}
+                  dining={dining}
+                  label={formatDateLong(date)}
+                  onSelectDate={onSelectDate}
+                  onSelectItem={onSelectItem}
+                  onCreateAt={(d, start) =>
+                    openEditor({ kind: 'event', prefill: { date: d, start } })
+                  }
+                />
+              </>
+            ) : null}
 
-          {view === 'week' && isMd ? (
-            <TimeGridView
-              dates={weekDates(date)}
-              today={now.today}
-              nowMinutes={now.minutes}
-              selectedDate={date}
-              selectedKey={selectedItem?.key}
-              itemsByDate={itemsByDate}
-              conflictKeys={conflictKeys}
-              {...stageHours}
-              dining={dining}
-              label={`Week of ${formatRangeLabel(range.from, range.to)}`}
-              onSelectDate={onSelectDate}
-              onSelectItem={onSelectItem}
-              onCreateAt={(d, start) => openEditor({ kind: 'event', prefill: { date: d, start } })}
-            />
-          ) : null}
-
-          {view === 'week' && !isMd ? (
-            <>
-              <DayStrip
-                dates={weekDates(date)}
-                today={now.today}
-                selectedDate={date}
-                counts={weekCounts}
-                onSelectDate={onSelectDate}
-              />
+            {view === 'day' ? (
               <TimeGridView
                 dates={[date]}
                 today={now.today}
@@ -514,98 +554,80 @@ export function CalendarPage() {
                   openEditor({ kind: 'event', prefill: { date: d, start } })
                 }
               />
-            </>
-          ) : null}
+            ) : null}
 
-          {view === 'day' ? (
-            <TimeGridView
-              dates={[date]}
-              today={now.today}
-              nowMinutes={now.minutes}
-              selectedDate={date}
-              selectedKey={selectedItem?.key}
-              itemsByDate={itemsByDate}
-              conflictKeys={conflictKeys}
-              {...stageHours}
-              dining={dining}
-              label={formatDateLong(date)}
-              onSelectDate={onSelectDate}
-              onSelectItem={onSelectItem}
-              onCreateAt={(d, start) => openEditor({ kind: 'event', prefill: { date: d, start } })}
-            />
-          ) : null}
+            {view === 'agenda' ? (
+              <AgendaView
+                from={range.from}
+                to={range.to}
+                today={now.today}
+                selectedKey={selectedItem?.key}
+                itemsByDate={itemsByDate}
+                conflictKeys={conflictKeys}
+                onSelectItem={onSelectItem}
+                emptyMessage={emptyMessage}
+                onClearFilters={allItems.length > 0 ? clearFilters : undefined}
+              />
+            ) : null}
 
-          {view === 'agenda' ? (
-            <AgendaView
-              from={range.from}
-              to={range.to}
-              today={now.today}
-              selectedKey={selectedItem?.key}
-              itemsByDate={itemsByDate}
-              conflictKeys={conflictKeys}
-              onSelectItem={onSelectItem}
-              emptyMessage={emptyMessage}
-              onClearFilters={allItems.length > 0 ? clearFilters : undefined}
-            />
-          ) : null}
+            {view !== 'agenda' && visible.length === 0 ? (
+              <output className="block rounded-md border border-dashed border-border-strong bg-surface p-4 text-sm text-ink-muted">
+                {emptyMessage}
+              </output>
+            ) : null}
+          </div>
 
-          {view !== 'agenda' && visible.length === 0 ? (
-            <output className="block rounded-md border border-dashed border-border-strong bg-surface p-4 text-sm text-ink-muted">
-              {emptyMessage}
-            </output>
+          {inspectorVisible ? (
+            <aside
+              aria-label="Calendar side panel"
+              className="sticky top-20 max-h-[calc(100dvh-6rem)] w-[22rem] shrink-0 overflow-y-auto rounded-lg border border-border bg-surface p-4"
+            >
+              {inspector}
+            </aside>
           ) : null}
         </div>
 
-        {inspectorVisible ? (
-          <aside
-            aria-label="Calendar side panel"
-            className="sticky top-20 max-h-[calc(100dvh-6rem)] w-[22rem] shrink-0 overflow-y-auto rounded-lg border border-border bg-surface p-4"
-          >
-            {inspector}
-          </aside>
+        {!isXl ? (
+          <>
+            <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+              <SheetContent side="left" className="w-[min(22rem,100vw)] overflow-y-auto p-4">
+                <SheetHeader className="p-0 pb-3">
+                  <SheetTitle>Layers &amp; filters</SheetTitle>
+                  <SheetDescription>
+                    These only change what is visible. No records are changed or deleted.
+                  </SheetDescription>
+                </SheetHeader>
+                {filtersPanel}
+              </SheetContent>
+            </Sheet>
+            <Sheet open={sheetOpen} onOpenChange={(o) => !o && go({ panel: undefined }, true)}>
+              <SheetContent
+                side={isMd ? 'right' : 'bottom'}
+                className={
+                  isMd
+                    ? 'w-[min(24rem,100vw)] overflow-y-auto p-4'
+                    : 'max-h-[88dvh] overflow-y-auto rounded-t-lg p-4'
+                }
+              >
+                <SheetHeader className="p-0 pb-3">
+                  <SheetTitle>Calendar panel</SheetTitle>
+                  <SheetDescription>
+                    Details, tasks and day context for your selection.
+                  </SheetDescription>
+                </SheetHeader>
+                {inspector}
+              </SheetContent>
+            </Sheet>
+          </>
         ) : null}
+        <EditorHost
+          request={editor}
+          data={data}
+          planning={planning.value}
+          getItemsOn={getItemsOn}
+          onClose={() => setEditor(null)}
+        />
       </div>
-
-      {!isXl ? (
-        <>
-          <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
-            <SheetContent side="left" className="w-[min(22rem,100vw)] overflow-y-auto p-4">
-              <SheetHeader className="p-0 pb-3">
-                <SheetTitle>Layers &amp; filters</SheetTitle>
-                <SheetDescription>
-                  These only change what is visible. No records are changed or deleted.
-                </SheetDescription>
-              </SheetHeader>
-              {filtersPanel}
-            </SheetContent>
-          </Sheet>
-          <Sheet open={sheetOpen} onOpenChange={(o) => !o && go({ panel: undefined }, true)}>
-            <SheetContent
-              side={isMd ? 'right' : 'bottom'}
-              className={
-                isMd
-                  ? 'w-[min(24rem,100vw)] overflow-y-auto p-4'
-                  : 'max-h-[88dvh] overflow-y-auto rounded-t-lg p-4'
-              }
-            >
-              <SheetHeader className="p-0 pb-3">
-                <SheetTitle>Calendar panel</SheetTitle>
-                <SheetDescription>
-                  Details, tasks and day context for your selection.
-                </SheetDescription>
-              </SheetHeader>
-              {inspector}
-            </SheetContent>
-          </Sheet>
-        </>
-      ) : null}
-      <EditorHost
-        request={editor}
-        data={data}
-        planning={planning.value}
-        getItemsOn={getItemsOn}
-        onClose={() => setEditor(null)}
-      />
-    </div>
+    </BottleneckFlagsProvider>
   )
 }

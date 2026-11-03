@@ -1,4 +1,15 @@
-import { BookOpen, Dumbbell, Music, PartyPopper, Trophy } from 'lucide-react'
+import {
+  BookOpen,
+  CircleDot,
+  Dumbbell,
+  Goal,
+  Music,
+  PartyPopper,
+  School,
+  Target,
+  Trophy,
+  Volleyball,
+} from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { PageHeader } from '@/components/page-header'
@@ -82,21 +93,25 @@ export function BookingsHubPage() {
           '/bookings/sports?activity=tableTennis',
           'Table Tennis',
           'Reserve a table in short demo slots.',
+          <Volleyball className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
           '/bookings/sports?activity=pool',
           'Pool',
           'Information only: no booking rules are configured.',
+          <CircleDot className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
           '/bookings/sports?activity=snooker',
           'Snooker',
           'Two tables: reserve a specific one, or let the demo pick an available table.',
+          <Target className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
           '/bookings/sports?activity=basketball',
           'Basketball',
           'Reserve the court for a group.',
+          <Goal className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
           '/bookings/library',
@@ -114,6 +129,7 @@ export function BookingsHubPage() {
           '/bookings/classrooms',
           'Classrooms',
           'Check CR Conference Hall, CR1, CR3 and G12 for a time, then book from a free slot.',
+          <School className="size-5 text-coffee" aria-hidden="true" />,
         )}
         {card(
           '/bookings/chill-zone',

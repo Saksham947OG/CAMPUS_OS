@@ -11,6 +11,8 @@ import { formatDateLong, formatTimeRange } from '@/lib/time'
 import type { Conflict } from '@/selectors/conflicts'
 import type { CalendarItem } from '@/selectors/items'
 import { describeRule, itemTimeText } from './describe'
+import { useFlag } from './bottleneck-flags'
+import { FlagBadge } from './flag-badge'
 
 interface Props {
   data: ProfileData
@@ -54,6 +56,7 @@ export function DetailsPanel({
   onReveal,
   onSelectItem,
 }: Props) {
+  const queue = useFlag(item?.key ?? '')
   if (missingKey && !item) {
     return (
       <output className="block rounded-md border border-dashed border-border-strong bg-surface p-4 text-sm">
@@ -116,6 +119,26 @@ export function DetailsPanel({
           </span>
         ) : null}
       </div>
+
+      {queue ? (
+        <section
+          aria-label="Process bottleneck"
+          className="mt-3 rounded-md border border-border-strong bg-mist p-2.5 text-sm text-ink"
+        >
+          <p className="flex items-center gap-1.5 font-semibold">
+            <FlagBadge flag={queue} withText /> · {queue.process}
+          </p>
+          <p className="mt-1">
+            {queue.waitText ? `Typically ${queue.waitText} of waiting. ` : ''}
+            {queue.fillText ? `${queue.fillText}. ` : ''}
+            {queue.capacityText ? `Holds ${queue.capacityText}.` : ''}
+          </p>
+          <p className="mt-1">{queue.advice}</p>
+          <Link to={queue.link.to} className="mt-1 inline-block font-medium text-coffee underline">
+            {queue.link.label}
+          </Link>
+        </section>
+      ) : null}
 
       {conflicts.length > 0 ? (
         <ul className="mt-3 flex flex-col gap-1.5" aria-label="Schedule overlaps">
